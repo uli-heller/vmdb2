@@ -71,7 +71,7 @@ class VirtualFilesystemMountStepRunner(vmdb.StepRunnerInterface):
         for mount_point in reversed(state.virtuals):
             try:
                 vmdb.unmount(mount_point)
-            except vmdb.NotFound as e:
+            except vmdb.NotMounted as e:
                 logging.warning(str(e))
             except cliapp.AppException:                
                 vmdb.warning('Something went wrong while unmounting. Ignoring.')
