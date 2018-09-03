@@ -179,7 +179,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             ]
         )
 
-        self.unmount(state)
+#        self.unmount(state)
 
     def teardown(self, step, settings, state):
         self.unmount(state)
