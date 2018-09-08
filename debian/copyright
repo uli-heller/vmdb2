@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: vmdb2
 Upstream-Contact: Lars Wirzenius <liw@liw.fi>
-Source: http://git.liw.fi/cgi-bin/cgit/cgit.cgi/vmdb2/
+Source: http://git.liw.fi/vmdb2
 
 Files: *
 Copyright: 2017-2018, Lars Wirzenius, Stuart Prescott

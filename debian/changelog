@@ -4,6 +4,7 @@ vmdb2 (0.13.2+git-1) UNRELEASED; urgency=medium
   * Drop build-dependency on pylint3, which doesn't install in Debian
     unstable at this time. Will put it back when it does.
   * Add dependency and build-dependency on qemu-utils, for qemu-img.
+  * Updated Homepage.
 
  -- Lars Wirzenius <liw@liw.fi>  Sun, 06 May 2018 09:26:25 +0300
 
