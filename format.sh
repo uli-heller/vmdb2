@@ -2,12 +2,13 @@
 
 set -eu
 
-tmp="$(mktemp -d)"
 cleanup()
 {
     rm -rf "$tmp"
 }
-#trap cleanup EXIT
+
+tmp="$(mktemp -d)"
+trap cleanup EXIT
 
 version="$(git describe)"
 sed "s/^date: .*/date: $version/" vmdb2.mdwn > "$tmp/prelude.mdwn"
