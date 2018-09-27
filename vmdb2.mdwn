@@ -1,5 +1,7 @@
 ---
-title: vmdb2 manual
+title: Building Debian system images with vmdb2
+author: Lars Wirzenius
+date: work-in-progress
 ...
 
 Introduction
@@ -13,9 +15,30 @@ of architectural problems with the old program. The new program is not
 compatible with the old one; that would've required keeping the
 problems, as well.
 
+Why vmdb2 given vmdebootstrap already existed
+-----------------------------------------------------------------------------
+
+`vmdebootstrap` was the first attempt by Lars Wirzenius to write a
+tool to build system images. It turned out to not be well designed.
+Specifically, it was not easily extensible to be as flexible as a tool
+of this sort should be.
+
+Why vmdb2 given other tools already exist
+-----------------------------------------------------------------------------
+
+Lars likes to write tools for himself and had some free time. He
+sometimes prefers to write his own tools rather than spend time and
+energy evaluating and improving existing tools. He admits this is a
+character flaw.
+
+Also, he felt ashamed of how messy `vmdebootstrap` turned out to be.
+
+If nobody else likes `vmdb2`, that just means Lars had some fun on his
+own.
+
 
 Installation
------------------------------------------------------------------------------
+=============================================================================
 
 You can get vmdb2 by getting the source code from git:
 
