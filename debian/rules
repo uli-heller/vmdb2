@@ -5,6 +5,10 @@ export PYBUILD_NAME=vmdb2
 %:
 	dh $@ --with=python3 --buildsystem=pybuild
 
+override_dh_auto_build:
+	dh_auto_build
+	./format.sh
+
 override_dh_auto_test:
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 	./check
