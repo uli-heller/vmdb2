@@ -15,6 +15,10 @@ of architectural problems with the old program. The new program is not
 compatible with the old one; that would've required keeping the
 problems, as well.
 
+This manual is published as HTML at
+<https://vmdb2-manual.liw.fi/> and as a PDF at
+<https://vmdb2-manual.liw.fi/vmdb2.pdf>.
+
 Why vmdb2 given vmdebootstrap already existed
 -----------------------------------------------------------------------------
 
