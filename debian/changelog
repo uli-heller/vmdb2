@@ -6,6 +6,7 @@ vmdb2 (0.13.2+git-1) UNRELEASED; urgency=medium
   * Add dependency and build-dependency on qemu-utils, for qemu-img.
   * Updated Homepage.
   * Build the manual and include it in the Debian package.
+  * Add build-dependcies for building docs.
 
  -- Lars Wirzenius <liw@liw.fi>  Sun, 06 May 2018 09:26:25 +0300
 
