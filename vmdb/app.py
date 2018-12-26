@@ -84,15 +84,26 @@ class Vmdb2(cliapp.Application):
         core_meltdown = False
         steps_taken = []
 
+        even_if_skipped = method_name + '_even_if_skipped'
         for step in steps:
             try:
                 logging.info(msg, step)
                 steps_taken.append(step)
                 runner = self.step_runners.find(step)
                 if runner.skip(step, self.settings, state):
-                    logging.info('Skipping as requested')
+                    logging.info('Skipping as requested by unless')
+                    method_names = [even_if_skipped]
                 else:
-                    method = getattr(runner, method_name)
+                    method_names = [method_name, even_if_skipped]
+
+                methods = [
+                    getattr(runner, name)
+                    for name in method_names
+                    if hasattr(runner, name)
+                ]
+
+                for method in methods:
+                    logging.info('Calling {}'.format(method))
                     method(step, self.settings, state)
             except BaseException as e:
                 vmdb.error(str(e))

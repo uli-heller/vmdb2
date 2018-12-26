@@ -27,6 +27,9 @@ class StepRunnerInterface(object):  # pragma: no cover
     def run(self, step_spec, settings, state):
         raise NotImplementedError()
 
+    def run_even_if_skipped(self, step_spec, settings, state):
+        pass
+
     def teardown(self, step_spec, settings, state):
         # Default implementation does nop, so that sub-classes don't
         # need to have a nop teardown.
