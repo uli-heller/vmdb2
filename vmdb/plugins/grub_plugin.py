@@ -139,7 +139,6 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         self.bind_mount_many(chroot, ['/dev', '/proc', '/sys'], state)
         if efi_dev:
             self.mount(chroot, efi_dev, '/boot/efi', state)
-        self.apt_update(chroot)
         self.install_package(chroot, grub_package)
 
         kernel_params = [
@@ -225,11 +224,6 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
 
     def chroot_path(self, chroot, path):
         return os.path.normpath(os.path.join(chroot, '.' + path))
-
-    def apt_update(self, chroot):
-        env = os.environ.copy()
-        env['DEBIAN_FRONTEND'] = 'noninteractive'
-        vmdb.runcmd_chroot(chroot, ['apt-get', 'update'], env=env)
 
     def install_package(self, chroot, package):
         env = os.environ.copy()
