@@ -33,7 +33,7 @@ class AptPlugin(cliapp.Plugin):
 class AptStepRunner(vmdb.StepRunnerInterface):
 
     def get_required_keys(self):
-        return ['apt', 'tag', 'packages']
+        return ['apt', 'packages']
 
     def run(self, step, settings, state):
         operation = step['apt']

@@ -47,14 +47,14 @@ class MklabelStepRunner(vmdb.StepRunnerInterface):
 class MkpartStepRunner(vmdb.StepRunnerInterface):
 
     def get_required_keys(self):
-        return ['mkpart', 'device', 'start', 'end', 'tag']
+        return ['mkpart', 'device', 'start', 'end']
 
     def run(self, step, settings, state):
         part_type = step['mkpart']
         device = step['device']
         start = step['start']
         end = step['end']
-        tag = step.get('tag')
+        tag = step.get('tag') or step.get('part-tag')
         if tag is None:
             tag = step['part-tag']
         fs_type = step.get('fs-type', 'ext2')
