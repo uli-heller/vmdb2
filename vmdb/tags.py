@@ -45,6 +45,10 @@ class Tags:
         item = self._get(tag)
         return item['mount_point']
 
+    def is_cached(self, tag):
+        item = self._get(tag)
+        return item['cached']
+
     def append(self, tag):
         if tag in self._tags:
             raise TagInUse(tag)
@@ -60,11 +64,12 @@ class Tags:
             raise AlreadyHasDev(tag)
         item['dev'] = dev
 
-    def set_mount_point(self, tag, mount_point):
+    def set_mount_point(self, tag, mount_point, cached=False):
         item = self._get(tag)
         if item['mount_point'] is not None:
             raise AlreadyMounted(tag)
         item['mount_point'] = mount_point
+        item['cached'] = cached
 
     def _get(self, tag):
         item = self._tags.get(tag)
