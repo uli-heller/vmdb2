@@ -28,7 +28,7 @@ class TagsTests(unittest.TestCase):
         tags = vmdb.Tags()
         self.assertEqual(tags.get_tags(), [])
 
-    def test_tells_if_tag_is_used(self):
+    def test_tells_if_tag_exists(self):
         tags = vmdb.Tags()
         self.assertFalse(tags.has_tag('foo'))
         tags.append('foo')
