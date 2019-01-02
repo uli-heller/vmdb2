@@ -40,6 +40,9 @@ Version 0.13.2+git, not yet released
   This allows a rootfs tarball that is old to be used, without the
   Packages files being too old to be usable.
 
+* The `cache_rootfs` step now caches all the explicitly mounted
+  filesystems, not just the root filesystem.
+
 Version 0.13.2, released 2018-05-06
 ------------------------------------
 
