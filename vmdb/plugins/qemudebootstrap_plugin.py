@@ -51,3 +51,8 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
              target,
              mirror])
         vmdb.runcmd_chroot(target, ['apt-get', 'update'])
+
+    def run_even_if_skipped(self, step, settings, state):
+        tag = step['target']
+        target = state.tags.get_mount_point(tag)
+        vmdb.runcmd_chroot(target, ['apt-get', 'update'])
