@@ -80,7 +80,6 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
         if x is not None and os.path.exists(x):
             os.remove(x)
 
-        underlying = step['cryptsetup']
         crypt_name = step['tag']
 
         crypt_dev = '/dev/mapper/{}'.format(crypt_name)

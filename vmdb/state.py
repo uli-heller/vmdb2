@@ -16,7 +16,7 @@
 # =*= License: GPL-3+ =*=
 
 
-class State(object):
+class State:
 
     def __init__(self):
         self._attrs = {}  # make sure this attribute exists

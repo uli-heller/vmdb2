@@ -19,7 +19,7 @@
 import cliapp
 
 
-class StepRunnerInterface(object):  # pragma: no cover
+class StepRunnerInterface:  # pragma: no cover
 
     def get_required_keys(self):
         raise NotImplementedError()
@@ -53,7 +53,7 @@ class StepRunnerInterface(object):  # pragma: no cover
         return getattr(state, value, False)
 
 
-class StepRunnerList(object):
+class StepRunnerList:
 
     def __init__(self):
         self._runners = []

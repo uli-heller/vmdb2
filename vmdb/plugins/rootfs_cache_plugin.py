@@ -56,7 +56,7 @@ class MakeCacheStepRunner(vmdb.StepRunnerInterface):
                 'tag {} mounted {} cached {}'.format(
                     tag, tags.get_mount_point(tag), tags.is_cached(tag)))
 
-        vmdb.progress('caching rootdir'.format(rootdir))
+        vmdb.progress('caching rootdir {}'.format(rootdir))
         vmdb.progress('caching relative {}'.format(dirs))
         if not os.path.exists(tar_path):
             vmdb.runcmd(

@@ -22,9 +22,6 @@
 # in /proc/mounts.
 
 
-import vmdb
-
-
 class Tags:
 
     def __init__(self):

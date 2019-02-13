@@ -3,7 +3,7 @@
 set -eu
 
 python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
-#pylint3 --rcfile pylint.conf vmdb
+pylint3 --rcfile pylint.conf vmdb
 yarn \
     --shell=python2 \
     --shell-arg '' \

@@ -103,7 +103,7 @@ class Vmdb2(cliapp.Application):
                 ]
 
                 for method in methods:
-                    logging.info('Calling {}'.format(method))
+                    logging.info('Calling %s', method)
                     method(step, self.settings, state)
             except BaseException as e:
                 vmdb.error(str(e))
