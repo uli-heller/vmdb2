@@ -47,7 +47,7 @@ class Tags:
 
     def is_cached(self, tag):
         item = self._get(tag)
-        return item['cached']
+        return item.get('cached', False)
 
     def append(self, tag):
         if tag in self._tags:
