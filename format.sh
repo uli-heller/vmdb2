@@ -23,7 +23,6 @@ pandoc \
     "$tmp/prelude.mdwn" vmdb/plugins/*.mdwn
 
 pandoc \
-    --pdf-engine=xelatex \
     --toc \
     --number-sections \
     -Vdocumentclass=report \
