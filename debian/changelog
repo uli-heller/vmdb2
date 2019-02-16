@@ -8,6 +8,7 @@ vmdb2 (0.13.2+git-1) UNRELEASED; urgency=medium
   * Build the manual and include it in the Debian package.
     (Closes: #907614)
   * Add build-dependcies for building docs.
+  * Add missing build-dep on dh-python.
 
  -- Lars Wirzenius <liw@liw.fi>  Sun, 06 May 2018 09:26:25 +0300
 
