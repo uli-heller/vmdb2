@@ -81,6 +81,8 @@ instructions. A minimal specification file example:
         end: 100%
         tag: root
 
+      - kpartx: "{{ output }}"
+
       - mkfs: ext4
         partition: root
 
@@ -93,10 +95,11 @@ instructions. A minimal specification file example:
       - apt: install
         packages:
           - linux-image-amd64
-        tag: root-fs
+        tag: root
 
       - grub: bios
         tag: root
+        console: serial
 
 The above creates a four gigabyte file, creates a GPT partition table,
 a single partition, with a filesystem, and installs Debian release
