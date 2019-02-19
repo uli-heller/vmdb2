@@ -1,0 +1,12 @@
+Step: `fstab`
+-----------------------------------------------------------------------------
+
+Create `/etc/fstab` inside the the image.
+
+Step keys:
+
+* `fstab` &mdash; REQUIRED; value is the tag for the root filesystem.
+
+Example (in the .vmdb file):
+
+    - fstab: root

@@ -11,6 +11,7 @@ vmdb/plugins/chroot_plugin.py
 vmdb/plugins/debootstrap_plugin.py
 vmdb/plugins/echo_plugin.py
 vmdb/plugins/error_plugin.py
+vmdb/plugins/fstab_plugin.py
 vmdb/plugins/grub_plugin.py
 vmdb/plugins/kernel_plugin.py
 vmdb/plugins/lvm2_plugin.py
