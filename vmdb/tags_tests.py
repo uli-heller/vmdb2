@@ -24,7 +24,7 @@ import vmdb
 
 class TagsTests(unittest.TestCase):
 
-    def test_lists_not_tags_initally(self):
+    def test_lists_no_tags_initially(self):
         tags = vmdb.Tags()
         self.assertEqual(tags.get_tags(), [])
 
