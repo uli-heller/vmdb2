@@ -16,12 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-# Unmount a directory, including any mount points under that
-# directory. If /mnt/foo is given, and /mnt/foo/bar is also mounted,
-# unmount /mnt/foo/bar first, and /mnt/foo then. Look for sub-mounts
-# in /proc/mounts.
-
-
 class Tags:
 
     def __init__(self):
