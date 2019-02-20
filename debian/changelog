@@ -9,6 +9,8 @@ vmdb2 (0.13.2+git-1) UNRELEASED; urgency=medium
     (Closes: #907614)
   * Add build-dependcies for building docs.
   * Add missing build-dep on dh-python.
+  * Fix rootfs-unpacked to be rootfs_unpacked in vmdb2.mdwn.
+    (Closes:#922709)
 
  -- Lars Wirzenius <liw@liw.fi>  Sun, 06 May 2018 09:26:25 +0300
 

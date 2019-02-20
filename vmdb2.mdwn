@@ -152,7 +152,7 @@ filesystem and stores it into the file as a compress tar archive
 skip running debootstrap needlessly.
 
 The specify which steps should be skipped, the `unless` field can be
-used: `unpack-rootfs` sets the `rootfs-unpacked` flag if it actually
+used: `unpack-rootfs` sets the `rootfs_unpacked` flag if it actually
 unpacks a tarball, and `unless` allows checking for that flag. If the
 tarball doesn't exist, the flag is not set.
 
@@ -160,10 +160,10 @@ tarball doesn't exist, the flag is not set.
 
     - debootstrap: stretch
       target: root
-      unless: rootfs-unpacked
+      unless: rootfs_unpacked
 
     - cache-rootfs: root
-      unless: rootfs-unpacked
+      unless: rootfs_unpacked
 
 If the tarball exists, it's unpacked, and the `debootstrap` and
 `cache-rootfs` steps are skipped.
