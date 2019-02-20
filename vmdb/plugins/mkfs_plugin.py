@@ -56,3 +56,5 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
             cmd.append(step['label'])
         cmd.append(device)
         vmdb.runcmd(cmd)
+
+        state.tags.set_fstype(tag, fstype)
