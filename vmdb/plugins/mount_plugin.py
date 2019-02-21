@@ -63,10 +63,12 @@ class MountStepRunner(vmdb.StepRunnerInterface):
             if not os.path.exists(mount_point):
                 os.makedirs(mount_point)
         else:
+            dirname = '/'
             mount_point = tempfile.mkdtemp()
 
         vmdb.runcmd(['mount', device, mount_point])
         state.tags.set_mount_point(tag, mount_point, cached=True)
+        state.tags.set_target_mount_point(tag, dirname)
 
         return mount_point
 
