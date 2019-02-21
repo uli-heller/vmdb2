@@ -46,6 +46,10 @@ class Tags:
         item = self._get(tag)
         return item['fstype']
 
+    def get_target_mount_point(self, tag):
+        item = self._get(tag)
+        return item['target_mount_point']
+
     def is_cached(self, tag):
         item = self._get(tag)
         return item.get('cached', False)
@@ -58,6 +62,7 @@ class Tags:
             'dev': None,
             'mount_point': None,
             'fstype': None,
+            'target_mount_point': None,
         }
 
     def set_dev(self, tag, dev):
@@ -78,6 +83,12 @@ class Tags:
         if item['fstype'] is not None:
             raise AlreadyHasFsType(tag)
         item['fstype'] = fstype
+
+    def set_target_mount_point(self, tag, target_mount_point):
+        item = self._get(tag)
+        if item['target_mount_point'] is not None:
+            raise AlreadyHasTargetMountPoint(tag)
+        item['target_mount_point'] = target_mount_point
 
     def _get(self, tag):
         item = self._tags.get(tag)
@@ -114,3 +125,9 @@ class AlreadyHasFsType(Exception):
 
     def __init__(self, tag):
         super().__init__('Already has filesytem type: {}'.format(tag))
+
+
+class AlreadyHasTargetMountPoint(Exception):
+
+    def __init__(self, tag):
+        super().__init__('Already has target mount point: {}'.format(tag))
