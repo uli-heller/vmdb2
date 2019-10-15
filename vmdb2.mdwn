@@ -139,7 +139,7 @@ The former is better for image file, the latter for real block
 devices.
 
 
-Speed up image creasing by caching the root filesystem
+Speed up image creation by caching the root filesystem
 -----------------------------------------------------------------------------
 
 Building an image can take several minutes, and that's with fast
@@ -148,7 +148,7 @@ running debootstrap, and that always results in the same output, for a
 given Debian release. This means its easy to cache.
 
 vmdb2 has the two actions `cache-roots` and `unpack-rootfs` and the
-command line option `--rootfs-tarball` to allow user to cache. Thhe
+command line option `--rootfs-tarball` to allow user to cache. The
 user uses the option to name a file. `cache-rootfs` takes the root
 filesystem and stores it into the file as a compress tar archive
 ("tarball"). `unpack-rootfs` unpacks the tarball. This allows vmdb2 to
