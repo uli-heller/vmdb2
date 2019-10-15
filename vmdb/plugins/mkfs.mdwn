@@ -5,7 +5,7 @@ Create a filesystem.
 
 Step keys:
 
-* `mkfs` &mdash; REQUIRED; filesystem type, such as `mkfs` or `vfat`.
+* `mkfs` &mdash; REQUIRED; filesystem type, such as `ext4` or `vfat`.
 
 * `partition` &mdash; REQUIRED; tag for the block device to use.
 

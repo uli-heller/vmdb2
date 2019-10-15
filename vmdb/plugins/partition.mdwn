@@ -12,8 +12,8 @@ Step keys:
 
 Example (in the .vmdb file):
 
-    - mklabel: "{{ output }}"
-      size: 4G
+    - mklabel: msdos
+      device: "{{ output }}"
 
 Step: `mkpart`
 -----------------------------------------------------------------------------
