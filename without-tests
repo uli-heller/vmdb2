@@ -22,3 +22,4 @@ vmdb/plugins/qemudebootstrap_plugin.py
 vmdb/plugins/partition_plugin.py
 vmdb/plugins/rootfs_cache_plugin.py
 vmdb/plugins/virtuals_plugin.py
+vmdb/plugins/create_file.py
