@@ -1,0 +1,33 @@
+Step: create-dir
+-----------------------------------------------------------------------------
+
+Create a directory in the target filesystem
+
+Step keys:
+* `create-dir` &mdash; REQUIRED; the full (starting from the new
+  filesystem root) path name of the directory to create. It will work
+  as a `mkdir -p` — Any intermediate directories that do not yet exist
+  will be created.
+* `perm` &mdash; OPTIONAL; the numeric (octal) representation of the
+  directory's permissions. Defaults to 0755.
+* `uid` &mdash; OPTIONAL; the numeric user ID of the directory's
+  owner. Defaults to 0 (root).
+* `gid` &mdash; OPTIONAL; the numeric user ID of the directory's
+  group. Defaults to 0 (root).
+
+Step: create-file
+-----------------------------------------------------------------------------
+Step keys:
+* `create-file` &mdash; REQUIRED; the full (starting from the new
+  filesystem root) path name of the file to create. It will *not*
+  create any directories; if they need to be created, please use
+  `create-dir` first.
+* `contents` &mdash; REQUIRED; the contents to be written to the
+  generated file.
+* `perm` &mdash; OPTIONAL; the numeric (octal) representation of the
+  file's permissions. Defaults to 0644.
+* `uid` &mdash; OPTIONAL; the numeric user ID of the file's
+  owner. Defaults to 0 (root).
+* `gid` &mdash; OPTIONAL; the numeric user ID of the file's
+  group. Defaults to 0 (root).
+
