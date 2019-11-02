@@ -154,6 +154,13 @@ To run automated tests:
 
     ./check
 
+This only runs the unit tests and build tests. To run a smoke test
+that actually builds and boots images:
+
+    sudo ./smoke.sh cache.tar.gz
+
+where `cache.tar.gz` caches the debootstrap output for a future run.
+
 You'll need the yarn program (part of the [cmdtest][] package), and
 also [CoverageTestRunner][] for running the unit tests.
 
