@@ -102,7 +102,7 @@ instructions. A minimal specification file example:
         console: serial
 
 The above creates a four gigabyte file, creates a GPT partition table,
-a single partition, with a filesystem, and installs Debian release
+a single partition, with an ext4 filesystem, and installs Debian release
 stretch onto it. It also installs a kernel, and a boot loader.
 
 To use this, save the specification into `test.vmdb`, and run the
@@ -139,7 +139,7 @@ The former is better for image file, the latter for real block
 devices.
 
 
-Speed up image creasing by caching the root filesystem
+Speed up image creation by caching the root filesystem
 -----------------------------------------------------------------------------
 
 Building an image can take several minutes, and that's with fast
@@ -148,7 +148,7 @@ running debootstrap, and that always results in the same output, for a
 given Debian release. This means its easy to cache.
 
 vmdb2 has the two actions `cache-roots` and `unpack-rootfs` and the
-command line option `--rootfs-tarball` to allow user to cache. Thhe
+command line option `--rootfs-tarball` to allow user to cache. The
 user uses the option to name a file. `cache-rootfs` takes the root
 filesystem and stores it into the file as a compress tar archive
 ("tarball"). `unpack-rootfs` unpacks the tarball. This allows vmdb2 to
@@ -168,12 +168,14 @@ tarball doesn't exist, the flag is not set.
     - cache-rootfs: root
       unless: rootfs_unpacked
 
-If the tarball exists, it's unpacked, and the `debootstrap` and
+If the tarball exists, it is unpacked, and the `debootstrap` and
 `cache-rootfs` steps are skipped.
 
 It's possible to have any number of steps between the unpack and the
-cache steps. However, note that if you change the steps, you need to
-delete the tarball to run them.
+cache steps. However, note that if you change anything within those
+steps, or time passes and you want to include the new packages that
+have made it into Debian, you need to delete the tarball so it is run
+again.
 
 TODO: unless, caching, tags, jinja2
 
