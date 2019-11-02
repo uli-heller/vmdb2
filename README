@@ -42,10 +42,10 @@ Getting vmdb2
 vmdb2 source code is available via git:
 
 * <http://git.liw.fi/vmdb2>
+* <https://gitlab.com/larswirzenius/vmdb2>
 
 It used to be on GitHub as well, but was withdrawn from there due to
-GitHub being a proprietary service and a dislike of its development
-workflow.
+GitHub being a proprietary service.
 
 Requirements:
 
