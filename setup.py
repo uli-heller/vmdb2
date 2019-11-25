@@ -45,7 +45,7 @@ class Build(build):
     def generate_troff(self, program, lang):
         with open('%s.1%s' % (program, lang), 'w') as f:
             cliapp.runcmd(
-                ['python', program,
+                ['python3', program,
                  '--generate-manpage=%s.1%s.in' % (program, lang),
                  '--output=%s.1' % program],
                 stdout=f)

@@ -4,7 +4,7 @@ set -eu
 
 python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
 yarn \
-    --shell=python2 \
+    --shell=python3 \
     --shell-arg '' \
     --shell-library yarns/lib.py \
     --env "PYTHONPATH=$(pwd)/yarns" \

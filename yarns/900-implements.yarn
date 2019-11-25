@@ -13,15 +13,15 @@ This chapter contains the implementations for all scenario steps.
     vmdb2 = os.path.join(srcdir, 'vmdb2')
     exit, out, err = cliapp.runcmd_unchecked([vmdb2] + args.split())
     vars['exit'] = exit
-    vars['stdout'] = out
-    vars['stderr'] = err
+    vars['stdout'] = out.decode()
+    vars['stderr'] = err.decode()
 
     IMPLEMENTS THEN exit code is (\d+)
     wanted = int(get_next_match())
     exit = vars['exit']
-    print 'exit code', exit
-    print 'stdout:', vars['stdout']
-    print 'stderr:', vars['stderr']
+    print('exit code', exit)
+    print('stdout:', vars['stdout'])
+    print('stderr:', vars['stderr'])
     assertEqual(exit, wanted)
 
     IMPLEMENTS THEN stdout contains "(.+)" followed by "(.+)"
