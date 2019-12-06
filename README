@@ -72,7 +72,6 @@ You probably need the following installed to run the smoke test:
 - python3-coverage-test-runner
 - python3-cliapp
 - python3-jinja2
-- pylint3
 - cmdtest 0.31 or later
 - qemu-utils
 - parted
