@@ -16,6 +16,9 @@
 # =*= License: GPL-3+ =*=
 
 
+import logging
+
+
 import cliapp
 
 
@@ -75,12 +78,20 @@ class StepRunnerList:
 
 class StepError(cliapp.AppException):
 
-    pass
+    def __init__(self, msg):
+        logging.error(msg)
+        super().__init__(msg)
 
 
-class NoMatchingRunner(cliapp.AppException):
+class NoMatchingRunner(StepError):
 
     def __init__(self, keys):
-        super(NoMatchingRunner, self).__init__(
-            'No runner implements step with keys {}'.format(
-                ', '.join(keys)))
+        super().__init__(
+            'No runner implements step with keys {}'.format(', '.join(keys)))
+
+
+class NotString(StepError):  # pragma: no cover
+
+    def __init__(self, name, actual):
+        msg = '%s: value must be string, got %r' % (name, actual)
+        super().__init__(msg)

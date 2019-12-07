@@ -40,4 +40,13 @@ class MkimgStepRunner(vmdb.StepRunnerInterface):
     def run(self, step, settings, state):
         filename = step['mkimg']
         size = step['size']
+
+        if not isinstance(filename, str):
+            raise vmdb.NotString('mkimg', filename)
+        if not filename:
+            raise vmdb.IsEmptyString('mkimg', filename)
+
+        if not isinstance(size, str):
+            raise vmdb.NotString('mkimg: size', size)
+
         vmdb.runcmd(['qemu-img', 'create', '-f', 'raw', filename, size])

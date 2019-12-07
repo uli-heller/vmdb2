@@ -22,6 +22,7 @@ from .step_list import (
     StepRunnerList,
     StepRunnerInterface,
     NoMatchingRunner,
+    NotString,
     StepError,
 )
 from .runcmd import (
