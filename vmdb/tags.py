@@ -28,6 +28,12 @@ class Tags:
         self._tags = {}
         self._tagnames = []
 
+    def __repr__(self):
+        return repr({
+            'tags': self._tags,
+            'tagnames': self._tagnames,
+        })
+
     def get_tags(self):
         return list(self._tags.keys())
 

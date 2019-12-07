@@ -24,7 +24,7 @@ class State:
 
     def as_dict(self):
         return {
-            key: getattr(self, key)
+            key: repr(getattr(self, key))
             for key in dir(self)
             if not key in self._attrs
         }

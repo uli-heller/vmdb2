@@ -18,8 +18,16 @@
 
 
 import cliapp
+import logging
 
 import vmdb
+
+
+class NotString(vmdb.StepError):
+
+    def __init__(self, name, actual):
+        msg = '%s: value must be string, got %r' % (name, actual)
+        super().__init__(msg)
 
 
 class MkfsPlugin(cliapp.Plugin):
@@ -37,6 +45,14 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
         fstype = step['mkfs']
         tag = step['partition']
         device = state.tags.get_dev(tag)
+
+        logging.debug('state: %r', state.as_dict())
+        if not isinstance(fstype, str):
+            raise NotString('mkfs', fstype)
+        if not isinstance(tag, str):
+            raise NotString('mkfs: tag', tag)
+        if not isinstance(device, str):
+            raise NotString('mkfs: device (for tag)', device)
 
         cmd = ['/sbin/mkfs', '-t', fstype]
         if 'label' in step:
