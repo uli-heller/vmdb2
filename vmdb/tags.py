@@ -28,7 +28,7 @@ class Tags:
         self._tags = {}
         self._tagnames = []
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return repr({
             'tags': self._tags,
             'tagnames': self._tagnames,
