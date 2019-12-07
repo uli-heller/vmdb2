@@ -1,40 +1,48 @@
+# This doesn't seem to work. Help to make it work would be
+# appreciated.
+#
 # This is a sample VMDB2 input file to specify a simple
 # system that boots on a PC with BIOS. Uses LVM2.
 
+
 steps:
-  - mkimg: "{{ output }}"
+  - mkimg: "{{ image }}"
     size: 4G
 
   - mklabel: msdos
-    device: "{{ output }}"
+    device: "{{ image }}"
 
   - mkpart: primary
-    device: "{{ output }}"
+    device: "{{ image }}"
     start: 1M
     end: 100M
     tag: /boot
 
   - mkpart: primary
-    device: "{{ output }}"
+    device: "{{ image }}"
     start: 100M
     end: 2G
-    tag: rootpv
+    tag: /rootpv
 
-  - kpartx: "{{ output }}"
+  - cryptsetup: /rootpv
+    tag: rootpv_crypt
+    key-cmd: echo lvm2.lukskey
 
   - vgcreate: rootvg
     physical:
-      - rootpv
+      - rootpv_crypt
 
   - lvcreate: rootvg
     name: rootfs
     size: 1G
 
   - mkfs: ext2
-    partition: /boot
+    partition: boot
 
   - mkfs: ext4
     partition: rootfs
+
+  - mount: /boot
 
   - mount: /boot
 
@@ -56,19 +64,12 @@ steps:
   - cache-rootfs: rootfs
     unless: rootfs_unpacked
 
-  # - apt: install
-  #   packages:
-  #     - lvm2
-  #   tag: rootfs
-
   - chroot: rootfs
     shell: |
       sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
       echo pc-vmdb2 > /etc/hostname
-#      vgdisplay
-#      lvdisplay
 
   - grub: bios
     tag: rootfs
-    image-dev: "{{ output }}"
+    image-dev: "{{ image }}"
     console: serial
