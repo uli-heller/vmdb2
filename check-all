@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -eu
+
+tarball="$1"
+
+tryit()
+{
+    local image="$1"
+    local yaml="$2"
+    echo "Testing $image"
+    ./vmdb2 --rootfs-tarball "$tarball" \
+            --verbose \
+            --log check.log \
+            --output "$image" \
+            "$yaml"
+    echo
+}
+        
+
+#tryit simple.img simple.vmdb
+#tryit luks.img luks.vmdb
+#tryit lvm2.img lvm2.vmdb
+
+tryit pc.img pc.vmdb
+tryit uefi.img uefi.vmdb
+tryit ansible.img ansible.vmdb
+tryit smoke-pc.img smoke-pc.vmdb
+tryit smoke-uefi.img smoke-uefi.vmdb
