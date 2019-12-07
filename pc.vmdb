@@ -12,38 +12,37 @@ steps:
     device: "{{ output }}"
     start: 0%
     end: 100%
-    part-tag: root-part
+    tag: /
 
   - mkfs: ext4
-    partition: root-part
+    partition: /
 
-  - mount: root-part
-    fs-tag: root-fs
+  - mount: /
 
-  - unpack-rootfs: root-fs
+  - unpack-rootfs: /
 
   - debootstrap: stretch
     mirror: http://deb.debian.org/debian
-    target: root-fs
+    target: /
     unless: rootfs_unpacked
 
   - apt: install
     packages:
     - linux-image-amd64
-    fs-tag: root-fs
+    tag: /
     unless: rootfs_unpacked
 
-  - cache-rootfs: root-fs
+  - cache-rootfs: /
     unless: rootfs_unpacked
 
-  - chroot: root-fs
+  - chroot: /
     shell: |
       apt -y install python
 
   - shell: |
       printf '[pc]\n%s hostname=pc\n' "$ROOT" > pc.inventory
       ansible-playbook -i pc.inventory -c chroot pc.yml
-    root-fs: root-fs
+    root-fs: /
 
   - grub: bios
-    tag: root-fs
+    tag: /
