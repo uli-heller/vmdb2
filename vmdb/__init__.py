@@ -19,6 +19,7 @@
 from .version import __version__, __version_info__
 from .state import State
 from .step_list import (
+    IsEmptyString,
     StepRunnerList,
     StepRunnerInterface,
     NoMatchingRunner,

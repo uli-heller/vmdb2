@@ -95,3 +95,10 @@ class NotString(StepError):  # pragma: no cover
     def __init__(self, name, actual):
         msg = '%s: value must be string, got %r' % (name, actual)
         super().__init__(msg)
+
+
+class IsEmptyString(StepError):  # pragma: no cover
+
+    def __init__(self, name, actual):
+        msg = '%s: value must not be an empty string, got %r' % (name, actual)
+        super().__init__(msg)

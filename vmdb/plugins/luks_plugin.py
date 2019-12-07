@@ -41,6 +41,11 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
         underlying = step['cryptsetup']
         crypt_name = step['tag']
 
+        if not isinstance(underlying, str):
+            raise vmdb.NotString('cryptsetup', underlying)
+        if not isinstance(crypt_name, str):
+            raise vmdb.NotString('cryptsetup: tag', crypt_name)
+
         state.tmp_key_file = None
         key_file = step.get('key-file')
         key_cmd = step.get('key-cmd')
