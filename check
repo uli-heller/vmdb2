@@ -3,6 +3,7 @@
 set -eu
 
 python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
+
 yarn \
     --shell=python3 \
     --shell-arg '' \

@@ -12,39 +12,40 @@ steps:
     device: "{{ output }}"
     start: 0%
     end: 1G
-    part-tag: efi-part
+    tag: efi
 
   - mkpart: primary
     device: "{{ output }}"
     start: 1G
     end: 100%
-    part-tag: root-part
+    tag: /
+
+  - kpartx: "{{ output }}"
 
   - mkfs: vfat
-    partition: efi-part
+    partition: efi
 
   - mkfs: ext4
-    partition: root-part
+    partition: /
 
-  - mount: root-part
-    fs-tag: root-fs
+  - mount: /
 
-  - unpack-rootfs: root-fs
+  - unpack-rootfs: /
 
   - debootstrap: stretch
     mirror: http://deb.debian.org/debian
-    target: root-fs
+    target: /
     unless: rootfs_unpacked
 
   - apt: install
     packages:
       - linux-image-amd64
-    fs-tag: root-fs
+    fs-tag: /
     unless: rootfs_unpacked
 
-  - cache-rootfs: root-fs
+  - cache-rootfs: /
     unless: rootfs_unpacked
 
   - grub: uefi
-    tag: root-fs
-    efi: efi-part
+    tag: /
+    efi: efi
