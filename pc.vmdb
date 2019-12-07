@@ -41,10 +41,5 @@ steps:
     shell: |
       apt -y install python
 
-  - shell: |
-      printf '[pc]\n%s hostname=pc\n' "$ROOT" > pc.inventory
-      ansible-playbook -i pc.inventory -c chroot pc.yml
-    root-fs: /
-
   - grub: bios
     tag: /
