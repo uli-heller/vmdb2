@@ -8,7 +8,7 @@ tryit()
 {
     local image="$1"
     local yaml="$2"
-    echo "Testing $image"
+    echo "Testing $yaml"
     ./vmdb2 --rootfs-tarball "$tarball" \
             --verbose \
             --log check.log \
@@ -16,13 +16,17 @@ tryit()
             "$yaml"
     echo
 }
-        
 
-#tryit luks.img luks.vmdb
-#tryit lvm2.img lvm2.vmdb
+src="$(dirname $0)"
+dst="$(pwd)"
+cd "$src"
 
-tryit pc.img pc.vmdb
-tryit uefi.img uefi.vmdb
-tryit ansible.img ansible.vmdb
-tryit smoke-pc.img smoke-pc.vmdb
-tryit smoke-uefi.img smoke-uefi.vmdb
+#tryit luks.img "$src/luks.vmdb"
+#tryit lvm2.img "$src/lvm2.vmdb"; exit
+
+for x in pc uefi ansible smoke-pc smoke-uefi
+do
+    tryit "$dst/$x.img" "$x.vmdb"
+done
+
+echo All test images built successfully.
