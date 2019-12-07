@@ -41,6 +41,4 @@ steps:
     playbook: ansible.yml
 
   - grub: bios
-    root-fs: root-fs
-    root-part: root-part
-    device: "{{ output }}"
+    tag: root-fs

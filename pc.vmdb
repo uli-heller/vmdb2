@@ -46,6 +46,4 @@ steps:
     root-fs: root-fs
 
   - grub: bios
-    root-fs: root-fs
-    root-part: root-part
-    device: "{{ output }}"
+    tag: root-fs

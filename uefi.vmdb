@@ -46,5 +46,5 @@ steps:
     unless: rootfs_unpacked
 
   - grub: uefi
-    rootfs: root-fs
-    efi-part: efi-part
+    tag: root-fs
+    efi: efi-part
