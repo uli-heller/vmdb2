@@ -18,7 +18,6 @@ tryit()
 }
         
 
-#tryit simple.img simple.vmdb
 #tryit luks.img luks.vmdb
 #tryit lvm2.img lvm2.vmdb
 

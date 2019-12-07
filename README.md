@@ -87,11 +87,11 @@ Tutorial
 To use vmdb2, git clone the source and at the root of the source tree
 run the following command:
 
-    sudo ./vmdb2 --output simple.img simple.vmdb --log simple.log
+    sudo ./vmdb2 --output pc.img pc.vmdb --log pc.log
 
-`--output simple.img` specifies that the output image is called
-`simple.img`, the specification is `simple.vmdb` and the log file goes
-to `simple.log`.
+`--output pc.img` specifies that the output image is called
+`pc.img`, the specification is `pc.vmdb` and the log file goes
+to `pc.log`.
 
 
 Plugins and steps
@@ -124,10 +124,10 @@ steps that will become incomplete as soon as development continues:
 * mkfs (create filesystem in a partition)
 * mount (mount filesystem, teardown unmounts it automatically)
 
-See `simple.vmdb` for examples. Note how the file uses Jinja2
-templating for value fields to get value of `--output` in the right
-places. Also note how creating a partition or mounting a filesystem
-assigns a "tag" that can be referenced in steps where the
+See `pc.vmdb` and other `.vmdb` files for examples. Note how the file
+uses Jinja2 templating for value fields to get value of `--output` in
+the right places. Also note how creating a partition or mounting a
+filesystem assigns a "tag" that can be referenced in steps where the
 partition/filesystem is needed, without having to know the actual path
 to the device node or mount point.
 
