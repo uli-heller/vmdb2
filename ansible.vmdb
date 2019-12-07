@@ -12,33 +12,38 @@ steps:
     device: "{{ output }}"
     start: 0%
     end: 100%
-    part-tag: root-part
+    tag: /
 
+  - kpartx: "{{ output }}"
+    
   - mkfs: ext4
-    partition: root-part
+    partition: /
+    
+  - mount: /
 
-  - mount: root-part
-    fs-tag: root-fs
-
-  - unpack-rootfs: root-fs
+  - unpack-rootfs: /
 
   - debootstrap: stretch
     mirror: http://deb.debian.org/debian
-    target: root-fs
+    target: /
     unless: rootfs_unpacked
 
   - apt: install
     packages:
     - linux-image-amd64
+    fs-tag: /
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
     - python
-    fs-tag: root-fs
+    fs-tag: /
+
+  - cache-rootfs: /
     unless: rootfs_unpacked
 
-  - cache-rootfs: root-fs
-    unless: rootfs_unpacked
-
-  - ansible: root-fs
+  - ansible: /
     playbook: ansible.yml
 
   - grub: bios
-    tag: root-fs
+    tag: /
