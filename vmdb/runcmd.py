@@ -33,8 +33,7 @@ def set_verbose_progress(verbose):
 
 def error(msg):
     logging.error(msg, exc_info=True)
-    if _verbose:
-        sys.stderr.write('ERROR: {}\n'.format(msg))
+    sys.stderr.write('ERROR: {}\n'.format(msg))
 
 
 def progress(msg):
