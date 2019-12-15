@@ -23,7 +23,7 @@ steps:
 
   - unpack-rootfs: /
 
-  - debootstrap: stretch
+  - debootstrap: buster
     mirror: http://deb.debian.org/debian
     target: /
     unless: rootfs_unpacked

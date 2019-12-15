@@ -21,7 +21,7 @@ Step keys:
 
 Example (in the .vmdb file):
 
-    - qemu-debootstrap: stretch
+    - qemu-debootstrap: buster
       target: root
       mirror: http://mirror.example.com/debian
       arch: arm64

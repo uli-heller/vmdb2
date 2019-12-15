@@ -15,6 +15,6 @@ Step keys:
 
 Example (in the .vmdb file):
 
-    - debootstrap: stretch
+    - debootstrap: buster
       target: root
       mirror: http://mirror.example.com/debian

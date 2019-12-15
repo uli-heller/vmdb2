@@ -88,7 +88,7 @@ instructions. A minimal specification file example:
 
       - mount: root
 
-      - debootstrap: stretch
+      - debootstrap: buster
         mirror: http://deb.debian.org/debian
         target: root
 
@@ -103,7 +103,7 @@ instructions. A minimal specification file example:
 
 The above creates a four gigabyte file, creates a GPT partition table,
 a single partition, with an ext4 filesystem, and installs Debian release
-stretch onto it. It also installs a kernel, and a boot loader.
+buster onto it. It also installs a kernel, and a boot loader.
 
 To use this, save the specification into `test.vmdb`, and run the
 following command:
@@ -161,7 +161,7 @@ tarball doesn't exist, the flag is not set.
 
     - unpack-rootfs: root
 
-    - debootstrap: stretch
+    - debootstrap: buster
       target: root
       unless: rootfs_unpacked
 
