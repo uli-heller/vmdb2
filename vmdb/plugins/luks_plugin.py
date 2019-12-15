@@ -54,7 +54,7 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
                 'cryptsetup step MUST define one of key-file or key-cmd')
 
         if key_file is None:
-            output = vmdb.runcmd(['sh', '-c', key_cmd])
+            output = vmdb.runcmd(['sh', '-ec', key_cmd])
             output = output.decode('UTF-8')
             key = output.splitlines()[0]
             fd, key_file = tempfile.mkstemp()
