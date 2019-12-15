@@ -105,6 +105,11 @@ class Vmdb2(cliapp.Application):
                 for method in methods:
                     logging.info('Calling %s', method)
                     method(step, self.settings, state)
+            except KeyError as e:
+                vmdb.error('Key error: %s' % str(e))
+                core_meltdown = True
+                if not keep_going:
+                    break
             except BaseException as e:
                 vmdb.error(str(e))
                 core_meltdown = True
