@@ -29,7 +29,7 @@ class Vmdb2(cliapp.Application):
     def add_settings(self):
         self.settings.string(
             ['image'],
-            'create image file FILE',
+            'use existing image file/device FILE (use --output to create new file)',
             metavar='FILE')
 
         self.settings.boolean(
