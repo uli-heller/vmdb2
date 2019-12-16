@@ -107,11 +107,13 @@ class Vmdb2(cliapp.Application):
                     method(step, self.settings, state)
             except KeyError as e:
                 vmdb.error('Key error: %s' % str(e))
+                vmdb.error(repr(e))
                 core_meltdown = True
                 if not keep_going:
                     break
             except BaseException as e:
                 vmdb.error(str(e))
+                vmdb.error(repr(e))
                 core_meltdown = True
                 if not keep_going:
                     break
