@@ -42,20 +42,21 @@ class FstabStepRunner(vmdb.StepRunnerInterface):
         for tag in state.tags.get_tags():
             device = state.tags.get_dev(tag)
             mount_point = state.tags.get_target_mount_point(tag)
-            fstype = state.tags.get_fstype(tag)
-            output = vmdb.runcmd([
-                'blkid', '-c', '/dev/null', '-o', 'value', '-s', 'UUID', device])
-            if output:
-                uuid = output.decode().strip()
-                filesystems.append({
-                    'uuid': uuid,
-                    'mount_point': mount_point,
-                    'fstype': fstype,
-                })
-            else:
-                raise Exception(
-                    'Unknown UUID for device {} (to be mounted on {})'.format(
-                        device, mount_point))
+            if mount_point is not None:
+                fstype = state.tags.get_fstype(tag)
+                output = vmdb.runcmd([
+                    'blkid', '-c', '/dev/null', '-o', 'value', '-s', 'UUID', device])
+                if output:
+                    uuid = output.decode().strip()
+                    filesystems.append({
+                        'uuid': uuid,
+                        'mount_point': mount_point,
+                        'fstype': fstype,
+                    })
+                else:
+                    raise Exception(
+                        'Unknown UUID for device {} (to be mounted on {})'.format(
+                            device, mount_point))
 
         fstab_path = os.path.join(chroot, 'etc/fstab')
         line = "UUID={uuid} {mount_point} {fstype} errors=remount-ro 0 1\n"
