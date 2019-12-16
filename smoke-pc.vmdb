@@ -46,6 +46,8 @@ steps:
       sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
       echo pc-vmdb2 > /etc/hostname
 
+  - fstab: rootfs
+
   - grub: bios
     tag: rootfs
     console: serial

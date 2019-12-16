@@ -41,5 +41,7 @@ steps:
     shell: |
       apt -y install python
 
+  - fstab: /
+
   - grub: bios
     tag: /

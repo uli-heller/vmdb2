@@ -46,6 +46,8 @@ steps:
   - cache-rootfs: /
     unless: rootfs_unpacked
 
+  - fstab: /
+
   - grub: uefi
     tag: /
     efi: efi

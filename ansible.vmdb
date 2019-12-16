@@ -45,5 +45,7 @@ steps:
   - ansible: /
     playbook: ansible.yml
 
+  - fstab: /
+
   - grub: bios
     tag: /
