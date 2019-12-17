@@ -53,7 +53,6 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
                 '--components', ','.join(components), suite,
                 target,
                 mirror])
-            vmdb.runcmd_chroot(target, ['apt-get', 'update'])
         else:
             vmdb.runcmd(
                 ['qemu-debootstrap',
