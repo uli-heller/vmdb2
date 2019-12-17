@@ -38,10 +38,14 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         tag = step['target']
         target = state.tags.get_mount_point(tag)
         mirror = step['mirror']
+        keyring = step.get('keyring', None)
         variant = step.get('variant', '-')
         if not (suite and tag and target and mirror):
             raise Exception('missing arg for debootstrap step')
-        vmdb.runcmd(['debootstrap', '--variant', variant, suite, target, mirror])
+        if keyring:
+            vmdb.runcmd(['debootstrap', '--keyring', keyring, '--variant', variant, suite, target, mirror])
+        else:
+            vmdb.runcmd(['debootstrap', '--variant', variant, suite, target, mirror])
 
     def run_even_if_skipped(self, step, settings, state):
         tag = step['target']

@@ -13,8 +13,11 @@ Step keys:
 
 * `mirror` &mdash; OPTIONAL; which Debian mirror to use
 
+* `keyring` &mdash; OPTIONAL; which gpg keyring to use to verify the packages.
+
 Example (in the .vmdb file):
 
     - debootstrap: buster
       target: root
       mirror: http://mirror.example.com/debian
+      keyring: /etc/apt/trusted.gpg

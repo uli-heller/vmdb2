@@ -38,18 +38,30 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
         tag = step['target']
         target = state.tags.get_mount_point(tag)
         mirror = step['mirror']
+        keyring = step.get('keyring', None)
         variant = step.get('variant', '-')
         arch = step['arch']
         components = step.get('components', ['main'])
         if not (suite and tag and target and mirror and arch):
             raise Exception('missing arg for qemu-debootstrap step')
-        vmdb.runcmd(
-            ['qemu-debootstrap',
-             '--arch', arch,
-             '--variant', variant,
-             '--components', ','.join(components), suite,
-             target,
-             mirror])
+        if keyring:
+            vmdb.runcmd(
+                ['qemu-debootstrap',
+                '--keyring', keyring,
+                '--arch', arch,
+                '--variant', variant,
+                '--components', ','.join(components), suite,
+                target,
+                mirror])
+            vmdb.runcmd_chroot(target, ['apt-get', 'update'])
+        else:
+            vmdb.runcmd(
+                ['qemu-debootstrap',
+                '--arch', arch,
+                '--variant', variant,
+                '--components', ','.join(components), suite,
+                target,
+                mirror])
         vmdb.runcmd_chroot(target, ['apt-get', 'update'])
 
     def run_even_if_skipped(self, step, settings, state):
