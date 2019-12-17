@@ -13,7 +13,10 @@ Step keys:
 
 * `mirror` &mdash; OPTIONAL; which Debian mirror to use
 
-* `keyring` &mdash; OPTIONAL; which gpg keyring to use to verify the packages. This is useful when using a non-official Debian repository (e.g. Raspbian) as by default debootstrap will use the keys provided by the "debian-archive-keyring" package.
+* `keyring` &mdash; OPTIONAL; which gpg keyring to use to verify the
+  packages. This is useful when using a non-official Debian repository
+  (e.g. Raspbian) as by default debootstrap will use the keys provided
+  by the "debian-archive-keyring" package.
 
 Example (in the .vmdb file):
 
