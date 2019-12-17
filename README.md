@@ -142,6 +142,13 @@ speculatively ("This seems like a good idea").
 To write a plugin, see the existing ones for examples, and put it in
 `vmdb/plugins/foo_plugin.py` for some value of `foo`.
 
+You should document the plugin in a Markdown file next to it:
+`vmdb/plugins/foo.mdwn` for plugin mentioned above. See existing
+documentation files for a model. You should mention all keys each step
+can use, and give an example. It would be great to explain when the
+plugin would be useful. Try to keep source lines to less than 80
+characters.
+
 Plugins are meant to be very easy to write. If not, there's probably
 something wrong with `vmdb2`. Please raise the issue.
 
@@ -165,6 +172,12 @@ also [CoverageTestRunner][] for running the unit tests.
 
 [cmdtest]: http://liw.fi/cmdtest/
 [CoverageTestRunner]: http://liw.fi/coverage-test-runner/
+
+Try to follow PEP8 for code formatting, and try to keep lines shorter
+than 80 characters.
+
+Make sure ./check and check-all scripts pass both before and after
+your modifications.
 
 
 Contact
