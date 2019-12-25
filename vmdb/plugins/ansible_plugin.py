@@ -40,16 +40,23 @@ class AnsibleStepRunner(vmdb.StepRunnerInterface):
         tag = step['ansible']
         playbook = step['playbook']
         mount_point = state.tags.get_mount_point(tag)
+        rootfs_tarball = settings['rootfs-tarball']
 
         state.ansible_inventory = self.create_inventory(mount_point)
         vmdb.progress(
             'Created {} for Ansible inventory'.format(state.ansible_inventory))
 
+        vars_filename = self.create_vars(rootfs_tarball)
+        vmdb.progress(
+            'Created {} for Ansible variables'.format(vars_filename))
+
         env = dict(os.environ)
         env['ANSIBLE_NOCOWS'] = '1'
         vmdb.runcmd(
             ['ansible-playbook', '-c', 'chroot',
-             '-i', state.ansible_inventory, playbook],
+             '-i', state.ansible_inventory,
+             '-e', '@{}'.format(vars_filename),
+             playbook],
             env=env)
 
     def teardown(self, step, settings, state):
@@ -60,5 +67,11 @@ class AnsibleStepRunner(vmdb.StepRunnerInterface):
     def create_inventory(self, chroot):
         fd, filename = tempfile.mkstemp()
         os.write(fd, '[image]\n{}\n'.format(chroot).encode())
+        os.close(fd)
+        return filename
+
+    def create_vars(self, tarball):
+        fd, filename = tempfile.mkstemp()
+        os.write(fd, 'rootfs_tarball: "{}"\n'.format(tarball).encode())
         os.close(fd)
         return filename
