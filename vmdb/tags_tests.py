@@ -68,7 +68,7 @@ class TagsTests(unittest.TestCase):
     def test_adds_mount_point(self):
         tags = vmdb.Tags()
         tags.append('first')
-        tags.set_mount_point('first', '/mnt/foo')
+        tags.set_builder_mount_point('first', '/mnt/foo')
         self.assertEqual(tags.get_tags(), ['first'])
         self.assertEqual(tags.get_dev('first'), None)
         self.assertEqual(tags.get_mount_point('first'), '/mnt/foo')
@@ -76,13 +76,13 @@ class TagsTests(unittest.TestCase):
     def test_mount_point_is_uncached_by_default(self):
         tags = vmdb.Tags()
         tags.append('first')
-        tags.set_mount_point('first', '/mnt/foo')
+        tags.set_builder_mount_point('first', '/mnt/foo')
         self.assertFalse(tags.is_cached('first'))
 
     def test_mount_point_can_be_made_cached(self):
         tags = vmdb.Tags()
         tags.append('first')
-        tags.set_mount_point('first', '/mnt/foo', cached=True)
+        tags.set_builder_mount_point('first', '/mnt/foo', cached=True)
         self.assertTrue(tags.is_cached('first'))
 
     def test_set_dev_raises_error_for_unknown_tag(self):
@@ -90,17 +90,17 @@ class TagsTests(unittest.TestCase):
         with self.assertRaises(vmdb.UnknownTag):
             tags.set_dev('first', '/mnt/foo')
 
-    def test_set_mount_point_raises_error_for_unknown_tag(self):
+    def test_set_builder_mount_point_raises_error_for_unknown_tag(self):
         tags = vmdb.Tags()
         with self.assertRaises(vmdb.UnknownTag):
-            tags.set_mount_point('first', '/mnt/foo')
+            tags.set_builder_mount_point('first', '/mnt/foo')
 
-    def test_set_mount_point_raises_error_for_double_mount(self):
+    def test_set_builder_mount_point_raises_error_for_double_mount(self):
         tags = vmdb.Tags()
         tags.append('first')
-        tags.set_mount_point('first', '/mnt/foo')
+        tags.set_builder_mount_point('first', '/mnt/foo')
         with self.assertRaises(vmdb.AlreadyMounted):
-            tags.set_mount_point('first', '/mnt/foo')
+            tags.set_builder_mount_point('first', '/mnt/foo')
 
     def test_set_dev_raises_error_for_double_dev(self):
         tags = vmdb.Tags()

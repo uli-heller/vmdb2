@@ -67,7 +67,7 @@ class MountStepRunner(vmdb.StepRunnerInterface):
             mount_point = tempfile.mkdtemp()
 
         vmdb.runcmd(['mount', device, mount_point])
-        state.tags.set_mount_point(tag, mount_point, cached=True)
+        state.tags.set_builder_mount_point(tag, mount_point, cached=True)
         state.tags.set_target_mount_point(tag, dirname)
 
         return mount_point

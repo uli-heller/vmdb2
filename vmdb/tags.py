@@ -40,7 +40,7 @@ class Tags:
 
     def get_mount_point(self, tag):
         item = self._get(tag)
-        return item['mount_point']
+        return item['builder_mount_point']
 
     def get_fstype(self, tag):
         item = self._get(tag)
@@ -60,7 +60,7 @@ class Tags:
         self._tagnames.append(tag)
         self._tags[tag] = {
             'dev': None,
-            'mount_point': None,
+            'builder_mount_point': None,
             'fstype': None,
             'target_mount_point': None,
         }
@@ -71,11 +71,11 @@ class Tags:
             raise AlreadyHasDev(tag)
         item['dev'] = dev
 
-    def set_mount_point(self, tag, mount_point, cached=False):
+    def set_builder_mount_point(self, tag, mount_point, cached=False):
         item = self._get(tag)
-        if item['mount_point'] is not None:
+        if item['builder_mount_point'] is not None:
             raise AlreadyMounted(tag)
-        item['mount_point'] = mount_point
+        item['builder_mount_point'] = mount_point
         item['cached'] = cached
 
     def set_fstype(self, tag, fstype):
