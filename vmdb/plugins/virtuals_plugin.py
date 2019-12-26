@@ -48,7 +48,7 @@ class VirtualFilesystemMountStepRunner(vmdb.StepRunnerInterface):
 
     def run(self, step, settings, state):
         fstag = step['mount-virtual-filesystems']
-        mount_point = state.tags.get_mount_point(fstag)
+        mount_point = state.tags.get_builder_mount_point(fstag)
         self.mount_virtuals(mount_point, state)
 
     def teardown(self, step, settings, state):

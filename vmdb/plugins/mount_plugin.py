@@ -58,7 +58,7 @@ class MountStepRunner(vmdb.StepRunnerInterface):
                 raise Exception('cannot find tag {}'.format(mount_on))
 
             mount_point = os.path.join(
-                state.tags.get_mount_point(mount_on), './' + dirname)
+                state.tags.get_builder_mount_point(mount_on), './' + dirname)
 
             if not os.path.exists(mount_point):
                 os.makedirs(mount_point)
@@ -74,7 +74,7 @@ class MountStepRunner(vmdb.StepRunnerInterface):
 
     def unmount_rootfs(self, step, settings, state):
         tag = step['mount']
-        mount_point = state.tags.get_mount_point(tag)
+        mount_point = state.tags.get_builder_mount_point(tag)
         if mount_point is None:
             return
 

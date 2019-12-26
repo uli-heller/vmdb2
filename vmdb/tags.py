@@ -38,7 +38,7 @@ class Tags:
         item = self._get(tag)
         return item['dev']
 
-    def get_mount_point(self, tag):
+    def get_builder_mount_point(self, tag):
         item = self._get(tag)
         return item['builder_mount_point']
 

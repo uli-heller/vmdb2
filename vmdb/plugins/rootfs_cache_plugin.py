@@ -43,7 +43,7 @@ class MakeCacheStepRunner(vmdb.StepRunnerInterface):
 
     def run(self, step, settings, state):
         fs_tag = step['cache-rootfs']
-        rootdir = state.tags.get_mount_point(fs_tag)
+        rootdir = state.tags.get_builder_mount_point(fs_tag)
         tar_path = settings['rootfs-tarball']
         opts = step.get('options', '--one-file-system').split()
         if not tar_path:
@@ -54,7 +54,7 @@ class MakeCacheStepRunner(vmdb.StepRunnerInterface):
         for tag in tags.get_tags():
             vmdb.progress(
                 'tag {} mounted {} cached {}'.format(
-                    tag, tags.get_mount_point(tag), tags.is_cached(tag)))
+                    tag, tags.get_builder_mount_point(tag), tags.is_cached(tag)))
 
         vmdb.progress('caching rootdir {}'.format(rootdir))
         vmdb.progress('caching relative {}'.format(dirs))
@@ -64,7 +64,7 @@ class MakeCacheStepRunner(vmdb.StepRunnerInterface):
 
     def _find_cacheable_mount_points(self, tags, rootdir):
         return list(sorted(
-            self._make_relative(rootdir, tags.get_mount_point(tag))
+            self._make_relative(rootdir, tags.get_builder_mount_point(tag))
             for tag in tags.get_tags()
             if tags.is_cached(tag)
         ))
@@ -83,7 +83,7 @@ class UnpackCacheStepRunner(vmdb.StepRunnerInterface):
 
     def run(self, step, settings, state):
         fs_tag = step['unpack-rootfs']
-        rootdir = state.tags.get_mount_point(fs_tag)
+        rootdir = state.tags.get_builder_mount_point(fs_tag)
         tar_path = settings['rootfs-tarball']
         if not tar_path:
             raise Exception('--rootfs-tarball MUST be set')

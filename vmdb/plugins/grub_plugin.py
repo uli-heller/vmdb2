@@ -121,7 +121,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         if tag is None:
             tag = step['root-fs']
         root_dev = state.tags.get_dev(tag)
-        chroot = state.tags.get_mount_point(tag)
+        chroot = state.tags.get_builder_mount_point(tag)
 
         image_dev = step.get('image-dev')
         if image_dev is None:

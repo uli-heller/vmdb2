@@ -36,7 +36,7 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
     def run(self, step, settings, state):
         suite = step['qemu-debootstrap']
         tag = step['target']
-        target = state.tags.get_mount_point(tag)
+        target = state.tags.get_builder_mount_point(tag)
         mirror = step['mirror']
         keyring = step.get('keyring', None)
         variant = step.get('variant', '-')
@@ -65,5 +65,5 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
 
     def run_even_if_skipped(self, step, settings, state):
         tag = step['target']
-        target = state.tags.get_mount_point(tag)
+        target = state.tags.get_builder_mount_point(tag)
         vmdb.runcmd_chroot(target, ['apt-get', 'update'])

@@ -35,7 +35,7 @@ class FstabStepRunner(vmdb.StepRunnerInterface):
 
     def run(self, step, setting, state):
         tag = step['fstab']
-        chroot = state.tags.get_mount_point(tag)
+        chroot = state.tags.get_builder_mount_point(tag)
 
         filesystems = []
 

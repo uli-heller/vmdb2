@@ -44,7 +44,7 @@ class AptStepRunner(vmdb.StepRunnerInterface):
         tag = step.get('tag')
         if tag is None:
             tag = step['fs-tag']
-        mount_point = state.tags.get_mount_point(tag)
+        mount_point = state.tags.get_builder_mount_point(tag)
 
         if not self.got_eatmydata(state):
             self.install_packages(mount_point, [], ['eatmydata'])

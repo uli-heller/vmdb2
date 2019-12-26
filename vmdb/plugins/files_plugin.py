@@ -34,7 +34,7 @@ class CreateFileStepRunner(vmdb.StepRunnerInterface):
         return ['create-file', 'contents']
 
     def run(self, step, settings, state):
-        root = state.tags.get_mount_point('/')
+        root = state.tags.get_builder_mount_point('/')
         newfile = step['create-file']
         contents = step['contents']
         perm = step.get('perm', 0o644)
@@ -58,7 +58,7 @@ class CopyFileStepRunner(vmdb.StepRunnerInterface):
         return ['copy-file', 'src']
 
     def run(self, step, settings, state):
-        root = state.tags.get_mount_point('/')
+        root = state.tags.get_builder_mount_point('/')
         newfile = step['copy-file']
         src = step['src']
         perm = step.get('perm', 0o644)
@@ -88,7 +88,7 @@ class CreateDirStepRunner(vmdb.StepRunnerInterface):
         return ['create-dir']
 
     def run(self, step, settings, state):
-        root = state.tags.get_mount_point('/')
+        root = state.tags.get_builder_mount_point('/')
         newdir = step['create-dir']
         path = '/'.join([root, newdir])
         perm = step.get('perm', 0o755)

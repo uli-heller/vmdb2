@@ -39,7 +39,7 @@ class AnsibleStepRunner(vmdb.StepRunnerInterface):
     def run(self, step, settings, state):
         tag = step['ansible']
         playbook = step['playbook']
-        mount_point = state.tags.get_mount_point(tag)
+        mount_point = state.tags.get_builder_mount_point(tag)
         rootfs_tarball = settings['rootfs-tarball']
 
         state.ansible_inventory = self.create_inventory(mount_point)
