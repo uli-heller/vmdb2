@@ -33,7 +33,16 @@ from .runcmd import (
     progress,
     error,
 )
-from .tags import Tags, UnknownTag, TagInUse, AlreadyHasDev, AlreadyHasFsType, AlreadyHasTargetMountPoint, AlreadyMounted
+from .tags import (
+    Tags,
+    UnknownTag,
+    TagInUse,
+    AlreadyHasDev,
+    AlreadyHasFsType,
+    AlreadyHasTargetMountPoint,
+    AlreadyMounted,
+    NeedBothMountPoints,
+)
 from .unmount import unmount, NotMounted
 from .spec import (
     Spec,

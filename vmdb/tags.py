@@ -90,6 +90,12 @@ class Tags:
             raise AlreadyHasTargetMountPoint(tag)
         item['target_mount_point'] = target_mount_point
 
+    def get_builder_from_target_mount_point(self, target_mount_point):
+        for item in self._tags.values():
+            if item['target_mount_point'] == target_mount_point:
+                return item['builder_mount_point']
+        raise NeedBothMountPoints(target_mount_point)
+
     def _get(self, tag):
         item = self._tags.get(tag)
         if item is None:
@@ -131,3 +137,10 @@ class AlreadyHasTargetMountPoint(Exception):
 
     def __init__(self, tag):
         super().__init__('Already has target mount point: {}'.format(tag))
+
+
+class NeedBothMountPoints(Exception):
+
+    def __init__(self, target_mp):
+        super().__init__(
+            'Need both mount points set, target: {}'.format(target_mp))

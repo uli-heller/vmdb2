@@ -46,7 +46,7 @@ class TagsTests(unittest.TestCase):
         with self.assertRaises(vmdb.UnknownTag):
             tags.get_dev('does-not-exist')
 
-    def test_get_mount_point_raises_error_for_unknown_tag(self):
+    def test_getting_builder_mount_point_raises_error_for_unknown_tag(self):
         tags = vmdb.Tags()
         with self.assertRaises(vmdb.UnknownTag):
             tags.get_builder_mount_point('does-not-exist')
@@ -65,7 +65,7 @@ class TagsTests(unittest.TestCase):
         self.assertEqual(tags.get_dev('first'), '/dev/foo')
         self.assertEqual(tags.get_builder_mount_point('first'), None)
 
-    def test_adds_mount_point(self):
+    def test_adds_builder_mount_point(self):
         tags = vmdb.Tags()
         tags.append('first')
         tags.set_builder_mount_point('first', '/mnt/foo')
@@ -73,13 +73,13 @@ class TagsTests(unittest.TestCase):
         self.assertEqual(tags.get_dev('first'), None)
         self.assertEqual(tags.get_builder_mount_point('first'), '/mnt/foo')
 
-    def test_mount_point_is_uncached_by_default(self):
+    def test_builder_mount_point_is_uncached_by_default(self):
         tags = vmdb.Tags()
         tags.append('first')
         tags.set_builder_mount_point('first', '/mnt/foo')
         self.assertFalse(tags.is_cached('first'))
 
-    def test_mount_point_can_be_made_cached(self):
+    def test_builder_mount_point_can_be_made_cached(self):
         tags = vmdb.Tags()
         tags.append('first')
         tags.set_builder_mount_point('first', '/mnt/foo', cached=True)
@@ -134,3 +134,20 @@ class TagsTests(unittest.TestCase):
         tags.set_target_mount_point('first', '/boot')
         with self.assertRaises(vmdb.AlreadyHasTargetMountPoint):
             tags.set_target_mount_point('first', '/')
+
+    def test_raises_error_if_both_mount_points_not_set(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_target_mount_point('first', '/boot')
+        with self.assertRaises(vmdb.NeedBothMountPoints):
+            tags.get_builder_from_target_mount_point('/')
+
+    def test_returns_builder_when_given_target_mount_point(self):
+        tags = vmdb.Tags()
+        tags.append('first')
+        tags.set_builder_mount_point('first', '/mnt/foo')
+        tags.set_target_mount_point('first', '/boot')
+        self.assertEqual(
+            tags.get_builder_from_target_mount_point('/boot'),
+            '/mnt/foo'
+        )
