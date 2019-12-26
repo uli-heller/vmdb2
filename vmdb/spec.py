@@ -40,6 +40,8 @@ def expand_templates(value, params):
     if isinstance(value, str):
         template = jinja2.Template(value)
         return template.render(**params)
+    elif isinstance(value, int):
+        return value
     elif isinstance(value, list):
         return [expand_templates(x, params) for x in value]
     elif isinstance(value, dict):

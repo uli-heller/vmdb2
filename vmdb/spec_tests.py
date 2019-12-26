@@ -32,6 +32,7 @@ class SpecTests(unittest.TestCase):
     steps:
       - step: foo
         arg: "{{ var1 }}"
+        number: 0711
       - step: bar
     '''
 
@@ -59,6 +60,7 @@ class SpecTests(unittest.TestCase):
                 {
                     'step': 'foo',
                     'arg': 'value1',
+                    'number': 0o711,
                 },
                 {
                     'step': 'bar',
