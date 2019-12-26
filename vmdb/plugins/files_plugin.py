@@ -37,24 +37,11 @@ class CreateFileStepRunner(vmdb.StepRunnerInterface):
         root = state.tags.get_mount_point('/')
         newfile = step['create-file']
         contents = step['contents']
-        perm = step.get('perm')
-        uid = step.get('uid')
-        gid = step.get('gid')
+        perm = step.get('perm', 0o644)
+        uid = step.get('uid', 0)
+        gid = step.get('gid', 0)
 
         filename = '/'.join([root,newfile])
-
-        if perm:
-            perm = int(perm, 8)
-        else:
-            perm = 0o0644
-        if uid:
-            uid = int(uid)
-        else:
-            uid = 0
-        if gid:
-            gid = int(gid)
-        else:
-            gid = 0
 
         logging.info('Creating file %s, uid %d, gid %d, perms %o' % (filename, uid, gid, perm))
         fd = open(filename, 'w')
@@ -74,24 +61,11 @@ class CopyFileStepRunner(vmdb.StepRunnerInterface):
         root = state.tags.get_mount_point('/')
         newfile = step['copy-file']
         src = step['src']
-        perm = step.get('perm')
-        uid = step.get('uid')
-        gid = step.get('gid')
+        perm = step.get('perm', 0o644)
+        uid = step.get('uid', 0)
+        gid = step.get('gid', 0)
 
         filename = '/'.join([root,newfile])
-
-        if perm:
-            perm = int(perm, 8)
-        else:
-            perm = 0o0644
-        if uid:
-            uid = int(uid)
-        else:
-            uid = 0
-        if gid:
-            gid = int(gid)
-        else:
-            gid = 0
 
         logging.info(
             'Copying file %s to %s, uid %d, gid %d, perms %o' % (
@@ -117,22 +91,9 @@ class CreateDirStepRunner(vmdb.StepRunnerInterface):
         root = state.tags.get_mount_point('/')
         newdir = step['create-dir']
         path = '/'.join([root, newdir])
-        perm = step.get('perm')
-        uid = step.get('uid')
-        gid = step.get('gid')
-
-        if perm:
-            perm = int(perm, 8)
-        else:
-            perm = 0o0755
-        if uid:
-            uid = int(uid)
-        else:
-            uid = 0
-        if gid:
-            gid = int(gid)
-        else:
-            gid = 0
+        perm = step.get('perm', 0o755)
+        uid = step.get('uid', 0)
+        gid = step.get('gid', 0)
 
         logging.info('Creating directory %s, uid %d, gid %d, perms %o' % (path, uid, gid, perm))
 
