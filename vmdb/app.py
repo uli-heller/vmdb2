@@ -67,9 +67,14 @@ class Vmdb2(cliapp.Application):
             sys.exit(1)
 
     def load_spec_file(self, filename):
-        vmdb.progress('Load spec file {}'.format(filename))
         spec = vmdb.Spec()
-        spec.load_file(filename)
+        if filename == "-":
+            vmdb.progress('Load spec from stdin')
+            spec.load_file(sys.stdin)
+        else:
+            vmdb.progress('Load spec file {}'.format(filename))
+            with open(filename) as f:
+                spec.load_file(f)
         return spec
 
     def run_steps(self, steps, state):

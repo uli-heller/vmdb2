@@ -108,7 +108,12 @@ buster onto it. It also installs a kernel, and a boot loader.
 To use this, save the specification into `test.vmdb`, and run the
 following command:
 
-    sudo vmdb2 test.vmdb --output test.img --verbose
+    sudo vmdb2 --output test.img --verbose test.vmdb
+
+Alternatively the specification can be passed in via stdin by setting the
+file name to `-`, lke so:
+
+    cat test.vmdb | sudo vmdb2 --output test.img --verbose -
 
 This will take a long time, mostly at the `debootstrap` step.
 
