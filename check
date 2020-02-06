@@ -2,8 +2,18 @@
 
 set -eu
 
+echo Running unit tests ============================================
 python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
+echo
 
+if command -v sp-codegen > /dev/null
+then
+    echo Running Subplot ============================================
+    sp-codegen vmdb2.md -o test.py --run
+    echo
+fi
+
+echo Running yarn tests ========================================
 yarn \
     --shell=python3 \
     --shell-arg '' \

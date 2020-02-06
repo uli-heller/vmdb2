@@ -1,0 +1,14 @@
+- given: a specification file called (?P<filename>\S+)
+  function: given_file
+
+- when: user runs vmdb2 -v (?P<filename>\S+) --output=(?P<output>\S+)
+  function: run_vmdb2
+
+- then: exit code is (?P<exit_code>\d+)
+  function: exit_code_is
+
+- then: stdout contains "(?P<pat1>.+)" followed by "(?P<pat2>.+)"
+  function: stdout_contains
+
+- then: stdout does NOT contain "(?P<pat1>.+)"
+  function: stdout_does_not_contain
