@@ -1,8 +1,11 @@
 Step: `debootstrap`
 -----------------------------------------------------------------------------
 
-Install packages using apt, which needs to already have been
-installed.
+Create a directory tree with a basic Debian installation. This does
+not include a boot loader.
+
+A side effect of this step is that `apt-get update` is **always** run,
+even if the step is otherwise skipped using `unless`.
 
 Step keys:
 
