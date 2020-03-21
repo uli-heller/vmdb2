@@ -1,4 +1,4 @@
-Step: `debootstrap`
+Step: debootstrap
 -----------------------------------------------------------------------------
 
 Create a directory tree with a basic Debian installation. This does

@@ -1,4 +1,4 @@
-Step: `mklabel`
+Step: mklabel
 -----------------------------------------------------------------------------
 
 Create a partition table on a block device.
@@ -15,7 +15,7 @@ Example (in the .vmdb file):
     - mklabel: msdos
       device: "{{ output }}"
 
-Step: `mkpart`
+Step: mkpart
 -----------------------------------------------------------------------------
 
 Create a partition.
@@ -42,7 +42,7 @@ Example (in the .vmdb file):
       end: 100%
       tag: root
 
-Step: `kpartx`
+Step: kpartx
 -----------------------------------------------------------------------------
 
 Create loop devices for partitions in an image file. Not needed when

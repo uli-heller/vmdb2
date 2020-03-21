@@ -1,4 +1,4 @@
-Step: `luks`
+Step: luks
 -----------------------------------------------------------------------------
 
 Set up disk encryption using LUKS with the `cryptsetup` utility. The

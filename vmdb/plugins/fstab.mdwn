@@ -1,4 +1,4 @@
-Step: `fstab`
+Step: fstab
 -----------------------------------------------------------------------------
 
 Create `/etc/fstab` inside the the image.

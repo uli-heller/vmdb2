@@ -1,4 +1,4 @@
-Step: `chroot`
+Step: chroot
 -----------------------------------------------------------------------------
 
 Run a shell snippet in a chroot inside the image.
@@ -16,7 +16,7 @@ Example (in the .vmdb file):
           echo I am in chroot
 
 
-Step: `shell`
+Step: shell
 -----------------------------------------------------------------------------
 
 Run a shell snippet on the host. This is not run in a chroot, and can

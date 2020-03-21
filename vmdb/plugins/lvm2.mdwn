@@ -1,4 +1,4 @@
-Step: `vgcreate`
+Step: vgcreate
 -----------------------------------------------------------------------------
 
 Create an LVM2 volume group (VG), and also initialise the physical
@@ -22,7 +22,7 @@ Example (in the .vmdb file):
       - other_partition
 
 
-Step: `lvcreate`
+Step: lvcreate
 -----------------------------------------------------------------------------
 
 Create an LVM2 logical volume (LV) in an existing volume group.

@@ -1,4 +1,4 @@
-tep: `qemu-debootstrap`
+Step: qemu-debootstrap
 -----------------------------------------------------------------------------
 
 Install packages using apt, which needs to already have been

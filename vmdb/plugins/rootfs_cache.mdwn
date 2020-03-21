@@ -1,4 +1,4 @@
-Step: `cache-rootfs`
+Step: cache-rootfs
 -----------------------------------------------------------------------------
 
 Create a tarball of the root filesystem in the image.
@@ -13,7 +13,7 @@ Example (in the .vmdb file):
       unless: rootfs_unpacked
 
 
-Step: `unpack-rootfs`
+Step: unpack-rootfs
 -----------------------------------------------------------------------------
 
 Unpack a tarball of the root filesystem to the image, and set the

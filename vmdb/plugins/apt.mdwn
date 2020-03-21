@@ -1,4 +1,4 @@
-Step: `apt`
+Step: apt
 -----------------------------------------------------------------------------
 
 Install packages using apt, which needs to already have been

@@ -1,4 +1,4 @@
-Step: `mkimg`
+Step: mkimg
 -----------------------------------------------------------------------------
 
 Create a new image file of a desired size.

@@ -1,4 +1,4 @@
-Step: `ansible`
+Step: ansible
 -----------------------------------------------------------------------------
 
 Run Ansible using a provided playbook, to configure the image. vmdb2
