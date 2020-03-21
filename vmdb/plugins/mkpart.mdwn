@@ -1,0 +1,26 @@
+Step: mkpart
+-----------------------------------------------------------------------------
+
+Create a partition.
+
+Step keys:
+
+* `mkpart` &mdash; REQUIRED; type of partition to create: use
+  `primary` (but any value acceped by `parted` is OK).
+
+* `device` &mdash; REQUIRED; filename of block device where to create
+  partition.
+
+* `start` &mdash; REQUIRED; where does the partition start?
+
+* `end` &mdash; REQUIRED; where does the partition end?
+
+* `tag` &mdash; REQUIRED; tag for the new partition.
+
+Example (in the .vmdb file):
+
+    - mkpart: primary
+      device: "{{ output }}"
+      start: 0%
+      end: 100%
+      tag: root

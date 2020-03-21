@@ -25,23 +25,10 @@ import cliapp
 import vmdb
 
 
-class PartitionPlugin(cliapp.Plugin):
+class MkpartPlugin(cliapp.Plugin):
 
     def enable(self):
-        self.app.step_runners.add(MklabelStepRunner())
         self.app.step_runners.add(MkpartStepRunner())
-        self.app.step_runners.add(KpartxStepRunner())
-
-
-class MklabelStepRunner(vmdb.StepRunnerInterface):
-
-    def get_required_keys(self):
-        return ['mklabel', 'device']
-
-    def run(self, step, settings, state):
-        label_type = step['mklabel']
-        device = step['device']
-        vmdb.runcmd(['parted', '-s', device, 'mklabel', label_type])
 
 
 class MkpartStepRunner(vmdb.StepRunnerInterface):
@@ -93,29 +80,3 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
             for line in new
             if line not in old
         ]
-
-
-class KpartxStepRunner(vmdb.StepRunnerInterface):
-
-    def get_required_keys(self):
-        return ['kpartx']
-
-    def run(self, step, settings, state):
-        device = step['kpartx']
-        tags = state.tags.get_tags()
-        devs = self.kpartx(device)
-        for tag, dev in zip(tags, devs):
-            vmdb.progress('remembering {} as {}'.format(dev, tag))
-            state.tags.set_dev(tag, dev)
-
-    def kpartx(self, device):
-        output = vmdb.runcmd(['kpartx', '-asv', device]).decode('UTF-8')
-        for line in output.splitlines():
-            words = line.split()
-            if words[0] == 'add':
-                name = words[2]
-                yield '/dev/mapper/{}'.format(name)
-
-    def teardown(self, step, settings, state):
-        device = step['kpartx']
-        vmdb.runcmd(['kpartx', '-dsv', device])

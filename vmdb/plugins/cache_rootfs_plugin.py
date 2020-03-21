@@ -24,7 +24,7 @@ import cliapp
 import vmdb
 
 
-class RootFSCachePlugin(cliapp.Plugin):
+class CacheRootFSPlugin(cliapp.Plugin):
 
     def enable(self):
         self.app.settings.string(
@@ -33,7 +33,6 @@ class RootFSCachePlugin(cliapp.Plugin):
             metavar='FILE')
 
         self.app.step_runners.add(MakeCacheStepRunner())
-        self.app.step_runners.add(UnpackCacheStepRunner())
 
 
 class MakeCacheStepRunner(vmdb.StepRunnerInterface):
@@ -74,25 +73,3 @@ class MakeCacheStepRunner(vmdb.StepRunnerInterface):
         if dirname == rootdir:
             return '.'
         return dirname[len(rootdir) + 1:]
-
-
-class UnpackCacheStepRunner(vmdb.StepRunnerInterface):
-
-    def get_required_keys(self):
-        return ['unpack-rootfs']
-
-    def run(self, step, settings, state):
-        fs_tag = step['unpack-rootfs']
-        rootdir = state.tags.get_builder_mount_point(fs_tag)
-        tar_path = settings['rootfs-tarball']
-        if not tar_path:
-            raise Exception('--rootfs-tarball MUST be set')
-        if os.path.exists(tar_path):
-            vmdb.runcmd(
-                ['tar', '-C', rootdir, '-xf', tar_path, '--numeric-owner'])
-            self.copy_resolv_conf(rootdir)
-            state.rootfs_unpacked = True
-
-    def copy_resolv_conf(self, rootdir):
-        filename = os.path.join(rootdir, 'etc', 'resolv.conf')
-        vmdb.runcmd(['cp', '/etc/resolv.conf', filename])

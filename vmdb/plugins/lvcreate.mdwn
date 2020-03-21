@@ -1,0 +1,18 @@
+Step: lvcreate
+-----------------------------------------------------------------------------
+
+Create an LVM2 logical volume (LV) in an existing volume group.
+
+Step keys:
+
+* `lvcreate` &mdash; REQUIRED; value is the tag for the volume group.
+
+* `name` &mdash; REQUIRED; tag for the new LV block device.
+
+* `size` &mdash; REQUIRED; size of the new LV.
+
+Example (in the .vmdb file):
+
+    - lvcreate: rootvg
+      name: rootfs
+      size: 1G

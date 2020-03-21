@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
+set -o pipefail
 
 echo Running unit tests ============================================
 python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
@@ -21,3 +22,32 @@ yarn \
     --env "PYTHONPATH=$(pwd)/yarns" \
     --cd-datadir \
     yarns/*.yarn "$@"
+echo
+
+echo Formatting docs ========================================
+./format.sh
+
+steps() {
+    sed -n '/<h2 id="step-.*> Step: /s///p' vmdb2.html
+}
+
+code() {
+    steps | grep '<code>' || true
+}
+
+panic() {
+    echo "ERROR: $@" 1>&2
+    exit 1
+}
+
+n="$(code | wc -l)"
+if [ "$n" != 0 ]
+then
+    code
+    panic "Documentation has steps that use code in title"
+fi
+
+if ! diff -u <(steps) <(steps | sort)
+then
+    panic "Steps are not in sorted order"
+fi

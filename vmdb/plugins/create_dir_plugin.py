@@ -1,4 +1,4 @@
-# Copyright 2017  Lars Wirzenius
+# Copyright 2019 Gunnar Wolf
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,29 +15,31 @@
 #
 # =*= License: GPL-3+ =*=
 
-
-
-import os
-
 import cliapp
-
 import vmdb
+import os
+import logging
 
-
-class ChrootPlugin(cliapp.Plugin):
+class CreateDirPlugin(cliapp.Plugin):
 
     def enable(self):
-        self.app.step_runners.add(ChrootStepRunner())
+        self.app.step_runners.add(CreateDirStepRunner())
 
 
-class ChrootStepRunner(vmdb.StepRunnerInterface):
+class CreateDirStepRunner(vmdb.StepRunnerInterface):
 
     def get_required_keys(self):
-        return ['chroot', 'shell']
+        return ['create-dir']
 
     def run(self, step, settings, state):
-        fs_tag = step['chroot']
-        shell = step['shell']
+        root = state.tags.get_builder_from_target_mount_point('/')
+        newdir = step['create-dir']
+        path = '/'.join([root, newdir])
+        perm = step.get('perm', 0o755)
+        uid = step.get('uid', 0)
+        gid = step.get('gid', 0)
 
-        mount_point = state.tags.get_builder_mount_point(fs_tag)
-        vmdb.runcmd_chroot(mount_point, ['sh', '-ec', shell])
+        logging.info('Creating directory %s, uid %d, gid %d, perms %o' % (path, uid, gid, perm))
+
+        os.makedirs(path, perm)
+        os.chown(path, uid, gid)

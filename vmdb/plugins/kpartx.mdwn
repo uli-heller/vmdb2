@@ -1,0 +1,13 @@
+Step: kpartx
+-----------------------------------------------------------------------------
+
+Create loop devices for partitions in an image file. Not needed when
+installing to a real block device, instead of an image file.
+
+Step keys:
+
+* `kpartx` &mdash; REQUIRED; filename of block device with partitions.
+
+Example (in the .vmdb file):
+
+    - kpartx: "{{ output }}"

@@ -1,18 +1,3 @@
-Step: cache-rootfs
------------------------------------------------------------------------------
-
-Create a tarball of the root filesystem in the image.
-
-Step keys:
-
-* `cache-rootfs` &mdash; REQUIRED; tag of root filesystem on image.
-
-Example (in the .vmdb file):
-
-    - cache-rootfs: root
-      unless: rootfs_unpacked
-
-
 Step: unpack-rootfs
 -----------------------------------------------------------------------------
 

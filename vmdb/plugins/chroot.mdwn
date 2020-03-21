@@ -14,22 +14,3 @@ Example (in the .vmdb file):
     - chroot: root
       shell: |
           echo I am in chroot
-
-
-Step: shell
------------------------------------------------------------------------------
-
-Run a shell snippet on the host. This is not run in a chroot, and can
-access the host system.
-
-Step keys:
-
-* `root-fs` &mdash; REQUIRED; value is the tag for the root filesystem.
-
-* `shell` &mdash; REQUIRED; the shell snippet to run
-
-Example (in the .vmdb file):
-
-    - root-fs: root
-      shell: |
-          echo I am in NOT in chroot.
