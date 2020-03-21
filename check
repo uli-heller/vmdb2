@@ -14,6 +14,7 @@ then
     echo
 fi
 
+if false; then
 echo Running yarn tests ========================================
 yarn \
     --shell=python3 \
@@ -23,6 +24,7 @@ yarn \
     --cd-datadir \
     yarns/*.yarn "$@"
 echo
+fi
 
 echo Formatting docs ========================================
 ./format.sh
