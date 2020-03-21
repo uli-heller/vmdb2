@@ -32,13 +32,17 @@ class LvcreatePlugin(cliapp.Plugin):
 
 class LvcreateStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['lvcreate']
+    def get_key_spec(self):
+        return {
+            'lvcreate': str,
+            'name': str,
+            'size': str,
+        }
 
-    def run(self, step, settings, state):
-        vgname = step['lvcreate']
-        lvname = step['name']
-        size = step['size']
+    def run(self, values, settings, state):
+        vgname = values['lvcreate']
+        lvname = values['name']
+        size = values['size']
 
         vmdb.runcmd(['lvcreate', '--name', lvname, '--size', size, vgname])
 

@@ -32,26 +32,29 @@ class VgcreatePlugin(cliapp.Plugin):
 
 class VgcreateStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['vgcreate', 'physical']
+    def get_key_spec(self):
+        return {
+            'vgcreate': str,
+            'physical': [],
+        }
 
-    def run(self, step, settings, state):
-        vgname = self.get_vg(step)
-        physical = self.get_pv(step, state)
+    def run(self, values, settings, state):
+        vgname = self.get_vg(values)
+        physical = self.get_pv(values, state)
 
         for phys in physical:
             vmdb.runcmd(['pvcreate', '-ff', '--yes', phys])
         vmdb.runcmd(['vgcreate', vgname] + physical)
 
-    def teardown(self, step, settings, state):
-        vgname = self.get_vg(step)
+    def teardown(self, values, settings, state):
+        vgname = self.get_vg(values)
         vmdb.runcmd(['vgchange', '-an', vgname])
 
-    def get_vg(self, step):
-        return step['vgcreate']
+    def get_vg(self, values):
+        return values['vgcreate']
 
-    def get_pv(self, step, state):
+    def get_pv(self, values, state):
         return [
             state.tags.get_dev(tag)
-            for tag in step['physical']
+            for tag in values['physical']
         ]

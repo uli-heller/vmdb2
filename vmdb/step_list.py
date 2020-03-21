@@ -24,8 +24,39 @@ import cliapp
 
 class StepRunnerInterface:  # pragma: no cover
 
-    def get_required_keys(self):
+    def get_key_spec(self):
         raise NotImplementedError()
+
+    def get_values(self, step):
+        keyspec = self.get_key_spec()
+        values = {}
+
+        # Get keys from step or defaults from spec.
+        for key, specvalue in keyspec.items():
+            if specvalue.__class__ == type:
+                if key not in step:
+                    raise StepKeyMissing(key)
+                values[key] = step[key]
+            else:
+                values[key] = step.get(key, specvalue)
+
+        # Check types of values.
+        for key, specvalue in keyspec.items():
+            if specvalue.__class__ == type:
+                wanted = specvalue
+            else:
+                wanted = specvalue.__class__
+            if not isinstance(values[key], wanted):
+                raise StepKeyWrongValueType(key, wanted, values[key])
+
+        return values
+
+    def get_required_keys(self):
+        return [
+            key
+            for key, value in self.get_key_spec().items()
+            if value.__class__ == type
+        ]
 
     def run(self, step_spec, settings, state):
         raise NotImplementedError()
@@ -72,6 +103,7 @@ class StepRunnerList:
         for runner in self._runners:
             required = set(runner.get_required_keys())
             if actual.intersection(required) == required:
+                runner.get_values(step_spec)
                 return runner
         raise NoMatchingRunner(actual)
 
@@ -81,6 +113,20 @@ class StepError(cliapp.AppException):
     def __init__(self, msg):
         logging.error(msg)
         super().__init__(msg)
+
+
+class StepKeyMissing(StepError):
+
+    def __init__(self, key):
+        super().__init__('Step is missing key {}'.format(key))
+
+
+class StepKeyWrongValueType(StepError):
+
+    def __init__(self, key, wanted, actual):
+        super().__init__(
+            'Step key {} has value {!r}, expected {!r}'.format(
+                key, wanted, actual))
 
 
 class NoMatchingRunner(StepError):

@@ -30,12 +30,16 @@ class MkfsPlugin(cliapp.Plugin):
 
 class MkfsStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['mkfs', 'partition']
+    def get_key_spec(self):
+        return {
+            'mkfs': str,
+            'partition': str,
+            'label': '',
+        }
 
-    def run(self, step, settings, state):
-        fstype = step['mkfs']
-        tag = step['partition']
+    def run(self, values, settings, state):
+        fstype = values['mkfs']
+        tag = values['partition']
         device = state.tags.get_dev(tag)
 
         if not isinstance(fstype, str):
@@ -46,14 +50,15 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
             raise vmdb.NotString('mkfs: device (for tag)', device)
 
         cmd = ['/sbin/mkfs', '-t', fstype]
-        if 'label' in step:
+        label = values['label'] or None
+        if label:
             if fstype == 'vfat':
                 cmd.append('-n')
             elif fstype == 'f2fs':
                 cmd.append('-l')
             else:
                 cmd.append('-L')
-            cmd.append(step['label'])
+            cmd.append(label)
         cmd.append(device)
         vmdb.runcmd(cmd)
 

@@ -33,10 +33,13 @@ class MklabelPlugin(cliapp.Plugin):
 
 class MklabelStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['mklabel', 'device']
+    def get_key_spec(self):
+        return {
+            'mklabel': str,
+            'device': str,
+        }
 
-    def run(self, step, settings, state):
-        label_type = step['mklabel']
-        device = step['device']
+    def run(self, values, settings, state):
+        label_type = values['mklabel']
+        device = values['device']
         vmdb.runcmd(['parted', '-s', device, 'mklabel', label_type])

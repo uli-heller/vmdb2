@@ -34,12 +34,15 @@ class MkimgPlugin(cliapp.Plugin):
 
 class MkimgStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['mkimg']
+    def get_key_spec(self):
+        return {
+            'mkimg': str,
+            'size': str,
+        }
 
-    def run(self, step, settings, state):
-        filename = step['mkimg']
-        size = step['size']
+    def run(self, values, settings, state):
+        filename = values['mkimg']
+        size = values['size']
 
         if not isinstance(filename, str):
             raise vmdb.NotString('mkimg', filename)

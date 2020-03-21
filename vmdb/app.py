@@ -102,9 +102,10 @@ class Vmdb2(cliapp.Application):
                     if hasattr(runner, name)
                 ]
 
+                values = runner.get_values(step)
                 for method in methods:
                     logging.info('Calling %s', method)
-                    method(step, self.settings, state)
+                    method(values, self.settings, state)
             except KeyError as e:
                 vmdb.error('Key error: %s' % str(e))
                 vmdb.error(repr(e))

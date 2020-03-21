@@ -34,12 +34,17 @@ class LuksPlugin(cliapp.Plugin):
 
 class CryptsetupStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['cryptsetup']
+    def get_key_spec(self):
+        return {
+            'cryptsetup': str,
+            'tag': str,
+            'key-file': '',
+            'key-cmd': '',
+        }
 
-    def run(self, step, settings, state):
-        underlying = step['cryptsetup']
-        crypt_name = step['tag']
+    def run(self, values, settings, state):
+        underlying = values['cryptsetup']
+        crypt_name = values['tag']
 
         if not isinstance(underlying, str):
             raise vmdb.NotString('cryptsetup', underlying)
@@ -47,8 +52,8 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
             raise vmdb.NotString('cryptsetup: tag', crypt_name)
 
         state.tmp_key_file = None
-        key_file = step.get('key-file')
-        key_cmd = step.get('key-cmd')
+        key_file = values['key-file'] or None
+        key_cmd = values['key-cmd'] or None
         if key_file is None and key_cmd is None:
             raise Exception(
                 'cryptsetup step MUST define one of key-file or key-cmd')
@@ -80,12 +85,12 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
         state.tags.append(crypt_name)
         state.tags.set_dev(crypt_name, crypt_dev)
 
-    def teardown(self, step, settings, state):
+    def teardown(self, values, settings, state):
         x = state.tmp_key_file
         if x is not None and os.path.exists(x):
             os.remove(x)
 
-        crypt_name = step['tag']
+        crypt_name = values['tag']
 
         crypt_dev = '/dev/mapper/{}'.format(crypt_name)
         vmdb.runcmd(['cryptsetup', 'close', crypt_dev])

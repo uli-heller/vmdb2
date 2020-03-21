@@ -32,18 +32,24 @@ class AptPlugin(cliapp.Plugin):
 
 class AptStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['apt', 'packages']
+    def get_key_spec(self):
+        return {
+            'apt': str,
+            'packages': [],
+            'tag': '',
+            'fs-tag': '',
+            'clean': True,
+        }
 
-    def run(self, step, settings, state):
-        operation = step['apt']
+    def run(self, values, settings, state):
+        operation = values['apt']
         if operation != 'install':
             raise Exception('"apt" must always have value "install"')
 
-        packages = step['packages']
-        tag = step.get('tag')
+        packages = values['packages']
+        tag = values.get('tag') or None
         if tag is None:
-            tag = step['fs-tag']
+            tag = values['fs-tag']
         mount_point = state.tags.get_builder_mount_point(tag)
 
         if not self.got_eatmydata(state):
@@ -51,7 +57,7 @@ class AptStepRunner(vmdb.StepRunnerInterface):
             state.got_eatmydata = True
         self.install_packages(mount_point, ['eatmydata'], packages)
 
-        if step.get('clean', True):
+        if values['clean']:
             self.clean_cache(mount_point)
 
     def got_eatmydata(self, state):

@@ -34,19 +34,23 @@ class MountPlugin(cliapp.Plugin):
 
 class MountStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['mount']
+    def get_key_spec(self):
+        return {
+            'mount': str,
+            'dirname': '',
+            'mount-on': '',
+        }
 
-    def run(self, step, settings, state):
-        self.mount_rootfs(step, settings, state)
+    def run(self, values, settings, state):
+        self.mount_rootfs(values, settings, state)
 
-    def teardown(self, step, settings, state):
-        self.unmount_rootfs(step, settings, state)
+    def teardown(self, values, settings, state):
+        self.unmount_rootfs(values, settings, state)
 
-    def mount_rootfs(self, step, settings, state):
-        tag = step['mount']
-        dirname = step.get('dirname')
-        mount_on = step.get('mount-on')
+    def mount_rootfs(self, values, settings, state):
+        tag = values['mount']
+        dirname = values['dirname'] or None
+        mount_on = values['mount-on'] or None
 
         device = state.tags.get_dev(tag)
 
@@ -72,8 +76,8 @@ class MountStepRunner(vmdb.StepRunnerInterface):
 
         return mount_point
 
-    def unmount_rootfs(self, step, settings, state):
-        tag = step['mount']
+    def unmount_rootfs(self, values, settings, state):
+        tag = values['mount']
         mount_point = state.tags.get_builder_mount_point(tag)
         if mount_point is None:
             return
@@ -83,5 +87,5 @@ class MountStepRunner(vmdb.StepRunnerInterface):
         except vmdb.NotMounted as e:
             logging.warning(str(e))
 
-        if not step.get('mount-on'):
+        if not values['mount-on']:
             os.rmdir(mount_point)
