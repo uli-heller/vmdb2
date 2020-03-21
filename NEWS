@@ -4,8 +4,20 @@ NEWS for vmdb2, the Debian disk image builder
 Version 0.13.2+git, not yet released
 ------------------------------------
 
-* Source code for vmdb2 is now hosted on git.liw.fi, moved there from
-  GitHub.
+It has been two years since the previous release. These release notes
+are a little sketchy.
+
+* All plugins now provide exactly one type of step. This is a little
+  simpler than having multiple steps provided by the same plugin.
+  Simplicity is good.
+
+* There is now some better automated testing.
+
+* vmdb2 now checks at start time that all required keys are set for
+  all steps and that keys have values of the correct type.
+
+* Source code for vmdb2 is now hosted on gitlab.com and git.liw.fi,
+  moved there from GitHub.
 
 * Fixed smoke test timeout for starting a VM to 5 min. The previous
   timeout (30 s) was short enough that tests often failed because of
