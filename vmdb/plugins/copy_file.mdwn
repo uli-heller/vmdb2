@@ -1,0 +1,20 @@
+Step: copy-file
+-----------------------------------------------------------------------------
+
+Copy a file from outside into the target filesystem.
+
+Step keys:
+
+* `copy-file` &mdash; REQUIRED; the full (starting from the new
+  filesystem root) path name of the file to create. Any missing
+  directories will be created (owner root, group root, mode 0511).
+* `src` &mdash; REQUIRED; filename on the host filesystem, outside the
+  chroot, relative to the current working directory of the vmdb2
+  process.
+* `perm` &mdash; OPTIONAL; the numeric (octal) representation of the
+  file's permissions. Defaults to 0644.
+* `uid` &mdash; OPTIONAL; the numeric user ID of the file's
+  owner. Defaults to 0 (root).
+* `gid` &mdash; OPTIONAL; the numeric user ID of the file's
+  group. Defaults to 0 (root).
+

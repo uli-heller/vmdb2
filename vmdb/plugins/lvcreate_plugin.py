@@ -1,4 +1,4 @@
-# Copyright 2017  Lars Wirzenius
+# Copyright 2018  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,20 +24,25 @@ import cliapp
 import vmdb
 
 
-class ChrootPlugin(cliapp.Plugin):
+class LvcreatePlugin(cliapp.Plugin):
 
     def enable(self):
-        self.app.step_runners.add(ChrootStepRunner())
+        self.app.step_runners.add(LvcreateStepRunner())
 
 
-class ChrootStepRunner(vmdb.StepRunnerInterface):
+class LvcreateStepRunner(vmdb.StepRunnerInterface):
 
     def get_required_keys(self):
-        return ['chroot', 'shell']
+        return ['lvcreate']
 
     def run(self, step, settings, state):
-        fs_tag = step['chroot']
-        shell = step['shell']
+        vgname = step['lvcreate']
+        lvname = step['name']
+        size = step['size']
 
-        mount_point = state.tags.get_builder_mount_point(fs_tag)
-        vmdb.runcmd_chroot(mount_point, ['sh', '-ec', shell])
+        vmdb.runcmd(['lvcreate', '--name', lvname, '--size', size, vgname])
+
+        lvdev = '/dev/{}/{}'.format(vgname, lvname)
+        assert os.path.exists(lvdev)
+        state.tags.append(lvname)
+        state.tags.set_dev(lvname, lvdev)

@@ -24,11 +24,10 @@ import cliapp
 import vmdb
 
 
-class Lvm2Plugin(cliapp.Plugin):
+class VgcreatePlugin(cliapp.Plugin):
 
     def enable(self):
         self.app.step_runners.add(VgcreateStepRunner())
-        self.app.step_runners.add(LvcreateStepRunner())
 
 
 class VgcreateStepRunner(vmdb.StepRunnerInterface):
@@ -56,21 +55,3 @@ class VgcreateStepRunner(vmdb.StepRunnerInterface):
             state.tags.get_dev(tag)
             for tag in step['physical']
         ]
-
-
-class LvcreateStepRunner(vmdb.StepRunnerInterface):
-
-    def get_required_keys(self):
-        return ['lvcreate']
-
-    def run(self, step, settings, state):
-        vgname = step['lvcreate']
-        lvname = step['name']
-        size = step['size']
-
-        vmdb.runcmd(['lvcreate', '--name', lvname, '--size', size, vgname])
-
-        lvdev = '/dev/{}/{}'.format(vgname, lvname)
-        assert os.path.exists(lvdev)
-        state.tags.append(lvname)
-        state.tags.set_dev(lvname, lvdev)

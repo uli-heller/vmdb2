@@ -24,20 +24,29 @@ import cliapp
 import vmdb
 
 
-class ChrootPlugin(cliapp.Plugin):
+class UnpackRootFSPlugin(cliapp.Plugin):
 
     def enable(self):
-        self.app.step_runners.add(ChrootStepRunner())
+        self.app.step_runners.add(UnpackCacheStepRunner())
 
 
-class ChrootStepRunner(vmdb.StepRunnerInterface):
+class UnpackCacheStepRunner(vmdb.StepRunnerInterface):
 
     def get_required_keys(self):
-        return ['chroot', 'shell']
+        return ['unpack-rootfs']
 
     def run(self, step, settings, state):
-        fs_tag = step['chroot']
-        shell = step['shell']
+        fs_tag = step['unpack-rootfs']
+        rootdir = state.tags.get_builder_mount_point(fs_tag)
+        tar_path = settings['rootfs-tarball']
+        if not tar_path:
+            raise Exception('--rootfs-tarball MUST be set')
+        if os.path.exists(tar_path):
+            vmdb.runcmd(
+                ['tar', '-C', rootdir, '-xf', tar_path, '--numeric-owner'])
+            self.copy_resolv_conf(rootdir)
+            state.rootfs_unpacked = True
 
-        mount_point = state.tags.get_builder_mount_point(fs_tag)
-        vmdb.runcmd_chroot(mount_point, ['sh', '-ec', shell])
+    def copy_resolv_conf(self, rootdir):
+        filename = os.path.join(rootdir, 'etc', 'resolv.conf')
+        vmdb.runcmd(['cp', '/etc/resolv.conf', filename])

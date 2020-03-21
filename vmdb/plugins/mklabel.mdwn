@@ -1,0 +1,16 @@
+Step: mklabel
+-----------------------------------------------------------------------------
+
+Create a partition table on a block device.
+
+Step keys:
+
+* `mklabel` &mdash; REQUIRED; type of partition table, MUST be one of
+  `msdos` and `gpt`.
+
+* `device` &mdash; REQUIRED; tag for the block device.
+
+Example (in the .vmdb file):
+
+    - mklabel: msdos
+      device: "{{ output }}"

@@ -20,36 +20,10 @@ import vmdb
 import os
 import logging
 
-class CreateFilePlugin(cliapp.Plugin):
+class CopyFilePlugin(cliapp.Plugin):
 
     def enable(self):
-        self.app.step_runners.add(CreateDirStepRunner())
-        self.app.step_runners.add(CreateFileStepRunner())
         self.app.step_runners.add(CopyFileStepRunner())
-
-
-class CreateFileStepRunner(vmdb.StepRunnerInterface):
-
-    def get_required_keys(self):
-        return ['create-file', 'contents']
-
-    def run(self, step, settings, state):
-        root = state.tags.get_builder_from_target_mount_point('/')
-        newfile = step['create-file']
-        contents = step['contents']
-        perm = step.get('perm', 0o644)
-        uid = step.get('uid', 0)
-        gid = step.get('gid', 0)
-
-        filename = '/'.join([root,newfile])
-
-        logging.info('Creating file %s, uid %d, gid %d, perms %o' % (filename, uid, gid, perm))
-        fd = open(filename, 'w')
-        fd.write(contents)
-        fd.close
-
-        os.chown(filename, uid, gid)
-        os.chmod(filename, perm)
 
 
 class CopyFileStepRunner(vmdb.StepRunnerInterface):
@@ -80,22 +54,3 @@ class CopyFileStepRunner(vmdb.StepRunnerInterface):
 
         os.chown(filename, uid, gid)
         os.chmod(filename, perm)
-
-
-class CreateDirStepRunner(vmdb.StepRunnerInterface):
-
-    def get_required_keys(self):
-        return ['create-dir']
-
-    def run(self, step, settings, state):
-        root = state.tags.get_builder_from_target_mount_point('/')
-        newdir = step['create-dir']
-        path = '/'.join([root, newdir])
-        perm = step.get('perm', 0o755)
-        uid = step.get('uid', 0)
-        gid = step.get('gid', 0)
-
-        logging.info('Creating directory %s, uid %d, gid %d, perms %o' % (path, uid, gid, perm))
-
-        os.makedirs(path, perm)
-        os.chown(path, uid, gid)

@@ -18,26 +18,25 @@
 
 
 import os
+import stat
 
 import cliapp
 
 import vmdb
 
 
-class ChrootPlugin(cliapp.Plugin):
+class MklabelPlugin(cliapp.Plugin):
 
     def enable(self):
-        self.app.step_runners.add(ChrootStepRunner())
+        self.app.step_runners.add(MklabelStepRunner())
 
 
-class ChrootStepRunner(vmdb.StepRunnerInterface):
+class MklabelStepRunner(vmdb.StepRunnerInterface):
 
     def get_required_keys(self):
-        return ['chroot', 'shell']
+        return ['mklabel', 'device']
 
     def run(self, step, settings, state):
-        fs_tag = step['chroot']
-        shell = step['shell']
-
-        mount_point = state.tags.get_builder_mount_point(fs_tag)
-        vmdb.runcmd_chroot(mount_point, ['sh', '-ec', shell])
+        label_type = step['mklabel']
+        device = step['device']
+        vmdb.runcmd(['parted', '-s', device, 'mklabel', label_type])

@@ -1,4 +1,4 @@
-Step: `grub`
+Step: grub
 -----------------------------------------------------------------------------
 
 Install the GRUB bootloader to the image. Works on a PC, for
