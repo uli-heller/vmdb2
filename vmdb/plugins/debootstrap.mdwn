@@ -14,7 +14,7 @@ Step keys:
 
 * `target` &mdash; REQUIRED; value is the tag for the root filesystem.
 
-* `mirror` &mdash; OPTIONAL; which Debian mirror to use
+* `mirror` &mdash; REQUIRED; which Debian mirror to use
 
 * `keyring` &mdash; OPTIONAL; which gpg keyring to use to verify the
   packages. This is useful when using a non-official Debian repository
