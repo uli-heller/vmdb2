@@ -43,15 +43,17 @@ class VirtualFilesystemMountStepRunner(vmdb.StepRunnerInterface):
         ['none', '/sys', 'sysfs'],
     ]
 
-    def get_required_keys(self):
-        return ['mount-virtual-filesystems']
+    def get_key_spec(self):
+        return {
+            'mount-virtual-filesystems': str,
+        }
 
-    def run(self, step, settings, state):
-        fstag = step['mount-virtual-filesystems']
+    def run(self, values, settings, state):
+        fstag = values['mount-virtual-filesystems']
         mount_point = state.tags.get_builder_mount_point(fstag)
         self.mount_virtuals(mount_point, state)
 
-    def teardown(self, step, settings, state):
+    def teardown(self, values, settings, state):
         self.unmount_virtuals(state)
 
     def mount_virtuals(self, rootfs, state):

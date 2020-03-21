@@ -32,11 +32,13 @@ class UnpackRootFSPlugin(cliapp.Plugin):
 
 class UnpackCacheStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['unpack-rootfs']
+    def get_key_spec(self):
+        return {
+            'unpack-rootfs': str,
+        }
 
-    def run(self, step, settings, state):
-        fs_tag = step['unpack-rootfs']
+    def run(self, values, settings, state):
+        fs_tag = values['unpack-rootfs']
         rootdir = state.tags.get_builder_mount_point(fs_tag)
         tar_path = settings['rootfs-tarball']
         if not tar_path:

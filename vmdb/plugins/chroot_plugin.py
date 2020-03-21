@@ -32,12 +32,15 @@ class ChrootPlugin(cliapp.Plugin):
 
 class ChrootStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['chroot', 'shell']
+    def get_key_spec(self):
+        return {
+            'chroot': str,
+            'shell': str,
+        }
 
-    def run(self, step, settings, state):
-        fs_tag = step['chroot']
-        shell = step['shell']
+    def run(self, values, settings, state):
+        fs_tag = values['chroot']
+        shell = values['shell']
 
         mount_point = state.tags.get_builder_mount_point(fs_tag)
         vmdb.runcmd_chroot(mount_point, ['sh', '-ec', shell])

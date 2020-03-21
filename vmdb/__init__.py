@@ -25,6 +25,8 @@ from .step_list import (
     NoMatchingRunner,
     NotString,
     StepError,
+    StepKeyMissing,
+    StepKeyWrongValueType,
 )
 from .runcmd import (
     runcmd,

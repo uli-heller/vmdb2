@@ -28,16 +28,22 @@ class CopyFilePlugin(cliapp.Plugin):
 
 class CopyFileStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['copy-file', 'src']
+    def get_key_spec(self):
+        return {
+            'copy-file': str,
+            'src': str,
+            'perm': 0o644,
+            'uid': 0,
+            'gid': 0,
+        }
 
-    def run(self, step, settings, state):
+    def run(self, values, settings, state):
         root = state.tags.get_builder_from_target_mount_point('/')
-        newfile = step['copy-file']
-        src = step['src']
-        perm = step.get('perm', 0o644)
-        uid = step.get('uid', 0)
-        gid = step.get('gid', 0)
+        newfile = values['copy-file']
+        src = values['src']
+        perm = values['perm']
+        uid = values['uid']
+        gid = values['gid']
 
         filename = '/'.join([root,newfile])
 

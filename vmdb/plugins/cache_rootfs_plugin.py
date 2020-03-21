@@ -37,14 +37,17 @@ class CacheRootFSPlugin(cliapp.Plugin):
 
 class MakeCacheStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['cache-rootfs']
+    def get_key_spec(self):
+        return {
+            'cache-rootfs': str,
+            'options': '--one-file-system',
+        }
 
-    def run(self, step, settings, state):
-        fs_tag = step['cache-rootfs']
+    def run(self, values, settings, state):
+        fs_tag = values['cache-rootfs']
         rootdir = state.tags.get_builder_mount_point(fs_tag)
         tar_path = settings['rootfs-tarball']
-        opts = step.get('options', '--one-file-system').split()
+        opts = values['options'].split()
         if not tar_path:
             raise Exception('--rootfs-tarball MUST be set')
         dirs = self._find_cacheable_mount_points(state.tags, rootdir)

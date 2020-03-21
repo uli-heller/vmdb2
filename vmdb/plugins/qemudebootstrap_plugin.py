@@ -30,18 +30,26 @@ class QemuDebootstrapPlugin(cliapp.Plugin):
 
 class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['qemu-debootstrap', 'target', 'mirror', 'arch']
+    def get_key_spec(self):
+        return {
+            'debootstrap': str,
+            'target': str,
+            'mirror': str,
+            'arch': str,
+            'keyring': '',
+            'variant': '-',
+            'components': ['main'],
+        }
 
-    def run(self, step, settings, state):
-        suite = step['qemu-debootstrap']
-        tag = step['target']
+    def run(self, values, settings, state):
+        suite = values['qemu-debootstrap']
+        tag = values['target']
         target = state.tags.get_builder_mount_point(tag)
-        mirror = step['mirror']
-        keyring = step.get('keyring', None)
-        variant = step.get('variant', '-')
-        arch = step['arch']
-        components = step.get('components', ['main'])
+        mirror = values['mirror']
+        keyring = values['keyring'] or None
+        variant = values['variant']
+        arch = values['arch']
+        components = values['compontents']
         if not (suite and tag and target and mirror and arch):
             raise Exception('missing arg for qemu-debootstrap step')
         if keyring:
@@ -63,7 +71,7 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
                 mirror])
         vmdb.runcmd_chroot(target, ['apt-get', 'update'])
 
-    def run_even_if_skipped(self, step, settings, state):
-        tag = step['target']
+    def run_even_if_skipped(self, values, settings, state):
+        tag = values['target']
         target = state.tags.get_builder_mount_point(tag)
         vmdb.runcmd_chroot(target, ['apt-get', 'update'])

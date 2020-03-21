@@ -30,11 +30,13 @@ class FstabPlugin(cliapp.Plugin):
 
 class FstabStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['fstab']
+    def get_key_spec(self):
+        return {
+            'fstab': str,
+        }
 
-    def run(self, step, setting, state):
-        tag = step['fstab']
+    def run(self, values, setting, state):
+        tag = values['fstab']
         chroot = state.tags.get_builder_mount_point(tag)
 
         filesystems = []

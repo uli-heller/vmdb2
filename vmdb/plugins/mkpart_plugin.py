@@ -33,18 +33,24 @@ class MkpartPlugin(cliapp.Plugin):
 
 class MkpartStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['mkpart', 'device', 'start', 'end']
+    def get_key_spec(self):
+        return {
+            'mkpart': str,
+            'device': str,
+            'start': str,
+            'end': str,
+            'tag': '',
+            'part-tag': '',
+            'fs-type': 'ext2',
+        }
 
-    def run(self, step, settings, state):
-        part_type = step['mkpart']
-        device = step['device']
-        start = step['start']
-        end = step['end']
-        tag = step.get('tag') or step.get('part-tag')
-        if tag is None:
-            tag = step['part-tag']
-        fs_type = step.get('fs-type', 'ext2')
+    def run(self, values, settings, state):
+        part_type = values['mkpart']
+        device = values['device']
+        start = values['start']
+        end = values['end']
+        tag = values['tag'] or values['part-tag'] or None
+        fs_type = values['fs-type']
 
         orig = self.list_partitions(device)
         vmdb.runcmd(['parted', '-s', device, 'mkpart', part_type, fs_type, start, end])

@@ -33,11 +33,13 @@ class KpartxPlugin(cliapp.Plugin):
 
 class KpartxStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['kpartx']
+    def get_key_spec(self):
+        return {
+            'kpartx': str,
+        }
 
-    def run(self, step, settings, state):
-        device = step['kpartx']
+    def run(self, values, settings, state):
+        device = values['kpartx']
         tags = state.tags.get_tags()
         devs = self.kpartx(device)
         for tag, dev in zip(tags, devs):
@@ -52,6 +54,6 @@ class KpartxStepRunner(vmdb.StepRunnerInterface):
                 name = words[2]
                 yield '/dev/mapper/{}'.format(name)
 
-    def teardown(self, step, settings, state):
-        device = step['kpartx']
+    def teardown(self, values, settings, state):
+        device = values['kpartx']
         vmdb.runcmd(['kpartx', '-dsv', device])

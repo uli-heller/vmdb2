@@ -32,15 +32,18 @@ class EchoPlugin(cliapp.Plugin):
 
 class EchoStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['echo']
+    def get_key_spec(self):
+        return {
+            'echo': str,
+            'teardown': '',
+        }
 
-    def run(self, step, settings, state):
-        text = step['echo']
+    def run(self, values, settings, state):
+        text = values['echo']
         vmdb.progress('{}'.format(text))
 
-    def teardown(self, step, settings, state):
-        if 'teardown' in step:
-            text = step['teardown']
+    def teardown(self, values, settings, state):
+        text = values['teardown']
+        if text:
             vmdb.progress('{}'.format(text))
             logging.info('%s', text)

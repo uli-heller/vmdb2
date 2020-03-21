@@ -33,12 +33,15 @@ class AnsiblePlugin(cliapp.Plugin):
 
 class AnsibleStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['ansible', 'playbook']
+    def get_key_spec(self):
+        return {
+            'ansible': str,
+            'playbook': str,
+        }
 
-    def run(self, step, settings, state):
-        tag = step['ansible']
-        playbook = step['playbook']
+    def run(self, values, settings, state):
+        tag = values['ansible']
+        playbook = values['playbook']
         mount_point = state.tags.get_builder_mount_point(tag)
         rootfs_tarball = settings['rootfs-tarball']
 
@@ -59,7 +62,7 @@ class AnsibleStepRunner(vmdb.StepRunnerInterface):
              playbook],
             env=env)
 
-    def teardown(self, step, settings, state):
+    def teardown(self, values, settings, state):
         if hasattr(state, 'ansible_inventory'):
             vmdb.progress('Removing {}'.format(state.ansible_inventory))
             os.remove(state.ansible_inventory)

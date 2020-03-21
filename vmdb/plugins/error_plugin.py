@@ -30,16 +30,22 @@ class ErrorPlugin(cliapp.Plugin):
 
 class ErrorStepRunner(vmdb.StepRunnerInterface):
 
+    def get_key_spec(self):
+        return {
+            'error': str,
+            'teardown': str,
+        }
+
     def get_required_keys(self):
         return ['error', 'teardown']
 
-    def run(self, step, settings, state):
+    def run(self, values, settings, state):
         # We use vmdb.progress here to get output to go to stdout,
         # instead of stderr. We want that for tests.
-        vmdb.progress('{}'.format(step['error']))
+        vmdb.progress('{}'.format(values['error']))
         raise vmdb.StepError('an error occurred')
 
-    def teardown(self, step, settings, state):
+    def teardown(self, values, settings, state):
         # We use vmdb.progress here to get output to go to stdout,
         # instead of stderr. We want that for tests.
-        vmdb.progress('{}'.format(step['teardown']))
+        vmdb.progress('{}'.format(values['teardown']))

@@ -86,53 +86,63 @@ class GrubPlugin(cliapp.Plugin):
 
 class GrubStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['grub', 'tag']
+    def get_key_spec(self):
+        return {
+            'grub': str,
+            'tag': str,
+            'root-fs': '',
+            'efi': '',
+            'efi-part': '',
+            'console': '',
+            'tag': '',
+            'image-dev': '',
+        }
 
-    def run(self, step, settings, state):
+    def run(self, values, settings, state):
         state.grub_mounts = []
-        flavor = step['grub']
+        flavor = values['grub']
         if flavor == 'uefi':
-            self.install_uefi(step, settings, state)
+            self.install_uefi(values, settings, state)
         elif flavor == 'bios':
-            self.install_bios(step, settings, state)
+            self.install_bios(values, settings, state)
         else:
             raise Exception('Unknown GRUB flavor {}'.format(flavor))
 
-    def install_uefi(self, step, settings, state):
-        if not 'efi' in step and 'efi-part' not in step:
-            raise Exception('"efi" or "efi-part" required in UEFI GRUB installtion')
+    def install_uefi(self, values, settings, state):
+        efi = values['efi'] or None
+        efi_part = values['efi-part'] or None
+        if efi is None  and efi_part is None:
+            raise Exception(
+                '"efi" or "efi-part" required in UEFI GRUB installation')
 
         vmdb.progress('Installing GRUB for UEFI')
         grub_package = 'grub-efi-amd64'
         grub_target = 'x86_64-efi'
-        self.install_grub(step, settings, state, grub_package, grub_target)
+        self.install_grub(values, settings, state, grub_package, grub_target)
 
-    def install_bios(self, step, settings, state):
+    def install_bios(self, values, settings, state):
         vmdb.progress('Installing GRUB for BIOS')
         grub_package = 'grub-pc'
         grub_target = 'i386-pc'
-        self.install_grub(step, settings, state, grub_package, grub_target)
+        self.install_grub(values, settings, state, grub_package, grub_target)
 
-    def install_grub(self, step, settings, state, grub_package, grub_target):
-        console = step.get('console', None)
+    def install_grub(self, values, settings, state, grub_package, grub_target):
+        console = values['console'] or None
 
-        tag = step.get('tag')
-        if tag is None:
-            tag = step['root-fs']
+        tag = values['tag'] or values['root-fs'] or None
         root_dev = state.tags.get_dev(tag)
         chroot = state.tags.get_builder_mount_point(tag)
 
-        image_dev = step.get('image-dev')
+        image_dev = values['image-dev'] or None
         if image_dev is None:
             image_dev = self.get_image_loop_device(root_dev)
 
-        if 'efi' in step:
-            efi = step['efi']
+        efi = values['efi'] or None
+        efi_part = values['efi-part'] or None
+        if efi is not None:
             efi_dev = state.tags.get_dev(efi)
-        elif 'efi-part' in step:
-            efi = step['efi-part']
-            efi_dev = state.tags.get_dev(efi)
+        elif efi_part is not None:
+            efi_dev = state.tags.get_dev(efi_part)
         else:
             efi_dev = None
 
@@ -181,7 +191,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
 
 #        self.unmount(state)
 
-    def teardown(self, step, settings, state):
+    def teardown(self, values, settings, state):
         self.unmount(state)
 
     def unmount(self, state):

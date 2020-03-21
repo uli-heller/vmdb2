@@ -30,24 +30,41 @@ class DebootstrapPlugin(cliapp.Plugin):
 
 class DebootstrapStepRunner(vmdb.StepRunnerInterface):
 
+    def get_key_spec(self):
+        return {
+            'debootstrap': str,
+            'target': str,
+            'mirror': str,
+            'keyring': '',
+            'variant': '-',
+        }
+
     def get_required_keys(self):
         return ['debootstrap', 'target', 'mirror']
 
-    def run(self, step, settings, state):
-        suite = step['debootstrap']
-        tag = step['target']
+    def run(self, values, settings, state):
+        suite = values['debootstrap']
+        tag = values['target']
         target = state.tags.get_builder_mount_point(tag)
-        mirror = step['mirror']
-        keyring = step.get('keyring', None)
-        variant = step.get('variant', '-')
+        mirror = values['mirror']
+        keyring = values['keyring'] or None
+        variant = values['variant']
+
         if not (suite and tag and target and mirror):
             raise Exception('missing arg for debootstrap step')
         if keyring:
-            vmdb.runcmd(['debootstrap', '--keyring', keyring, '--variant', variant, suite, target, mirror])
+            vmdb.runcmd([
+                'debootstrap',
+                '--keyring', keyring,
+                '--variant', variant,
+                suite, target, mirror])
         else:
-            vmdb.runcmd(['debootstrap', '--variant', variant, suite, target, mirror])
+            vmdb.runcmd([
+                'debootstrap',
+                '--variant', variant,
+                suite, target, mirror])
 
-    def run_even_if_skipped(self, step, settings, state):
-        tag = step['target']
+    def run_even_if_skipped(self, values, settings, state):
+        tag = values['target']
         target = state.tags.get_builder_mount_point(tag)
         vmdb.runcmd_chroot(target, ['apt-get', 'update'])
