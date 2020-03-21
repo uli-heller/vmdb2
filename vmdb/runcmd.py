@@ -18,6 +18,7 @@
 
 import logging
 import os
+import subprocess
 import sys
 
 import cliapp
@@ -53,8 +54,36 @@ def runcmd(argv, *argvs, **kwargs):
 
 
 def runcmd_chroot(chroot, argv, *argvs, **kwargs):
-    full_argv = ['chroot', chroot] + argv
-    return runcmd(full_argv, *argvs, **kwargs)
+    _mount_proc(chroot)
+    try:
+        full_argv = ['chroot', chroot] + argv
+        return runcmd(full_argv, *argvs, **kwargs)
+    except Exception:
+        _unmount_proc(chroot)
+        raise
+    finally:
+        _unmount_proc(chroot)
+
+
+def _mount_proc(chroot):
+    proc = _procdir(chroot)
+    argv = ['chroot', chroot, 'mount', '-t', 'proc', 'proc', '/proc']
+    progress('mounting proc: %r' % argv)
+    subprocess.check_call(argv)
+
+
+def _unmount_proc(chroot):
+    proc = _procdir(chroot)
+    argv = ['chroot', chroot, 'umount', '/proc']
+    progress('unmounting proc: %r' % argv)
+    subprocess.check_call(argv)
+
+
+def _procdir(chroot):
+    proc = os.path.join(chroot, 'proc')
+    if not os.path.exists(proc):
+        os.mkdir(proc, mode=Oo755)
+    return proc
 
 
 def _log_stdout(data):

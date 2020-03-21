@@ -36,7 +36,7 @@
 # mount /dev into the chroot so the device is available.
 #
 # grub-install seems to also require /proc and /sys so we bind mount
-# those into the chroot as well.
+# /sys into the chroot as well. /proc is already mounted otherwise.
 #
 # We install the UEFI version of GRUB, and for that we additionally
 # bind mount the EFI partition in the image. Oh yeah, you MUST have
@@ -136,7 +136,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         else:
             efi_dev = None
 
-        self.bind_mount_many(chroot, ['/dev', '/proc', '/sys'], state)
+        self.bind_mount_many(chroot, ['/dev', '/sys'], state)
         if efi_dev:
             self.mount(chroot, efi_dev, '/boot/efi', state)
         self.install_package(chroot, grub_package)
