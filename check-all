@@ -10,9 +10,9 @@ tryit()
     local image="$1"
     local yaml="$2"
     echo "Testing $yaml"
-    ./vmdb2 --rootfs-tarball "$tarball" \
+    ./vmdb2 --rootfs-tarball "$dst/$tarball" \
             --verbose \
-            --log check.log \
+            --log "$dst/check.log" \
             --output "$image" \
             "$yaml"
     echo
