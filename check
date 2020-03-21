@@ -26,6 +26,7 @@ yarn \
 echo
 fi
 
+if false; then
 echo Formatting docs ========================================
 ./format.sh
 
@@ -52,4 +53,5 @@ fi
 if ! diff -u <(steps) <(steps | sort)
 then
     panic "Steps are not in sorted order"
+fi
 fi
