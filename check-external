@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Check external image specifications. Assume current working directory is
+# where the vmdb2 version to be tested is.
+
+set -eu
+
+cache="$(cd "$1" && pwd)"
+shift
+
+export PATH="$(pwd):$PATH"
+
+echo "Create temporary directory for images"
+tmp="$(mktemp -d)"
+
+# This will delete the temporary directory automatically at exit.
+trap "rm -rf $tmp" EXIT
+
+echo "Test Lars's personal images"
+git clone -q git://git.liw.fi/base-image-specs "$tmp/specs"
+(cd "$tmp/specs" && chronic ./build-all.sh "$cache" "$cache")
+
+echo "Test Debian's Raspberry Pi images"
+git clone -q https://salsa.debian.org/raspi-team/image-specs.git "$tmp/debian"
+(cd "$tmp/debian" && chronic make images)
