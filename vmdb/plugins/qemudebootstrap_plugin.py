@@ -32,7 +32,7 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
 
     def get_key_spec(self):
         return {
-            'debootstrap': str,
+            'qemu-debootstrap': str,
             'target': str,
             'mirror': str,
             'arch': str,
@@ -49,7 +49,7 @@ class QemuDebootstrapStepRunner(vmdb.StepRunnerInterface):
         keyring = values['keyring'] or None
         variant = values['variant']
         arch = values['arch']
-        components = values['compontents']
+        components = values['components']
         if not (suite and tag and target and mirror and arch):
             raise Exception('missing arg for qemu-debootstrap step')
         if keyring:
