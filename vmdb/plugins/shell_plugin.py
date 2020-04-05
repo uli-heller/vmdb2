@@ -32,8 +32,11 @@ class ShellPlugin(cliapp.Plugin):
 
 class ShellStepRunner(vmdb.StepRunnerInterface):
 
-    def get_required_keys(self):
-        return ['shell', 'root-fs']
+    def get_key_spec(self):
+        return {
+            'shell': str,
+            'root-fs': str,
+        }
 
     def run(self, step, settings, state):
         shell = step['shell']

@@ -36,9 +36,6 @@ class ErrorStepRunner(vmdb.StepRunnerInterface):
             'teardown': str,
         }
 
-    def get_required_keys(self):
-        return ['error', 'teardown']
-
     def run(self, values, settings, state):
         # We use vmdb.progress here to get output to go to stdout,
         # instead of stderr. We want that for tests.

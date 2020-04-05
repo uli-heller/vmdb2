@@ -39,9 +39,6 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
             'variant': '-',
         }
 
-    def get_required_keys(self):
-        return ['debootstrap', 'target', 'mirror']
-
     def run(self, values, settings, state):
         suite = values['debootstrap']
         tag = values['target']
