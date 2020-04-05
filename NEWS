@@ -6,6 +6,10 @@ Version 0.14+git, not yet released
 
 * The shell plugin source file was misnamed. Fixed now.
 
+* Fixes to problems found while building the Debian Raspberry Pi
+  images.
+
+
 Version 0.14, released 2020-03-21
 ------------------------------------
 
