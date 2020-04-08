@@ -57,12 +57,12 @@ def runcmd_chroot(chroot, argv, *argvs, **kwargs):
     _mount_proc(chroot)
     try:
         full_argv = ['chroot', chroot] + argv
-        return runcmd(full_argv, *argvs, **kwargs)
+        ret = runcmd(full_argv, *argvs, **kwargs)
     except Exception:
         _unmount_proc(chroot)
         raise
-    finally:
-        _unmount_proc(chroot)
+    _unmount_proc(chroot)
+    return ret
 
 
 def _mount_proc(chroot):
