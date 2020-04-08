@@ -18,8 +18,8 @@ trap "rm -rf $tmp" EXIT
 
 echo "Test Lars's personal images"
 git clone -q git://git.liw.fi/base-image-specs "$tmp/specs"
-(cd "$tmp/specs" && chronic ./build-all.sh "$cache" "$cache")
+(cd "$tmp/specs" && ./build-all.sh "$cache" "$cache")
 
 echo "Test Debian's Raspberry Pi images"
 git clone -q https://salsa.debian.org/raspi-team/image-specs.git "$tmp/debian"
-(cd "$tmp/debian" && chronic make images)
+(cd "$tmp/debian" && echo make images)
