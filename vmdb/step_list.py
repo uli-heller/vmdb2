@@ -51,13 +51,6 @@ class StepRunnerInterface:  # pragma: no cover
 
         return values
 
-    def get_required_keys(self):
-        return [
-            key
-            for key, value in self.get_key_spec().items()
-            if value.__class__ == type
-        ]
-
     def run(self, step_spec, settings, state):
         raise NotImplementedError()
 
@@ -101,11 +94,18 @@ class StepRunnerList:
     def find(self, step_spec):
         actual = set(step_spec.keys())
         for runner in self._runners:
-            required = set(runner.get_required_keys())
+            required = set(self.get_required_keys(runner))
             if actual.intersection(required) == required:
                 runner.get_values(step_spec)
                 return runner
         raise NoMatchingRunner(actual)
+
+    def get_required_keys(self, runner):
+        return [
+            key
+            for key, value in runner.get_key_spec().items()
+            if value.__class__ == type
+        ]
 
 
 class StepError(cliapp.AppException):
