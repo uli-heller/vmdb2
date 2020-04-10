@@ -14,8 +14,12 @@ install:
   - ansible
   - moreutils
   - git
+  - cmdtest
+  - pandoc
 source: .
-workspace: ~/tmp/contractor/vmdb2
+# We build many huge images, and there's no use for them, so don't
+# save them.
+# workspace: ~/tmp/contractor/vmdb2
 build: |
   export LC_ALL=C.UTF-8
 
