@@ -14,19 +14,19 @@ then
     echo
 fi
 
-if false; then
 echo Running yarn tests ========================================
-yarn \
-    --shell=python3 \
-    --shell-arg '' \
-    --shell-library yarns/lib.py \
-    --env "PYTHONPATH=$(pwd)/yarns" \
-    --cd-datadir \
-    yarns/*.yarn "$@"
-echo
+if python3 -c 'import yarnutils' 2>/dev/null
+then
+    yarn \
+        --shell=python3 \
+        --shell-arg '' \
+        --shell-library yarns/lib.py \
+        --env "PYTHONPATH=$(pwd)/yarns" \
+        --cd-datadir \
+        yarns/*.yarn "$@"
+    echo
 fi
 
-if false; then
 echo Formatting docs ========================================
 ./format.sh
 
@@ -53,5 +53,4 @@ fi
 if ! diff -u <(steps) <(steps | sort)
 then
     panic "Steps are not in sorted order"
-fi
 fi
