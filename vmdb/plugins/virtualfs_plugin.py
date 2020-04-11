@@ -45,11 +45,11 @@ class VirtualFilesystemMountStepRunner(vmdb.StepRunnerInterface):
 
     def get_key_spec(self):
         return {
-            'mount-virtual-filesystems': str,
+            'virtual-filesystems': str,
         }
 
     def run(self, values, settings, state):
-        fstag = values['mount-virtual-filesystems']
+        fstag = values['virtual-filesystems']
         mount_point = state.tags.get_builder_mount_point(fstag)
         self.mount_virtuals(mount_point, state)
 
