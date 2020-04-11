@@ -113,6 +113,14 @@ following command:
 This will take a long time, mostly at the `debootstrap` step.
 
 
+Unpartitioned images
+-----------------------------------------------------------------------------
+
+At this time, vmdb2 does not support building unpartitioned images, or
+images without a partition table. Such support may be added later. If
+this would be useful, do tell the authors.
+
+
 Tags
 -----------------------------------------------------------------------------
 
