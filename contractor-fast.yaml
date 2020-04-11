@@ -22,11 +22,14 @@ build: |
   export LC_ALL=C.UTF-8
   ./check
 
+  ls -lh /workspace
+  rm -f /workspace/check.log
   sudo ./vmdb2 --rootfs-tarball /workspace/buster.tar.gz \
       --verbose --log /workspace/check.log \
-      --output /workspace/uefi.img uefi.vmdb
+      --output /workspace/uefi.img uefi.vmdb 2>&1
 
   cd /workspace
+  sudo chown -R worker:worker .
   ls -lh
   du -h *.img
   rm -f *.img*
