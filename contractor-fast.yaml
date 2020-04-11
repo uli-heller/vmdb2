@@ -1,0 +1,22 @@
+worker-image: ~/tmp/contractor/worker-vmdb2.img
+install:
+  - build-essential
+  - python3-all
+  - python3-coverage-test-runner
+  - python3-cliapp
+  - python3-jinja2
+  - python3-yaml
+  - qemu-utils
+  - parted
+  - kpartx
+  - debootstrap
+  - dosfstools
+  - ansible
+  - moreutils
+  - git
+  - cmdtest
+  - pandoc
+source: .
+build: |
+  export LC_ALL=C.UTF-8
+  ./check
