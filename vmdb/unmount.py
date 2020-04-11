@@ -22,10 +22,15 @@
 # in /proc/mounts.
 
 
+import logging
+
+import cliapp
+
 import vmdb
 
 
 def unmount(what, mounts=None, real_unmount=None):
+    logging.debug('Unmounting {} and everything on top of it'.format(what))
     if mounts is None:  # pragma: no cover
         mounts = _read_proc_mounts()
     if real_unmount is None:  # pragma: no cover
@@ -35,6 +40,7 @@ def unmount(what, mounts=None, real_unmount=None):
     dirnames = _find_what_to_unmount(mounts, what)
     for dirname in dirnames:
         real_unmount(dirname)
+    logging.debug('Finishd unmounting {}'.format(what))
 
 
 def _read_proc_mounts():  # pragma: no cover
@@ -43,7 +49,10 @@ def _read_proc_mounts():  # pragma: no cover
 
 
 def _real_unmount(what):  # pragma: no cover
-    vmdb.runcmd(['umount', what])
+    try:
+        vmdb.runcmd(['umount', what])
+    except cliapp.AppException:
+        logging.info('unmount failed, but ignoring that')
 
 
 def _parse_proc_mounts(text):
