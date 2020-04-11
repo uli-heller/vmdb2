@@ -58,9 +58,10 @@ class Vmdb2(cliapp.Application):
         steps_taken, core_meltdown = self.run_steps(steps, state)
         if core_meltdown:
             vmdb.progress('Something went wrong, cleaning up!')
+            self.run_teardowns(steps_taken, state)
         else:
-            vmdb.progress('All went fine, cleaning up.')
-        self.run_teardowns(steps_taken, state)
+            self.run_teardowns(steps_taken, state)
+            vmdb.progress('All went fine.')
 
         if core_meltdown:
             logging.error('An error occurred, exiting with non-zero exit code')
