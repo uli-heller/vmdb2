@@ -30,6 +30,8 @@ steps:
 
   - mount: /
 
+  - virtual-filesystems: /
+
   - unpack-rootfs: /
 
   - debootstrap: buster

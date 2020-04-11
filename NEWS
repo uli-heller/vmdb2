@@ -4,6 +4,21 @@ NEWS for vmdb2, the Debian disk image builder
 Version 0.14.1+git, not yet released
 ------------------------------------
 
+* Document and rename the `virtual-filesystems` plugin, and undo the
+  previous changes to have `/proc` automatically mounted in the
+  chroot, when running commands in the chroot. That wasn't enough
+  (e.g., it didn't cover Ansible), and `virtual-filesystems`
+  seems generally like the better solution.
+
+  The grub plugin handles the filesystems it needs itself, but doesn't
+  mind if they're already mounted. The `virtual-filesystems` step is
+  only needed when a Debian package is installed, possibly via
+  Ansible, or some other command is run that needs `/proc` or one of
+  the other virtual filesystems.
+
+  This change should NOT require changes to existing, working .vmdb
+  files.
+
 
 Version 0.14.1, not yet released
 ------------------------------------

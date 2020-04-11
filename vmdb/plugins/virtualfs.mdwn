@@ -1,0 +1,29 @@
+Step: virtual-filesystems
+-----------------------------------------------------------------------------
+
+Mount the usual Linux virtual filesystems in the chroot:
+
+* `/proc`
+* `/dev`
+* `/dev/pts`
+* `/dev/shm`
+* `/run`
+* `/run/lock`
+* `/sys`
+
+They will be automatically unmounted at the end.
+
+Often, the virtual filesystems are unnecessary, but some Debian
+packages won't install without them. The grub boot loader needs them
+as well, but mounts what it needs itself, if necessary.
+
+Step keys:
+
+* `virtual-filesystems` &mdash; REQUIRED; value is the tag of
+  the root filesystem.
+
+Example (in the .vmdb file):
+
+~~~yaml
+- virtual-filesystem: rootfs
+~~~

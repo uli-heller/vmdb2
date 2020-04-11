@@ -54,29 +54,8 @@ def runcmd(argv, *argvs, **kwargs):
 
 
 def runcmd_chroot(chroot, argv, *argvs, **kwargs):
-    _mount_proc(chroot)
-    try:
-        full_argv = ['chroot', chroot] + argv
-        ret = runcmd(full_argv, *argvs, **kwargs)
-    except Exception:
-        _unmount_proc(chroot)
-        raise
-    _unmount_proc(chroot)
-    return ret
-
-
-def _mount_proc(chroot):
-    proc = _procdir(chroot)
-    argv = ['chroot', chroot, 'mount', '-t', 'proc', 'proc', '/proc']
-    progress('mounting proc: %r' % argv)
-    subprocess.check_call(argv)
-
-
-def _unmount_proc(chroot):
-    proc = _procdir(chroot)
-    argv = ['chroot', chroot, 'umount', '/proc']
-    progress('unmounting proc: %r' % argv)
-    subprocess.check_call(argv)
+    full_argv = ['chroot', chroot] + argv
+    return runcmd(full_argv, *argvs, **kwargs)
 
 
 def _procdir(chroot):
