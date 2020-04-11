@@ -17,6 +17,16 @@ install:
   - cmdtest
   - pandoc
 source: .
+workspace: ~/tmp/contractor/vmdb2
 build: |
   export LC_ALL=C.UTF-8
   ./check
+
+  sudo ./vmdb2 --rootfs-tarball /workspace/buster.tar.gz \
+      --verbose --log /workspace/check.log \
+      --output /workspace/uefi.img uefi.vmdb
+
+  cd /workspace
+  ls -lh
+  du -h *.img
+  rm -f *.img*
