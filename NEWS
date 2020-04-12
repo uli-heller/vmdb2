@@ -19,6 +19,10 @@ Version 0.14.1+git, not yet released
   This change should NOT require changes to existing, working .vmdb
   files.
 
+* The `mkpart` step now waits for the new partition device to exist
+  before it's finished. This only applies when the target is a real
+  disk, not a disk image.
+
 
 Version 0.14.1, not yet released
 ------------------------------------
