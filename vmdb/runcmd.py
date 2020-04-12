@@ -43,14 +43,20 @@ def progress(msg):
         sys.stdout.write('{}\n'.format(msg))
 
 
-def runcmd(argv, *argvs, **kwargs):
+def runcmd(argv, **kwargs):
     progress('Exec: %r' % (argv,))
-    kwargs['stdout_callback'] = _log_stdout
-    kwargs['stderr_callback'] = _log_stderr
     env = kwargs.get('env', os.environ.copy())
     env['LC_ALL'] = 'C'
     kwargs['env'] = env
-    return cliapp.runcmd(argv, *argvs, **kwargs)
+    kwargs['stdout'] = kwargs.get('stdout', subprocess.PIPE)
+    kwargs['stderr'] = kwargs.get('stderr', subprocess.PIPE)
+    p = subprocess.Popen(argv, **kwargs)
+    out, err = p.communicate()
+    logging.debug('STDOUT: %s', out.decode('UTF8'))
+    logging.debug('STDERR: %s', err.decode('UTF8'))
+    if p.returncode != 0:
+        raise cliapp.AppException('Command failed: {}'.format(p.returncode))
+    return out
 
 
 def runcmd_chroot(chroot, argv, *argvs, **kwargs):
