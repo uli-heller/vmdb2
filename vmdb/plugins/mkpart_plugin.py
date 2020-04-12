@@ -19,6 +19,7 @@
 
 import os
 import stat
+import time
 
 import cliapp
 
@@ -54,12 +55,28 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
 
         orig = self.list_partitions(device)
         vmdb.runcmd(['parted', '-s', device, 'mkpart', part_type, fs_type, start, end])
+        new = self.list_partitions(device)
+        diff = self.diff_partitions(orig, new)
+
+        if len(diff) == 0:
+            raise ExpectedNewPartition()
+
+        if len(diff) > 1:
+            raise UnexpectedNewPartitions(diff)
 
         state.tags.append(tag)
+
+        # If device is a real block device (e.g, /dev/sdb), the
+        # parition we have in diff are also real devices (e.g.,
+        # /dev/sdb1), and we should remember those in tags.
+        #
+        # If, however, device is a disk image file (e.g, foo.img), the
+        # partition in diff is not a device file but something like
+        # foo.img1. We don't need to remember that in tags. The user
+        # will use the kpartx step later to add those partitions into
+        # tags.
         if self.is_block_dev(device):
-            new = self.list_partitions(device)
-            diff = self.diff_partitions(orig, new)
-            assert len(diff) == 1
+            self.wait_for_file_to_exist(diff[0])
             vmdb.progress('remembering partition {} as {}'.format(diff[0], tag))
             state.tags.set_dev(tag, diff[0])
 
@@ -86,3 +103,26 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
             for line in new
             if line not in old
         ]
+
+    def wait_for_file_to_exist(self, filename):
+        while not os.file.exists(filename):
+            time.sleep(1)
+
+
+class MkpartError(cliapp.AppException):
+
+    pass
+
+
+class ExpectedNewPartition(MkpartError):
+
+    def __init__(self):
+        super().__init__('Expected a new partition to exist after mkpart')
+
+
+class UnexpectedNewPartitions(MkpartError):
+
+    def __init__(self, diff):
+        super().__init__(
+            'Expected only one new partition to exist after mkpart, '
+            'but found {}'.format(' '.join(diff)))
