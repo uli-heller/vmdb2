@@ -21,7 +21,7 @@ Step keys:
 * `console` &mdash; OPTIONAL; set to `serial` to configure the image
   to use a serial console.
 
-* `device` &mdash; OPTIONAL; which device to install GRUB onto; this
+* `image-dev` &mdash; OPTIONAL; which device to install GRUB onto; this
   is needed when installing to a real hard drive, instead of an image.
 
 Example (in the .vmdb file):

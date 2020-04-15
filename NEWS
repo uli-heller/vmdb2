@@ -23,6 +23,10 @@ Version 0.14.1+git, not yet released
   before it's finished. This only applies when the target is a real
   disk, not a disk image.
 
+* Bug fix: The `grub` step documentation claimed the step key for
+  specifying the image device is `device`. It has now been fixed to be
+  `image-dev`. Thanks: Sebastian Bachmann.
+
 
 Version 0.14.1, not yet released
 ------------------------------------
