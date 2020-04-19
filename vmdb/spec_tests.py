@@ -45,11 +45,11 @@ class SpecTests(unittest.TestCase):
             os.remove(self.filename)
 
     def test_loads_spec(self):
-        self.spec.load_file(self.filename)
+        self.spec.load_file(open(self.filename))
         self.assertEqual(self.spec.as_dict(), as_dict(self.spec_yaml))
 
     def test_expands_templates(self):
-        self.spec.load_file(self.filename)
+        self.spec.load_file(open(self.filename))
         params = {
             'var1': 'value1',
         }
