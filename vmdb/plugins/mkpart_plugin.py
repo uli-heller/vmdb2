@@ -105,7 +105,7 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
         ]
 
     def wait_for_file_to_exist(self, filename):
-        while not os.file.exists(filename):
+        while not os.path.exists(filename):
             time.sleep(1)
 
 
