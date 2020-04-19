@@ -25,9 +25,8 @@ class Spec:
     def __init__(self):
         self._dict = None
 
-    def load_file(self, filename):
-        with open(filename) as f:
-            self._dict = yaml.safe_load(f)
+    def load_file(self, f):
+        self._dict = yaml.safe_load(f)
 
     def as_dict(self):
         return dict(self._dict)
