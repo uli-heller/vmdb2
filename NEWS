@@ -4,31 +4,72 @@ NEWS for vmdb2, the Debian disk image builder
 Version 0.14.1+git, not yet released
 ------------------------------------
 
-* Document and rename the `virtual-filesystems` plugin, and undo the
-  previous changes to have `/proc` automatically mounted in the
-  chroot, when running commands in the chroot. That wasn't enough
-  (e.g., it didn't cover Ansible), and `virtual-filesystems`
-  seems generally like the better solution.
+### New and changed features
 
-  The grub plugin handles the filesystems it needs itself, but doesn't
-  mind if they're already mounted. The `virtual-filesystems` step is
-  only needed when a Debian package is installed, possibly via
-  Ansible, or some other command is run that needs `/proc` or one of
-  the other virtual filesystems.
+* Document and rename the `virtual-filesystems` plugin. This allows
+  installation of Debian packages that require `/proc` to be mounted
+  to install, such as `ca-certificates-java`.
+  
+  Undo previous changes to have `/proc` automatically mounted in the
+  chroot, when running commands in the chroot. That wasn't enough
+  (e.g., it didn't cover Ansible), and `virtual-filesystems` seems
+  generally like the more general and better solution.
+
+  The `grub` step handles the filesystems it needs itself, but doesn't
+  mind if they're already mounted.
 
   This change should NOT require changes to existing, working .vmdb
-  files.
+  files. If it does, please report a bug.
 
-* The `mkpart` step now waits for the new partition device to exist
-  before it's finished. This only applies when the target is a real
-  disk, not a disk image.
+* The .vmdb file can now be passed in via the standard input, by
+  specifying `-` as the filename. Patch from voney.
 
-* Bug fix: The `grub` step documentation claimed the step key for
-  specifying the image device is `device`. It has now been fixed to be
-  `image-dev`. Thanks: Sebastian Bachmann.
+* The manual now documents that un-partitioned images are not
+  supported, at least not yet.
+  
+* The "All went fine" message is now written at the very end of the
+  vmdb2 run, if at all. Previously all the messages from teardown
+  parts of steps were printed after it, hiding it effectively.
+  
+* The standard output and error output of the commands vmdb2 runs are
+  no longer logged in real time, only after the command has finished.
+  This is a side effect of the `cliapp.runcmd` helper function no
+  longer being used. The Python standard library subprocess module is
+  used directly instead. This change is a step to drop the dependency
+  on the cliapp library.
 
+### Bug fixes
 
-Version 0.14.1, not yet released
+* The `grub` step documentation now uses the correct key for
+  specifying the image device (`image-dev`). Thanks: Sebastian
+  Bachmann.
+
+* The `mkpart` step now waits for the new device node to be created.
+  Previously it sometimes took enough time to be created that the next
+  step failed. This only affects when the output disk is a real block
+  device, not a disk image file.
+
+### Changes mainly affecting vmdb2 and plugin developers
+
+* The `./check` script only runs the yarn integration testing tool if
+  it's new enough to have the yarnutils Python library included. Yarn
+  is being replaced with Subplot.
+
+* Step runners must now use a new way of specifying expected and
+  allowed keys for steps. The new way specifies types for mandatory
+  keys, and default values for optional keys. The old
+  `get_required_keys` method is gone. This change makes mistakes in
+  step runner code a little less likely, and opens up the possibility
+  of generating documentation about step keys automatically.
+
+* Failures when un-mounting filesystems are now ignored. Such failures
+  can happen for various reasons, but by far the most common reason is
+  because the mount had already been unmounted and it's simpler to
+  just ignore failures than keep meticulous track of what's been
+  unmounted already.
+  
+
+Version 0.14.1
 ------------------------------------
 
 This is a bug fix release to fix bugs in the 0.14 release that slipped
