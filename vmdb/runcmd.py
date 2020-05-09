@@ -35,12 +35,14 @@ def set_verbose_progress(verbose):
 def error(msg):
     logging.error(msg, exc_info=True)
     sys.stderr.write('ERROR: {}\n'.format(msg))
+    sys.stderr.flush()
 
 
 def progress(msg):
     logging.info(msg)
     if _verbose:
         sys.stdout.write('{}\n'.format(msg))
+        sys.stdout.flush()
 
 
 def runcmd(argv, **kwargs):

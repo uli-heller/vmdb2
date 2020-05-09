@@ -1,6 +1,15 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
+Version 0.15+git, not yet released
+------------------------------------
+
+* Progress output is now flushed after every write. This matters, when
+  the output goes to a pipe, because then Python would buffer the
+  output, meaning that progress output gets delayed until the buffer
+  fills up, and that's useless.
+
+
 Version 0.15, released 2020-05-05
 ------------------------------------
 
