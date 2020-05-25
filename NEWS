@@ -9,6 +9,9 @@ Version 0.15+git, not yet released
   output, meaning that progress output gets delayed until the buffer
   fills up, and that's useless.
 
+* Add a `quiet` field to the grub step to configure the kernel boot to
+  be quiet or not. Default is now not quiet, which is a change from before.
+
 
 Version 0.15, released 2020-05-05
 ------------------------------------

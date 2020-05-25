@@ -24,6 +24,9 @@ Step keys:
 * `image-dev` &mdash; OPTIONAL; which device to install GRUB onto; this
   is needed when installing to a real hard drive, instead of an image.
 
+* `quiet` &mdash; OPTIONAL; should the kernel be configured to boot
+  quietly? Default is no.
+
 Example (in the .vmdb file):
 
     - grub: bios

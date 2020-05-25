@@ -79,66 +79,64 @@ import vmdb
 
 
 class GrubPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(GrubStepRunner())
 
 
 class GrubStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
         return {
-            'grub': str,
-            'tag': str,
-            'root-fs': '',
-            'efi': '',
-            'efi-part': '',
-            'console': '',
-            'tag': '',
-            'image-dev': '',
+            "grub": str,
+            "tag": str,
+            "root-fs": "",
+            "efi": "",
+            "efi-part": "",
+            "console": "",
+            "tag": "",
+            "image-dev": "",
+            "quiet": False,
         }
 
     def run(self, values, settings, state):
         state.grub_mounts = []
-        flavor = values['grub']
-        if flavor == 'uefi':
+        flavor = values["grub"]
+        if flavor == "uefi":
             self.install_uefi(values, settings, state)
-        elif flavor == 'bios':
+        elif flavor == "bios":
             self.install_bios(values, settings, state)
         else:
-            raise Exception('Unknown GRUB flavor {}'.format(flavor))
+            raise Exception("Unknown GRUB flavor {}".format(flavor))
 
     def install_uefi(self, values, settings, state):
-        efi = values['efi'] or None
-        efi_part = values['efi-part'] or None
-        if efi is None  and efi_part is None:
-            raise Exception(
-                '"efi" or "efi-part" required in UEFI GRUB installation')
+        efi = values["efi"] or None
+        efi_part = values["efi-part"] or None
+        if efi is None and efi_part is None:
+            raise Exception('"efi" or "efi-part" required in UEFI GRUB installation')
 
-        vmdb.progress('Installing GRUB for UEFI')
-        grub_package = 'grub-efi-amd64'
-        grub_target = 'x86_64-efi'
+        vmdb.progress("Installing GRUB for UEFI")
+        grub_package = "grub-efi-amd64"
+        grub_target = "x86_64-efi"
         self.install_grub(values, settings, state, grub_package, grub_target)
 
     def install_bios(self, values, settings, state):
-        vmdb.progress('Installing GRUB for BIOS')
-        grub_package = 'grub-pc'
-        grub_target = 'i386-pc'
+        vmdb.progress("Installing GRUB for BIOS")
+        grub_package = "grub-pc"
+        grub_target = "i386-pc"
         self.install_grub(values, settings, state, grub_package, grub_target)
 
     def install_grub(self, values, settings, state, grub_package, grub_target):
-        console = values['console'] or None
+        console = values["console"] or None
 
-        tag = values['tag'] or values['root-fs'] or None
+        tag = values["tag"] or values["root-fs"] or None
         root_dev = state.tags.get_dev(tag)
         chroot = state.tags.get_builder_mount_point(tag)
 
-        image_dev = values['image-dev'] or None
+        image_dev = values["image-dev"] or None
         if image_dev is None:
             image_dev = self.get_image_loop_device(root_dev)
 
-        efi = values['efi'] or None
-        efi_part = values['efi-part'] or None
+        efi = values["efi"] or None
+        efi_part = values["efi-part"] or None
         if efi is not None:
             efi_dev = state.tags.get_dev(efi)
         elif efi_part is not None:
@@ -146,56 +144,61 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         else:
             efi_dev = None
 
-        self.bind_mount_many(chroot, ['/dev', '/sys'], state)
+        quiet = values["quiet"]
+
+        self.bind_mount_many(chroot, ["/dev", "/sys"], state)
         if efi_dev:
-            self.mount(chroot, efi_dev, '/boot/efi', state)
+            self.mount(chroot, efi_dev, "/boot/efi", state)
         self.install_package(chroot, grub_package)
 
         kernel_params = [
-            'biosdevname=0',
-            'net.ifnames=0',
-            'consoleblank=0',
-            'systemd.show_status=true',
-            'rw',
-            'quiet',
-            'systemd.show_status=false',
+            "biosdevname=0",
+            "net.ifnames=0",
+            "consoleblank=0",
+            "systemd.show_status=true",
+            "rw",
         ]
-        if console == 'serial':
-            kernel_params.extend([
-                'quiet',
-                'loglevel=3',
-                'rd.systemd.show_status=false',
-                'systemd.show_status=false',
-                'console=tty0',
-                'console=ttyS0,115200n8',
-            ])
+        if console == "serial":
+            kernel_params.extend(
+                ["loglevel=3", "console=tty0", "console=ttyS0,115200n8"]
+            )
+        if quiet:
+            kernel_params.extend(
+                [
+                    "quiet",
+                    "systemd.show_status=false",
+                    "rd.systemd.show_status=false",
+                    "systemd.show_status=false",
+                ]
+            )
 
         self.set_grub_cmdline_config(chroot, kernel_params)
         self.add_grub_crypto_disk(chroot)
-        if console == 'serial':
+        if console == "serial":
             self.add_grub_serial_console(chroot)
 
-        vmdb.runcmd_chroot(chroot, ['grub-mkconfig', '-o', '/boot/grub/grub.cfg'])
+        vmdb.runcmd_chroot(chroot, ["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
         vmdb.runcmd_chroot(
-            chroot, [
-                'grub-install',
-                '--target=' + grub_target,
-                '--no-nvram',
-                '--force-extra-removable',
-                '--no-floppy',
-                '--modules=part_msdos part_gpt',
-                '--grub-mkdevicemap=/boot/grub/device.map',
+            chroot,
+            [
+                "grub-install",
+                "--target=" + grub_target,
+                "--no-nvram",
+                "--force-extra-removable",
+                "--no-floppy",
+                "--modules=part_msdos part_gpt",
+                "--grub-mkdevicemap=/boot/grub/device.map",
                 image_dev,
-            ]
+            ],
         )
 
-#        self.unmount(state)
+    #        self.unmount(state)
 
     def teardown(self, values, settings, state):
         self.unmount(state)
 
     def unmount(self, state):
-        mounts = getattr(state, 'grub_mounts', [])
+        mounts = getattr(state, "grub_mounts", [])
         mounts.reverse()
         while mounts:
             mount_point = mounts.pop()
@@ -208,18 +211,19 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         # We get /dev/mappers/loopXpY and return /dev/loopX
         # assert partition_device.startswith('/dev/mapper/loop')
 
-        m = re.match(r'^/dev/mapper/(?P<loop>.*)p\d+$', partition_device)
+        m = re.match(r"^/dev/mapper/(?P<loop>.*)p\d+$", partition_device)
         if m is None:
-            raise Exception('Do not understand partition device name {}'.format(
-                partition_device))
+            raise Exception(
+                "Do not understand partition device name {}".format(partition_device)
+            )
         assert m is not None
 
-        loop = m.group('loop')
-        return '/dev/{}'.format(loop)
+        loop = m.group("loop")
+        return "/dev/{}".format(loop)
 
     def bind_mount_many(self, chroot, paths, state):
         for path in paths:
-            self.mount(chroot, path, path, state, mount_opts=['--bind'])
+            self.mount(chroot, path, path, state, mount_opts=["--bind"])
 
     def mount(self, chroot, path, mount_point, state, mount_opts=None):
         chroot_path = self.chroot_path(chroot, mount_point)
@@ -229,45 +233,47 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         if mount_opts is None:
             mount_opts = []
 
-        vmdb.runcmd(['mount'] + mount_opts + [path, chroot_path])
+        vmdb.runcmd(["mount"] + mount_opts + [path, chroot_path])
         state.grub_mounts.append(chroot_path)
 
     def chroot_path(self, chroot, path):
-        return os.path.normpath(os.path.join(chroot, '.' + path))
+        return os.path.normpath(os.path.join(chroot, "." + path))
 
     def install_package(self, chroot, package):
         env = os.environ.copy()
-        env['DEBIAN_FRONTEND'] = 'noninteractive'
+        env["DEBIAN_FRONTEND"] = "noninteractive"
         vmdb.runcmd_chroot(
-            chroot,
-            ['apt-get', '-y', '--no-show-progress', 'install', package],
-            env=env)
+            chroot, ["apt-get", "-y", "--no-show-progress", "install", package], env=env
+        )
 
     def set_grub_cmdline_config(self, chroot, kernel_params):
-        param_string = ' '.join(kernel_params)
+        param_string = " ".join(kernel_params)
 
-        filename = self.chroot_path(chroot, '/etc/default/grub')
+        filename = self.chroot_path(chroot, "/etc/default/grub")
 
         with open(filename) as f:
             text = f.read()
 
         lines = text.splitlines()
-        lines = [line for line in lines
-                 if not line.startswith('GRUB_CMDLINE_LINUX_DEFAULT')]
+        lines = [
+            line for line in lines if not line.startswith("GRUB_CMDLINE_LINUX_DEFAULT")
+        ]
         lines.append('GRUB_CMDLINE_LINUX_DEFAULT="{}"'.format(param_string))
 
-        with open(filename, 'w') as f:
-            f.write('\n'.join(lines) + '\n')
+        with open(filename, "w") as f:
+            f.write("\n".join(lines) + "\n")
 
     def add_grub_serial_console(self, chroot):
-        filename = self.chroot_path(chroot, '/etc/default/grub')
+        filename = self.chroot_path(chroot, "/etc/default/grub")
 
-        with open(filename, 'a') as f:
-            f.write('GRUB_TERMINAL=serial\n')
-            f.write('GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 '
-                    '--word=8 --parity=no --stop=1"\n')
+        with open(filename, "a") as f:
+            f.write("GRUB_TERMINAL=serial\n")
+            f.write(
+                'GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 '
+                '--word=8 --parity=no --stop=1"\n'
+            )
 
     def add_grub_crypto_disk(self, chroot):
-        filename = self.chroot_path(chroot, '/etc/default/grub')
-        with open(filename, 'a') as f:
-            f.write('GRUB_ENABLE_CRYPTODISK=y\n')
+        filename = self.chroot_path(chroot, "/etc/default/grub")
+        with open(filename, "a") as f:
+            f.write("GRUB_ENABLE_CRYPTODISK=y\n")
