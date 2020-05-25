@@ -141,6 +141,19 @@ device nodes, etc), it needs to be run using root privileges. For the
 same reason, it probably can't be run in an unprivileged container.
 
 
+## Setting the hostname
+
+vmdb2 uses debootstrap, which copies the host's /etc/hostname file
+into the image. You probably want to set the hostname for the image
+you're creating. You can do this by overwriting the /etc/hostname file
+in the image, for example with the following step:
+
+~~~yaml
+- chroot: rootfs
+  shell: |
+    echo myhostname > /etc/hostname
+~~~
+
 ## All images must be partitioned
 
 At this time, vmdb2 does not support building partitioned images
