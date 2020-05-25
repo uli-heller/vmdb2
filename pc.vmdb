@@ -39,6 +39,7 @@ steps:
 
   - chroot: /
     shell: |
+      echo pc > /etc/hostname
       apt -y install python
 
   - fstab: /

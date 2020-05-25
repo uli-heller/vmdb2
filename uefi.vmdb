@@ -48,6 +48,10 @@ steps:
   - cache-rootfs: /
     unless: rootfs_unpacked
 
+  - chroot: /
+    shell: |
+      echo uefi-vmdb2 > /etc/hostname
+
   - fstab: /
 
   - grub: uefi
