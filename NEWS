@@ -12,6 +12,10 @@ Version 0.15+git, not yet released
 * Add a `quiet` field to the grub step to configure the kernel boot to
   be quiet or not. Default is now not quiet, which is a change from before.
 
+* Add a `timeout` field to the grub step to configure grub menu
+  timeout. Default is now zero seconds, which is a change from the
+  Debian default of five seconds.
+
 
 Version 0.15, released 2020-05-05
 ------------------------------------

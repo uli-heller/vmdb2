@@ -95,6 +95,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             "tag": "",
             "image-dev": "",
             "quiet": False,
+            "timeout": 0,
         }
 
     def run(self, values, settings, state):
@@ -174,6 +175,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
 
         self.set_grub_cmdline_config(chroot, kernel_params)
         self.add_grub_crypto_disk(chroot)
+        self.set_grub_timeout(chroot, values["timeout"])
         if console == "serial":
             self.add_grub_serial_console(chroot)
 
@@ -277,3 +279,8 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         filename = self.chroot_path(chroot, "/etc/default/grub")
         with open(filename, "a") as f:
             f.write("GRUB_ENABLE_CRYPTODISK=y\n")
+
+    def set_grub_timeout(self, chroot, timeout):
+        filename = self.chroot_path(chroot, "/etc/default/grub")
+        with open(filename, "a") as f:
+            f.write("GRUB_TIMEOUT={}\n".format(timeout))

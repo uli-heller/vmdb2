@@ -27,6 +27,9 @@ Step keys:
 * `quiet` &mdash; OPTIONAL; should the kernel be configured to boot
   quietly? Default is no.
 
+* `timeout` &mdash; OPTIONAL; set the grub menu timeout, in seconds.
+  Defaults to 0 seconds.
+
 Example (in the .vmdb file):
 
     - grub: bios
