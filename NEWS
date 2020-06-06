@@ -9,12 +9,21 @@ Version 0.15+git, not yet released
   output, meaning that progress output gets delayed until the buffer
   fills up, and that's useless.
 
-* Add a `quiet` field to the grub step to configure the kernel boot to
-  be quiet or not. Default is now not quiet, which is a change from before.
+* The documentation is now formatted using Subplot. Previously, the
+  manual and the acceptance test suite were split into separate, but
+  confusingly named files (vmdb2.md vs vmdb2.mdwn); now they are
+  combined. The manual has been cleaned up a bit.
 
-* Add a `timeout` field to the grub step to configure grub menu
+* Add a `quiet` field to the **grub step** to configure the kernel
+  boot to be quiet or not. Default is now not quiet, which is a change
+  from before.
+
+* Add a `timeout` field to the **grub step** to configure grub menu
   timeout. Default is now zero seconds, which is a change from the
   Debian default of five seconds.
+
+* Symbolic links can now be used in the **mkpart step** for device
+  files, thanks to Tim Small.
 
 
 Version 0.15, released 2020-05-05
