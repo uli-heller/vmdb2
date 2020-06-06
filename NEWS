@@ -1,8 +1,8 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.15+git, not yet released
-------------------------------------
+Version 0.16, released 2020-06-06
+-----------------------------------------------------------------------------
 
 * Progress output is now flushed after every write. This matters, when
   the output goes to a pipe, because then Python would buffer the
@@ -27,7 +27,7 @@ Version 0.15+git, not yet released
 
 
 Version 0.15, released 2020-05-05
-------------------------------------
+-----------------------------------------------------------------------------
 
 ### New and changed features
 
@@ -95,7 +95,7 @@ Version 0.15, released 2020-05-05
   
 
 Version 0.14.1
-------------------------------------
+-----------------------------------------------------------------------------
 
 This is a bug fix release to fix bugs in the 0.14 release that slipped
 through due to insufficient testing.
@@ -108,7 +108,7 @@ through due to insufficient testing.
 
 
 Version 0.14, released 2020-03-21
-------------------------------------
+-----------------------------------------------------------------------------
 
 It has been two years since the previous release. These release notes
 are a little sketchy.
