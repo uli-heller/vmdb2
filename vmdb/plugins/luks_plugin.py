@@ -75,7 +75,7 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
                     state.tags.get_builder_mount_point(t))
             assert 0
 
-        vmdb.runcmd(['cryptsetup', 'luksFormat', dev, key_file])
+        vmdb.runcmd(['cryptsetup', '-q', 'luksFormat', dev, key_file])
         vmdb.runcmd(
             ['cryptsetup', 'open', '--type', 'luks', '--key-file', key_file, dev,
              crypt_name])
