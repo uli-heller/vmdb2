@@ -1,7 +1,7 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.16+git, not yet released
+Version 0.17, released 2020-07-13
 -----------------------------------------------------------------------------
 
 * The luks plugin now runs the `cryptsetup` utility with the `-q`
