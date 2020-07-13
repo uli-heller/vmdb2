@@ -4,6 +4,11 @@ NEWS for vmdb2, the Debian disk image builder
 Version 0.16+git, not yet released
 -----------------------------------------------------------------------------
 
+* The luks plugin now runs the `cryptsetup` utility with the `-q`
+  (alias for `--batch-mode`) option for batch mode, to prevent the
+  utility from asking any questions of the user. Fix by Birger
+  Schacht.
+
 
 Version 0.16, released 2020-06-06
 -----------------------------------------------------------------------------
