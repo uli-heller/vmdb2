@@ -9,7 +9,7 @@ cleanup()
 
 trap cleanup EXIT
 
-cat vmdb2.md vmdb/plugins/*.mdwn > tmp.md
+(cat vmdb2.md; for x in vmdb/plugins/*.mdwn; do cat "$x"; echo; done) > tmp.md
 if command -v sp-docgen > /dev/null
 then
     sp-docgen tmp.md -o vmdb2.html

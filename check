@@ -30,6 +30,10 @@ fi
 echo Formatting docs ========================================
 ./format.sh
 
+plugindocs() {
+    ls -1 vmdb/plugins/*.mdwn
+}
+
 steps() {
     sed -n '/<h2 id="step-.*> Step: /s///p' vmdb2.html
 }
@@ -42,6 +46,15 @@ panic() {
     echo "ERROR: $@" 1>&2
     exit 1
 }
+
+for doc in $(plugindocs)
+do
+    n="$(grep -c '^Step:' "$doc")"
+    if [ "$n" != 1 ]
+    then
+	panic "Plugin doc $doc must have exactly 1 step title"
+    fi
+done
 
 n="$(code | wc -l)"
 if [ "$n" != 0 ]
