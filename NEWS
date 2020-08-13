@@ -1,8 +1,12 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.17+git, not yet released
+Version 0.18, released 2020-08-13
 -----------------------------------------------------------------------------
+
+* The way the manual was formatted could sometimes lead to different
+  plugins' documentation being merged into the same section. This has
+  now been fixed.
 
 
 Version 0.17, released 2020-07-13
