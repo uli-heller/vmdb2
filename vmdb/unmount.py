@@ -23,10 +23,7 @@
 
 
 import logging
-
-import cliapp
-
-import vmdb
+import subprocess
 
 
 def unmount(what, mounts=None, real_unmount=None):
@@ -50,9 +47,9 @@ def _read_proc_mounts():  # pragma: no cover
 
 def _real_unmount(what):  # pragma: no cover
     try:
-        vmdb.runcmd(["umount", what])
-    except cliapp.AppException:
-        logging.info("unmount failed, but ignoring that")
+        subprocess.check_call(["umount", what])
+    except subprocess.CalledProcessError as e:
+        logging.info("unmount failed, but ignoring that: %s", e)
 
 
 def _parse_proc_mounts(text):
