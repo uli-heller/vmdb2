@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 
 import cliapp
@@ -25,22 +24,17 @@ import vmdb
 
 
 class ChrootPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(ChrootStepRunner())
 
 
 class ChrootStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'chroot': str,
-            'shell': str,
-        }
+        return {"chroot": str, "shell": str}
 
     def run(self, values, settings, state):
-        fs_tag = values['chroot']
-        shell = values['shell']
+        fs_tag = values["chroot"]
+        shell = values["shell"]
 
         mount_point = state.tags.get_builder_mount_point(fs_tag)
-        vmdb.runcmd_chroot(mount_point, ['sh', '-ec', shell])
+        vmdb.runcmd_chroot(mount_point, ["sh", "-ec", shell])

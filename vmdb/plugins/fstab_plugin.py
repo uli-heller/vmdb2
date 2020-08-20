@@ -23,20 +23,16 @@ import vmdb
 
 
 class FstabPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(FstabStepRunner())
 
 
 class FstabStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'fstab': str,
-        }
+        return {"fstab": str}
 
     def run(self, values, setting, state):
-        tag = values['fstab']
+        tag = values["fstab"]
         chroot = state.tags.get_builder_mount_point(tag)
 
         filesystems = []
@@ -46,22 +42,23 @@ class FstabStepRunner(vmdb.StepRunnerInterface):
             mount_point = state.tags.get_target_mount_point(tag)
             if mount_point is not None:
                 fstype = state.tags.get_fstype(tag)
-                output = vmdb.runcmd([
-                    'blkid', '-c', '/dev/null', '-o', 'value', '-s', 'UUID', device])
+                output = vmdb.runcmd(
+                    ["blkid", "-c", "/dev/null", "-o", "value", "-s", "UUID", device]
+                )
                 if output:
                     uuid = output.decode().strip()
-                    filesystems.append({
-                        'uuid': uuid,
-                        'mount_point': mount_point,
-                        'fstype': fstype,
-                    })
+                    filesystems.append(
+                        {"uuid": uuid, "mount_point": mount_point, "fstype": fstype}
+                    )
                 else:
                     raise Exception(
-                        'Unknown UUID for device {} (to be mounted on {})'.format(
-                            device, mount_point))
+                        "Unknown UUID for device {} (to be mounted on {})".format(
+                            device, mount_point
+                        )
+                    )
 
-        fstab_path = os.path.join(chroot, 'etc/fstab')
+        fstab_path = os.path.join(chroot, "etc/fstab")
         line = "UUID={uuid} {mount_point} {fstype} errors=remount-ro 0 1\n"
-        with open(fstab_path, 'w') as fstab:
+        with open(fstab_path, "w") as fstab:
             for entry in filesystems:
                 fstab.write(line.format(**entry))

@@ -16,48 +16,41 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import cliapp
 
 import vmdb
 
 
 class MkfsPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(MkfsStepRunner())
 
 
 class MkfsStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'mkfs': str,
-            'partition': str,
-            'label': '',
-        }
+        return {"mkfs": str, "partition": str, "label": ""}
 
     def run(self, values, settings, state):
-        fstype = values['mkfs']
-        tag = values['partition']
+        fstype = values["mkfs"]
+        tag = values["partition"]
         device = state.tags.get_dev(tag)
 
         if not isinstance(fstype, str):
-            raise vmdb.NotString('mkfs', fstype)
+            raise vmdb.NotString("mkfs", fstype)
         if not isinstance(tag, str):
-            raise vmdb.NotString('mkfs: tag', tag)
+            raise vmdb.NotString("mkfs: tag", tag)
         if not isinstance(device, str):
-            raise vmdb.NotString('mkfs: device (for tag)', device)
+            raise vmdb.NotString("mkfs: device (for tag)", device)
 
-        cmd = ['/sbin/mkfs', '-t', fstype]
-        label = values['label'] or None
+        cmd = ["/sbin/mkfs", "-t", fstype]
+        label = values["label"] or None
         if label:
-            if fstype == 'vfat':
-                cmd.append('-n')
-            elif fstype == 'f2fs':
-                cmd.append('-l')
+            if fstype == "vfat":
+                cmd.append("-n")
+            elif fstype == "f2fs":
+                cmd.append("-l")
             else:
-                cmd.append('-L')
+                cmd.append("-L")
             cmd.append(label)
         cmd.append(device)
         vmdb.runcmd(cmd)

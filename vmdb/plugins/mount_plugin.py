@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import logging
 import os
 import tempfile
@@ -27,19 +26,13 @@ import vmdb
 
 
 class MountPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(MountStepRunner())
 
 
 class MountStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'mount': str,
-            'dirname': '',
-            'mount-on': '',
-        }
+        return {"mount": str, "dirname": "", "mount-on": ""}
 
     def run(self, values, settings, state):
         self.mount_rootfs(values, settings, state)
@@ -48,36 +41,37 @@ class MountStepRunner(vmdb.StepRunnerInterface):
         self.unmount_rootfs(values, settings, state)
 
     def mount_rootfs(self, values, settings, state):
-        tag = values['mount']
-        dirname = values['dirname'] or None
-        mount_on = values['mount-on'] or None
+        tag = values["mount"]
+        dirname = values["dirname"] or None
+        mount_on = values["mount-on"] or None
 
         device = state.tags.get_dev(tag)
 
         if dirname:
             if not mount_on:
-                raise Exception('no mount-on tag given')
+                raise Exception("no mount-on tag given")
 
             if not state.tags.has_tag(mount_on):
-                raise Exception('cannot find tag {}'.format(mount_on))
+                raise Exception("cannot find tag {}".format(mount_on))
 
             mount_point = os.path.join(
-                state.tags.get_builder_mount_point(mount_on), './' + dirname)
+                state.tags.get_builder_mount_point(mount_on), "./" + dirname
+            )
 
             if not os.path.exists(mount_point):
                 os.makedirs(mount_point)
         else:
-            dirname = '/'
+            dirname = "/"
             mount_point = tempfile.mkdtemp()
 
-        vmdb.runcmd(['mount', device, mount_point])
+        vmdb.runcmd(["mount", device, mount_point])
         state.tags.set_builder_mount_point(tag, mount_point, cached=True)
         state.tags.set_target_mount_point(tag, dirname)
 
         return mount_point
 
     def unmount_rootfs(self, values, settings, state):
-        tag = values['mount']
+        tag = values["mount"]
         mount_point = state.tags.get_builder_mount_point(tag)
         if mount_point is None:
             return
@@ -87,5 +81,5 @@ class MountStepRunner(vmdb.StepRunnerInterface):
         except vmdb.NotMounted as e:
             logging.warning(str(e))
 
-        if not values['mount-on']:
+        if not values["mount-on"]:
             os.rmdir(mount_point)

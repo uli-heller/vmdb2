@@ -21,7 +21,6 @@ import yaml
 
 
 class Spec:
-
     def __init__(self):
         self._dict = None
 
@@ -32,7 +31,7 @@ class Spec:
         return dict(self._dict)
 
     def get_steps(self, params):
-        return expand_templates(self._dict['steps'], params)
+        return expand_templates(self._dict["steps"], params)
 
 
 def expand_templates(value, params):
@@ -44,9 +43,6 @@ def expand_templates(value, params):
     elif isinstance(value, list):
         return [expand_templates(x, params) for x in value]
     elif isinstance(value, dict):
-        return {
-            key: expand_templates(value[key], params)
-            for key in value
-        }
+        return {key: expand_templates(value[key], params) for key in value}
     else:
-        assert 0, 'Unknown value type: {!r}'.format(value)
+        assert 0, "Unknown value type: {!r}".format(value)

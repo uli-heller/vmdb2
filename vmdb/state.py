@@ -17,14 +17,11 @@
 
 
 class State:
-
     def __init__(self):
         self._attrs = {}  # make sure this attribute exists
         self._attrs = self.as_dict()
 
     def as_dict(self):
         return {
-            key: repr(getattr(self, key))
-            for key in dir(self)
-            if not key in self._attrs
+            key: repr(getattr(self, key)) for key in dir(self) if not key in self._attrs
         }

@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 
 import cliapp
@@ -25,23 +24,18 @@ import vmdb
 
 
 class ShellPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(ShellStepRunner())
 
 
 class ShellStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'shell': str,
-            'root-fs': str,
-        }
+        return {"shell": str, "root-fs": str}
 
     def run(self, step, settings, state):
-        shell = step['shell']
-        fs_tag = step['root-fs']
+        shell = step["shell"]
+        fs_tag = step["root-fs"]
 
         env = dict(os.environ)
-        env['ROOT'] = state.tags.get_builder_mount_point(fs_tag)
-        vmdb.runcmd(['sh', '-ec', shell], env=env)
+        env["ROOT"] = state.tags.get_builder_mount_point(fs_tag)
+        vmdb.runcmd(["sh", "-ec", shell], env=env)

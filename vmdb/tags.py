@@ -17,16 +17,12 @@
 
 
 class Tags:
-
     def __init__(self):
         self._tags = {}
         self._tagnames = []
 
     def __repr__(self):  # pragma: no cover
-        return repr({
-            'tags': self._tags,
-            'tagnames': self._tagnames,
-        })
+        return repr({"tags": self._tags, "tagnames": self._tagnames})
 
     def get_tags(self):
         return list(self._tags.keys())
@@ -36,64 +32,64 @@ class Tags:
 
     def get_dev(self, tag):
         item = self._get(tag)
-        return item['dev']
+        return item["dev"]
 
     def get_builder_mount_point(self, tag):
         item = self._get(tag)
-        return item['builder_mount_point']
+        return item["builder_mount_point"]
 
     def get_fstype(self, tag):
         item = self._get(tag)
-        return item['fstype']
+        return item["fstype"]
 
     def get_target_mount_point(self, tag):
         item = self._get(tag)
-        return item['target_mount_point']
+        return item["target_mount_point"]
 
     def is_cached(self, tag):
         item = self._get(tag)
-        return item.get('cached', False)
+        return item.get("cached", False)
 
     def append(self, tag):
         if tag in self._tags:
             raise TagInUse(tag)
         self._tagnames.append(tag)
         self._tags[tag] = {
-            'dev': None,
-            'builder_mount_point': None,
-            'fstype': None,
-            'target_mount_point': None,
+            "dev": None,
+            "builder_mount_point": None,
+            "fstype": None,
+            "target_mount_point": None,
         }
 
     def set_dev(self, tag, dev):
         item = self._get(tag)
-        if item['dev'] is not None:
+        if item["dev"] is not None:
             raise AlreadyHasDev(tag)
-        item['dev'] = dev
+        item["dev"] = dev
 
     def set_builder_mount_point(self, tag, mount_point, cached=False):
         item = self._get(tag)
-        if item['builder_mount_point'] is not None:
+        if item["builder_mount_point"] is not None:
             raise AlreadyMounted(tag)
-        item['builder_mount_point'] = mount_point
-        item['cached'] = cached
+        item["builder_mount_point"] = mount_point
+        item["cached"] = cached
 
     def set_fstype(self, tag, fstype):
         item = self._get(tag)
-        if item['fstype'] is not None:
+        if item["fstype"] is not None:
             raise AlreadyHasFsType(tag)
-        item['fstype'] = fstype
+        item["fstype"] = fstype
 
     def set_target_mount_point(self, tag, target_mount_point):
         item = self._get(tag)
-        if item['target_mount_point'] is not None:
+        if item["target_mount_point"] is not None:
             raise AlreadyHasTargetMountPoint(tag)
-        item['target_mount_point'] = target_mount_point
+        item["target_mount_point"] = target_mount_point
 
     def get_builder_from_target_mount_point(self, target_mount_point):
         for item in self._tags.values():
-            if item['target_mount_point'] == target_mount_point:
-                return item['builder_mount_point']
+            if item["target_mount_point"] == target_mount_point:
+                return item["builder_mount_point"]
         raise NeedBothMountPoints(target_mount_point)
 
     def _get(self, tag):
@@ -104,43 +100,35 @@ class Tags:
 
 
 class TagInUse(Exception):
-
     def __init__(self, tag):
-        super().__init__('Tag already used: {}'.format(tag))
+        super().__init__("Tag already used: {}".format(tag))
 
 
 class UnknownTag(Exception):
-
     def __init__(self, tag):
-        super().__init__('Unknown tag: {}'.format(tag))
+        super().__init__("Unknown tag: {}".format(tag))
 
 
 class AlreadyHasDev(Exception):
-
     def __init__(self, tag):
-        super().__init__('Already has device: {}'.format(tag))
+        super().__init__("Already has device: {}".format(tag))
 
 
 class AlreadyMounted(Exception):
-
     def __init__(self, tag):
-        super().__init__('Already mounted tag: {}'.format(tag))
+        super().__init__("Already mounted tag: {}".format(tag))
 
 
 class AlreadyHasFsType(Exception):
-
     def __init__(self, tag):
-        super().__init__('Already has filesytem type: {}'.format(tag))
+        super().__init__("Already has filesytem type: {}".format(tag))
 
 
 class AlreadyHasTargetMountPoint(Exception):
-
     def __init__(self, tag):
-        super().__init__('Already has target mount point: {}'.format(tag))
+        super().__init__("Already has target mount point: {}".format(tag))
 
 
 class NeedBothMountPoints(Exception):
-
     def __init__(self, target_mp):
-        super().__init__(
-            'Need both mount points set, target: {}'.format(target_mp))
+        super().__init__("Need both mount points set, target: {}".format(target_mp))

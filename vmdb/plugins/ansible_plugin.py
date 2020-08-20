@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 import tempfile
 
@@ -26,50 +25,52 @@ import vmdb
 
 
 class AnsiblePlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(AnsibleStepRunner())
 
 
 class AnsibleStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'ansible': str,
-            'playbook': str,
-        }
+        return {"ansible": str, "playbook": str}
 
     def run(self, values, settings, state):
-        tag = values['ansible']
-        playbook = values['playbook']
+        tag = values["ansible"]
+        playbook = values["playbook"]
         mount_point = state.tags.get_builder_mount_point(tag)
-        rootfs_tarball = settings['rootfs-tarball']
+        rootfs_tarball = settings["rootfs-tarball"]
 
         state.ansible_inventory = self.create_inventory(mount_point)
         vmdb.progress(
-            'Created {} for Ansible inventory'.format(state.ansible_inventory))
+            "Created {} for Ansible inventory".format(state.ansible_inventory)
+        )
 
         vars_filename = self.create_vars(rootfs_tarball)
-        vmdb.progress(
-            'Created {} for Ansible variables'.format(vars_filename))
+        vmdb.progress("Created {} for Ansible variables".format(vars_filename))
 
         env = dict(os.environ)
-        env['ANSIBLE_NOCOWS'] = '1'
+        env["ANSIBLE_NOCOWS"] = "1"
         vmdb.runcmd(
-            ['ansible-playbook', '-c', 'chroot',
-             '-i', state.ansible_inventory,
-             '-e', '@{}'.format(vars_filename),
-             playbook],
-            env=env)
+            [
+                "ansible-playbook",
+                "-c",
+                "chroot",
+                "-i",
+                state.ansible_inventory,
+                "-e",
+                "@{}".format(vars_filename),
+                playbook,
+            ],
+            env=env,
+        )
 
     def teardown(self, values, settings, state):
-        if hasattr(state, 'ansible_inventory'):
-            vmdb.progress('Removing {}'.format(state.ansible_inventory))
+        if hasattr(state, "ansible_inventory"):
+            vmdb.progress("Removing {}".format(state.ansible_inventory))
             os.remove(state.ansible_inventory)
 
     def create_inventory(self, chroot):
         fd, filename = tempfile.mkstemp()
-        os.write(fd, '[image]\n{}\n'.format(chroot).encode())
+        os.write(fd, "[image]\n{}\n".format(chroot).encode())
         os.close(fd)
         return filename
 

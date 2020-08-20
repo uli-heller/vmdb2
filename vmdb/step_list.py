@@ -23,7 +23,6 @@ import cliapp
 
 
 class StepRunnerInterface:  # pragma: no cover
-
     def get_key_spec(self):
         raise NotImplementedError()
 
@@ -71,7 +70,7 @@ class StepRunnerInterface:  # pragma: no cover
         # a list of such names. If all variables have a value that
         # evaluates as truth, the step is skipped.
 
-        value = step_spec.get('unless', None)
+        value = step_spec.get("unless", None)
         if value is None:
             return False
 
@@ -81,7 +80,6 @@ class StepRunnerInterface:  # pragma: no cover
 
 
 class StepRunnerList:
-
     def __init__(self):
         self._runners = []
 
@@ -109,42 +107,37 @@ class StepRunnerList:
 
 
 class StepError(cliapp.AppException):
-
     def __init__(self, msg):
         logging.error(msg)
         super().__init__(msg)
 
 
 class StepKeyMissing(StepError):
-
     def __init__(self, key):
-        super().__init__('Step is missing key {}'.format(key))
+        super().__init__("Step is missing key {}".format(key))
 
 
 class StepKeyWrongValueType(StepError):
-
     def __init__(self, key, wanted, actual):
         super().__init__(
-            'Step key {} has value {!r}, expected {!r}'.format(
-                key, wanted, actual))
+            "Step key {} has value {!r}, expected {!r}".format(key, wanted, actual)
+        )
 
 
 class NoMatchingRunner(StepError):
-
     def __init__(self, keys):
         super().__init__(
-            'No runner implements step with keys {}'.format(', '.join(keys)))
+            "No runner implements step with keys {}".format(", ".join(keys))
+        )
 
 
 class NotString(StepError):  # pragma: no cover
-
     def __init__(self, name, actual):
-        msg = '%s: value must be string, got %r' % (name, actual)
+        msg = "%s: value must be string, got %r" % (name, actual)
         super().__init__(msg)
 
 
 class IsEmptyString(StepError):  # pragma: no cover
-
     def __init__(self, name, actual):
-        msg = '%s: value must not be an empty string, got %r' % (name, actual)
+        msg = "%s: value must not be an empty string, got %r" % (name, actual)
         super().__init__(msg)

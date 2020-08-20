@@ -16,33 +16,27 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import cliapp
 
 import vmdb
 
 
 class ErrorPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(ErrorStepRunner())
 
 
 class ErrorStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'error': str,
-            'teardown': str,
-        }
+        return {"error": str, "teardown": str}
 
     def run(self, values, settings, state):
         # We use vmdb.progress here to get output to go to stdout,
         # instead of stderr. We want that for tests.
-        vmdb.progress('{}'.format(values['error']))
-        raise vmdb.StepError('an error occurred')
+        vmdb.progress("{}".format(values["error"]))
+        raise vmdb.StepError("an error occurred")
 
     def teardown(self, values, settings, state):
         # We use vmdb.progress here to get output to go to stdout,
         # instead of stderr. We want that for tests.
-        vmdb.progress('{}'.format(values['teardown']))
+        vmdb.progress("{}".format(values["teardown"]))

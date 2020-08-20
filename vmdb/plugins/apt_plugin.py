@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 
 import cliapp
@@ -25,65 +24,50 @@ import vmdb
 
 
 class AptPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(AptStepRunner())
 
 
 class AptStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'apt': str,
-            'packages': [],
-            'tag': '',
-            'fs-tag': '',
-            'clean': True,
-        }
+        return {"apt": str, "packages": [], "tag": "", "fs-tag": "", "clean": True}
 
     def run(self, values, settings, state):
-        operation = values['apt']
-        if operation != 'install':
+        operation = values["apt"]
+        if operation != "install":
             raise Exception('"apt" must always have value "install"')
 
-        packages = values['packages']
-        tag = values.get('tag') or None
+        packages = values["packages"]
+        tag = values.get("tag") or None
         if tag is None:
-            tag = values['fs-tag']
+            tag = values["fs-tag"]
         mount_point = state.tags.get_builder_mount_point(tag)
 
         if not self.got_eatmydata(state):
-            self.install_packages(mount_point, [], ['eatmydata'])
+            self.install_packages(mount_point, [], ["eatmydata"])
             state.got_eatmydata = True
-        self.install_packages(mount_point, ['eatmydata'], packages)
+        self.install_packages(mount_point, ["eatmydata"], packages)
 
-        if values['clean']:
+        if values["clean"]:
             self.clean_cache(mount_point)
 
     def got_eatmydata(self, state):
-        return hasattr(state, 'got_eatmydata') and getattr(state, 'got_eatmydata')
+        return hasattr(state, "got_eatmydata") and getattr(state, "got_eatmydata")
 
     def install_packages(self, mount_point, argv_prefix, packages):
         env = os.environ.copy()
-        env['DEBIAN_FRONTEND'] = 'noninteractive'
+        env["DEBIAN_FRONTEND"] = "noninteractive"
+
+        vmdb.runcmd_chroot(mount_point, argv_prefix + ["apt-get", "update"], env=env)
 
         vmdb.runcmd_chroot(
             mount_point,
-            argv_prefix +
-            ['apt-get', 'update'],
-            env=env)
-
-        vmdb.runcmd_chroot(
-            mount_point,
-            argv_prefix +
-            ['apt-get', '-y', '--no-show-progress', 'install'] + packages,
-            env=env)
+            argv_prefix + ["apt-get", "-y", "--no-show-progress", "install"] + packages,
+            env=env,
+        )
 
     def clean_cache(self, mount_point):
         env = os.environ.copy()
-        env['DEBIAN_FRONTEND'] = 'noninteractive'
+        env["DEBIAN_FRONTEND"] = "noninteractive"
 
-        vmdb.runcmd_chroot(
-            mount_point,
-            ['apt-get', 'clean'],
-            env=env)
+        vmdb.runcmd_chroot(mount_point, ["apt-get", "clean"], env=env)

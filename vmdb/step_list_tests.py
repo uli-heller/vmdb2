@@ -22,7 +22,6 @@ import vmdb
 
 
 class StepRunnerListTests(unittest.TestCase):
-
     def test_is_empty_initially(self):
         steps = vmdb.StepRunnerList()
         self.assertEqual(len(steps), 0)
@@ -35,39 +34,30 @@ class StepRunnerListTests(unittest.TestCase):
 
     def test_finds_correct_runner(self):
         steps = vmdb.StepRunnerList()
-        keyspec = {
-            'foo': str,
-            'bar': str,
-        }
+        keyspec = {"foo": str, "bar": str}
         runner = DummyStepRunner(keyspec=keyspec)
         steps.add(runner)
-        found = steps.find({'foo': 'foo', 'bar': 'bar'})
+        found = steps.find({"foo": "foo", "bar": "bar"})
         self.assertEqual(runner, found)
 
     def test_raises_error_if_runner_not_found(self):
         steps = vmdb.StepRunnerList()
-        keyspec = {
-            'foo': str,
-            'bar': str,
-        }
+        keyspec = {"foo": str, "bar": str}
         runner = DummyStepRunner(keyspec=keyspec)
         steps.add(runner)
         with self.assertRaises(vmdb.NoMatchingRunner):
-            steps.find({'foo': 'foo'})
+            steps.find({"foo": "foo"})
 
     def test_raises_error_if_wrong_step_key_values(self):
         steps = vmdb.StepRunnerList()
-        keyspec = {
-            'foo': str,
-        }
+        keyspec = {"foo": str}
         runner = DummyStepRunner(keyspec=keyspec)
         steps.add(runner)
         with self.assertRaises(vmdb.StepKeyWrongValueType):
-            steps.find({'foo': 42})
+            steps.find({"foo": 42})
 
 
 class DummyStepRunner(vmdb.StepRunnerInterface):
-
     def __init__(self, keyspec=None):
         self.keyspec = keyspec
 
@@ -79,36 +69,35 @@ class DummyStepRunner(vmdb.StepRunnerInterface):
 
 
 class StepRunnerGetKeyValuesTests(unittest.TestCase):
-
     def test_returns_values_from_step_for_mandatory_keys(self):
-        keyspec = {'foo': str}
+        keyspec = {"foo": str}
         runner = DummyStepRunner(keyspec=keyspec)
-        self.assertEqual(runner.get_values({'foo': 'bar'}), {'foo': 'bar'})
+        self.assertEqual(runner.get_values({"foo": "bar"}), {"foo": "bar"})
 
     def test_raises_error_for_missing_mandatory_key(self):
-        keyspec = {'foo': str}
+        keyspec = {"foo": str}
         runner = DummyStepRunner(keyspec=keyspec)
         with self.assertRaises(vmdb.StepKeyMissing):
             runner.get_values({})
 
     def test_raises_error_for_wrong_type_of_value_for_mandatory_key(self):
-        keyspec = {'foo': str}
+        keyspec = {"foo": str}
         runner = DummyStepRunner(keyspec=keyspec)
         with self.assertRaises(vmdb.StepKeyWrongValueType):
-            runner.get_values({'foo': 42})
+            runner.get_values({"foo": 42})
 
     def test_returns_default_value_for_missing_optional_key(self):
-        keyspec = {'foo': 'bar'}
+        keyspec = {"foo": "bar"}
         runner = DummyStepRunner(keyspec=keyspec)
-        self.assertEqual(runner.get_values({}), {'foo': 'bar'})
+        self.assertEqual(runner.get_values({}), {"foo": "bar"})
 
     def test_returns_actual_value_for_optional_key(self):
-        keyspec = {'foo': 'bar'}
+        keyspec = {"foo": "bar"}
         runner = DummyStepRunner(keyspec=keyspec)
-        self.assertEqual(runner.get_values({'foo': 'yo'}), {'foo': 'yo'})
+        self.assertEqual(runner.get_values({"foo": "yo"}), {"foo": "yo"})
 
     def test_raises_error_for_wrong_type_of_value_for_optional_key(self):
-        keyspec = {'foo': 'bar'}
+        keyspec = {"foo": "bar"}
         runner = DummyStepRunner(keyspec=keyspec)
         with self.assertRaises(vmdb.StepKeyWrongValueType):
-            runner.get_values({'foo': 42})
+            runner.get_values({"foo": 42})

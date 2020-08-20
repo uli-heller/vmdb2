@@ -25,16 +25,14 @@ import vmdb
 
 
 class Vmdb2(cliapp.Application):
-
     def add_settings(self):
         self.settings.string(
-            ['image'],
-            'use existing image file/device FILE (use --output to create new file)',
-            metavar='FILE')
+            ["image"],
+            "use existing image file/device FILE (use --output to create new file)",
+            metavar="FILE",
+        )
 
-        self.settings.boolean(
-            ['verbose', 'v'],
-            'verbose output')
+        self.settings.boolean(["verbose", "v"], "verbose output")
 
     def setup(self):
         self.step_runners = vmdb.StepRunnerList()
@@ -43,7 +41,7 @@ class Vmdb2(cliapp.Application):
         if len(args) != 1:
             sys.exit("No image specification was given on the command line.")
 
-        vmdb.set_verbose_progress(self.settings['verbose'])
+        vmdb.set_verbose_progress(self.settings["verbose"])
 
         spec = self.load_spec_file(args[0])
         state = vmdb.State()
@@ -57,47 +55,47 @@ class Vmdb2(cliapp.Application):
 
         steps_taken, core_meltdown = self.run_steps(steps, state)
         if core_meltdown:
-            vmdb.progress('Something went wrong, cleaning up!')
+            vmdb.progress("Something went wrong, cleaning up!")
             self.run_teardowns(steps_taken, state)
         else:
             self.run_teardowns(steps_taken, state)
-            vmdb.progress('All went fine.')
+            vmdb.progress("All went fine.")
 
         if core_meltdown:
-            logging.error('An error occurred, exiting with non-zero exit code')
+            logging.error("An error occurred, exiting with non-zero exit code")
             sys.exit(1)
 
     def load_spec_file(self, filename):
         spec = vmdb.Spec()
         if filename == "-":
-            vmdb.progress('Load spec from stdin')
+            vmdb.progress("Load spec from stdin")
             spec.load_file(sys.stdin)
         else:
-            vmdb.progress('Load spec file {}'.format(filename))
+            vmdb.progress("Load spec file {}".format(filename))
             with open(filename) as f:
                 spec.load_file(f)
         return spec
 
     def run_steps(self, steps, state):
-        return self.run_steps_helper(
-            steps, state, 'Running step: %r', 'run', False)
+        return self.run_steps_helper(steps, state, "Running step: %r", "run", False)
 
     def run_teardowns(self, steps, state):
         return self.run_steps_helper(
-            list(reversed(steps)), state, 'Running teardown: %r', 'teardown', True)
+            list(reversed(steps)), state, "Running teardown: %r", "teardown", True
+        )
 
     def run_steps_helper(self, steps, state, msg, method_name, keep_going):
         core_meltdown = False
         steps_taken = []
 
-        even_if_skipped = method_name + '_even_if_skipped'
+        even_if_skipped = method_name + "_even_if_skipped"
         for step in steps:
             try:
                 logging.info(msg, step)
                 steps_taken.append(step)
                 runner = self.step_runners.find(step)
                 if runner.skip(step, self.settings, state):
-                    logging.info('Skipping as requested by unless')
+                    logging.info("Skipping as requested by unless")
                     method_names = [even_if_skipped]
                 else:
                     method_names = [method_name, even_if_skipped]
@@ -110,10 +108,10 @@ class Vmdb2(cliapp.Application):
 
                 values = runner.get_values(step)
                 for method in methods:
-                    logging.info('Calling %s', method)
+                    logging.info("Calling %s", method)
                     method(values, self.settings, state)
             except KeyError as e:
-                vmdb.error('Key error: %s' % str(e))
+                vmdb.error("Key error: %s" % str(e))
                 vmdb.error(repr(e))
                 core_meltdown = True
                 if not keep_going:

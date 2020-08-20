@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import logging
 
 import cliapp
@@ -25,25 +24,20 @@ import vmdb
 
 
 class EchoPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(EchoStepRunner())
 
 
 class EchoStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'echo': str,
-            'teardown': '',
-        }
+        return {"echo": str, "teardown": ""}
 
     def run(self, values, settings, state):
-        text = values['echo']
-        vmdb.progress('{}'.format(text))
+        text = values["echo"]
+        vmdb.progress("{}".format(text))
 
     def teardown(self, values, settings, state):
-        text = values['teardown']
+        text = values["teardown"]
         if text:
-            vmdb.progress('{}'.format(text))
-            logging.info('%s', text)
+            vmdb.progress("{}".format(text))
+            logging.info("%s", text)

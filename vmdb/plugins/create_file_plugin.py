@@ -22,37 +22,29 @@ import logging
 
 
 class CreateFilePlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(CreateFileStepRunner())
 
 
 class CreateFileStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'create-file': str,
-            'contents': str,
-            'perm': 0o644,
-            'uid': 0,
-            'gid': 0,
-        }
+        return {"create-file": str, "contents": str, "perm": 0o644, "uid": 0, "gid": 0}
 
     def run(self, values, settings, state):
-        root = state.tags.get_builder_from_target_mount_point('/')
-        newfile = values['create-file']
-        contents = values['contents']
-        perm = values['perm']
-        uid = values['uid']
-        gid = values['gid']
+        root = state.tags.get_builder_from_target_mount_point("/")
+        newfile = values["create-file"]
+        contents = values["contents"]
+        perm = values["perm"]
+        uid = values["uid"]
+        gid = values["gid"]
 
-        filename = '/'.join([root, newfile])
+        filename = "/".join([root, newfile])
 
         logging.info(
-            'Creating file %s, uid %d, gid %d, perms %o' % (
-                filename, uid, gid, perm))
+            "Creating file %s, uid %d, gid %d, perms %o" % (filename, uid, gid, perm)
+        )
 
-        fd = open(filename, 'w')
+        fd = open(filename, "w")
         fd.write(contents)
         fd.close
 

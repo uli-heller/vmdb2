@@ -16,52 +16,53 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import cliapp
 
 import vmdb
 
 
 class DebootstrapPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(DebootstrapStepRunner())
 
 
 class DebootstrapStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
         return {
-            'debootstrap': str,
-            'target': str,
-            'mirror': str,
-            'keyring': '',
-            'variant': '-',
+            "debootstrap": str,
+            "target": str,
+            "mirror": str,
+            "keyring": "",
+            "variant": "-",
         }
 
     def run(self, values, settings, state):
-        suite = values['debootstrap']
-        tag = values['target']
+        suite = values["debootstrap"]
+        tag = values["target"]
         target = state.tags.get_builder_mount_point(tag)
-        mirror = values['mirror']
-        keyring = values['keyring'] or None
-        variant = values['variant']
+        mirror = values["mirror"]
+        keyring = values["keyring"] or None
+        variant = values["variant"]
 
         if not (suite and tag and target and mirror):
-            raise Exception('missing arg for debootstrap step')
+            raise Exception("missing arg for debootstrap step")
         if keyring:
-            vmdb.runcmd([
-                'debootstrap',
-                '--keyring', keyring,
-                '--variant', variant,
-                suite, target, mirror])
+            vmdb.runcmd(
+                [
+                    "debootstrap",
+                    "--keyring",
+                    keyring,
+                    "--variant",
+                    variant,
+                    suite,
+                    target,
+                    mirror,
+                ]
+            )
         else:
-            vmdb.runcmd([
-                'debootstrap',
-                '--variant', variant,
-                suite, target, mirror])
+            vmdb.runcmd(["debootstrap", "--variant", variant, suite, target, mirror])
 
     def run_even_if_skipped(self, values, settings, state):
-        tag = values['target']
+        tag = values["target"]
         target = state.tags.get_builder_mount_point(tag)
-        vmdb.runcmd_chroot(target, ['apt-get', 'update'])
+        vmdb.runcmd_chroot(target, ["apt-get", "update"])

@@ -23,35 +23,30 @@ import vmdb
 
 
 class UnmountTests(unittest.TestCase):
-
     def setUp(self):
         self.mounts = ProcMounts()
 
     def unmount(self, what):
-        vmdb.unmount(
-            what,
-            mounts=str(self.mounts),
-            real_unmount=self.mounts.unmount)
+        vmdb.unmount(what, mounts=str(self.mounts), real_unmount=self.mounts.unmount)
 
     def test_raises_error_if_not_mounted(self):
         with self.assertRaises(vmdb.NotMounted):
-            self.unmount('/foo')
+            self.unmount("/foo")
 
     def test_unmounts_mounted_dir(self):
-        self.mounts.mount('/dev/foo', '/foo')
-        self.unmount('/foo')
-        self.assertFalse(self.mounts.is_mounted('/foo'))
+        self.mounts.mount("/dev/foo", "/foo")
+        self.unmount("/foo")
+        self.assertFalse(self.mounts.is_mounted("/foo"))
 
     def test_unmounts_mounted_dir_with_submounts(self):
-        self.mounts.mount('/dev/foo', '/foo')
-        self.mounts.mount('/dev/bar', '/foo/bar')
-        self.unmount('/foo')
-        self.assertFalse(self.mounts.is_mounted('/foo'))
-        self.assertFalse(self.mounts.is_mounted('/foo/bar'))
+        self.mounts.mount("/dev/foo", "/foo")
+        self.mounts.mount("/dev/bar", "/foo/bar")
+        self.unmount("/foo")
+        self.assertFalse(self.mounts.is_mounted("/foo"))
+        self.assertFalse(self.mounts.is_mounted("/foo/bar"))
 
 
 class ProcMounts:
-
     def __init__(self):
         self.mounts = []
 
@@ -62,17 +57,10 @@ class ProcMounts:
         self.mounts.append((device, point))
 
     def unmount(self, what):
-        self.mounts = [
-            mount
-            for mount in self.mounts
-            if what not in mount
-        ]
+        self.mounts = [mount for mount in self.mounts if what not in mount]
 
     def __str__(self):
-        return ''.join(
-            '{}\n'.format(self.mount_line(mount))
-            for mount in self.mounts
-        )
+        return "".join("{}\n".format(self.mount_line(mount)) for mount in self.mounts)
 
     def mount_line(self, mount):
-        return '{} {} fstype options 0 0'.format(mount[0], mount[1])
+        return "{} {} fstype options 0 0".format(mount[0], mount[1])

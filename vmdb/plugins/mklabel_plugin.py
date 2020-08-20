@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 import stat
 
@@ -26,20 +25,15 @@ import vmdb
 
 
 class MklabelPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(MklabelStepRunner())
 
 
 class MklabelStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'mklabel': str,
-            'device': str,
-        }
+        return {"mklabel": str, "device": str}
 
     def run(self, values, settings, state):
-        label_type = values['mklabel']
-        device = values['device']
-        vmdb.runcmd(['parted', '-s', device, 'mklabel', label_type])
+        label_type = values["mklabel"]
+        device = values["device"]
+        vmdb.runcmd(["parted", "-s", device, "mklabel", label_type])

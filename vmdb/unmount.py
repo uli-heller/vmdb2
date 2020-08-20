@@ -30,7 +30,7 @@ import vmdb
 
 
 def unmount(what, mounts=None, real_unmount=None):
-    logging.debug('Unmounting {} and everything on top of it'.format(what))
+    logging.debug("Unmounting {} and everything on top of it".format(what))
     if mounts is None:  # pragma: no cover
         mounts = _read_proc_mounts()
     if real_unmount is None:  # pragma: no cover
@@ -40,31 +40,28 @@ def unmount(what, mounts=None, real_unmount=None):
     dirnames = _find_what_to_unmount(mounts, what)
     for dirname in dirnames:
         real_unmount(dirname)
-    logging.debug('Finishd unmounting {}'.format(what))
+    logging.debug("Finishd unmounting {}".format(what))
 
 
 def _read_proc_mounts():  # pragma: no cover
-    with open('/proc/mounts') as f:
+    with open("/proc/mounts") as f:
         return f.read()
 
 
 def _real_unmount(what):  # pragma: no cover
     try:
-        vmdb.runcmd(['umount', what])
+        vmdb.runcmd(["umount", what])
     except cliapp.AppException:
-        logging.info('unmount failed, but ignoring that')
+        logging.info("unmount failed, but ignoring that")
 
 
 def _parse_proc_mounts(text):
-    return [
-        line.split()[:2]
-        for line in text.splitlines()
-    ]
+    return [line.split()[:2] for line in text.splitlines()]
 
 
 def _find_what_to_unmount(mounts, what):
     dirname = _find_mount_point(mounts, what)
-    dirnameslash = dirname + '/'
+    dirnameslash = dirname + "/"
     to_unmount = [
         point
         for dev, point in mounts
@@ -81,6 +78,5 @@ def _find_mount_point(mounts, what):
 
 
 class NotMounted(Exception):
-
     def __init__(self, what):
-        super().__init__('Not mounted: {}'.format(what))
+        super().__init__("Not mounted: {}".format(what))

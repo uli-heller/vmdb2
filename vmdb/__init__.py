@@ -28,13 +28,7 @@ from .step_list import (
     StepKeyMissing,
     StepKeyWrongValueType,
 )
-from .runcmd import (
-    runcmd,
-    runcmd_chroot,
-    set_verbose_progress,
-    progress,
-    error,
-)
+from .runcmd import runcmd, runcmd_chroot, set_verbose_progress, progress, error
 from .tags import (
     Tags,
     UnknownTag,
@@ -46,8 +40,5 @@ from .tags import (
     NeedBothMountPoints,
 )
 from .unmount import unmount, NotMounted
-from .spec import (
-    Spec,
-    expand_templates,
-)
+from .spec import Spec, expand_templates
 from .app import Vmdb2

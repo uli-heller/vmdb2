@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 import stat
 
@@ -26,34 +25,30 @@ import vmdb
 
 
 class KpartxPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(KpartxStepRunner())
 
 
 class KpartxStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'kpartx': str,
-        }
+        return {"kpartx": str}
 
     def run(self, values, settings, state):
-        device = values['kpartx']
+        device = values["kpartx"]
         tags = state.tags.get_tags()
         devs = self.kpartx(device)
         for tag, dev in zip(tags, devs):
-            vmdb.progress('remembering {} as {}'.format(dev, tag))
+            vmdb.progress("remembering {} as {}".format(dev, tag))
             state.tags.set_dev(tag, dev)
 
     def kpartx(self, device):
-        output = vmdb.runcmd(['kpartx', '-asv', device]).decode('UTF-8')
+        output = vmdb.runcmd(["kpartx", "-asv", device]).decode("UTF-8")
         for line in output.splitlines():
             words = line.split()
-            if words[0] == 'add':
+            if words[0] == "add":
                 name = words[2]
-                yield '/dev/mapper/{}'.format(name)
+                yield "/dev/mapper/{}".format(name)
 
     def teardown(self, values, settings, state):
-        device = values['kpartx']
-        vmdb.runcmd(['kpartx', '-dsv', device])
+        device = values["kpartx"]
+        vmdb.runcmd(["kpartx", "-dsv", device])

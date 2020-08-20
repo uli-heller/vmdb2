@@ -28,16 +28,16 @@ import vmdb
 
 class SpecTests(unittest.TestCase):
 
-    spec_yaml = '''
+    spec_yaml = """
     steps:
       - step: foo
         arg: "{{ var1 }}"
         number: 0711
       - step: bar
-    '''
+    """
 
     def setUp(self):
-        self.filename = write_temp_file(bytes(self.spec_yaml, 'ascii'))
+        self.filename = write_temp_file(bytes(self.spec_yaml, "ascii"))
         self.spec = vmdb.Spec()
 
     def tearDown(self):
@@ -50,52 +50,33 @@ class SpecTests(unittest.TestCase):
 
     def test_expands_templates(self):
         self.spec.load_file(open(self.filename))
-        params = {
-            'var1': 'value1',
-        }
+        params = {"var1": "value1"}
         steps = self.spec.get_steps(params)
         self.assertEqual(
-            steps,
-            [
-                {
-                    'step': 'foo',
-                    'arg': 'value1',
-                    'number': 0o711,
-                },
-                {
-                    'step': 'bar',
-                },
-            ]
+            steps, [{"step": "foo", "arg": "value1", "number": 0o711}, {"step": "bar"}]
         )
 
-class ExpandTemplatesTests(unittest.TestCase):
 
+class ExpandTemplatesTests(unittest.TestCase):
     def test_raises_assert_if_given_incomprehensible_value(self):
         with self.assertRaises(AssertionError):
             vmdb.expand_templates(None, {})
 
     def test_returns_same_given_string_without_template(self):
-        self.assertEqual(vmdb.expand_templates('foo', {}), 'foo')
+        self.assertEqual(vmdb.expand_templates("foo", {}), "foo")
 
     def test_expands_simple_string_template(self):
-        params = {
-            'foo': 'bar',
-        }
-        self.assertEqual(vmdb.expand_templates('{{ foo }}', params), 'bar')
+        params = {"foo": "bar"}
+        self.assertEqual(vmdb.expand_templates("{{ foo }}", params), "bar")
 
     def test_expands_list_of_templates(self):
-        params = {
-            'foo': 'bar',
-        }
-        self.assertEqual(vmdb.expand_templates(['{{ foo }}'], params), ['bar'])
+        params = {"foo": "bar"}
+        self.assertEqual(vmdb.expand_templates(["{{ foo }}"], params), ["bar"])
 
     def test_expands_dict_of_templates(self):
-        params = {
-            'foo': 'bar',
-        }
+        params = {"foo": "bar"}
         self.assertEqual(
-            vmdb.expand_templates({'key': '{{ foo }}'}, params),
-            {'key': 'bar'}
+            vmdb.expand_templates({"key": "{{ foo }}"}, params), {"key": "bar"}
         )
 
 

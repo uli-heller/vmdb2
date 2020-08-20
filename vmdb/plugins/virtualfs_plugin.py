@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import logging
 import os
 
@@ -26,7 +25,6 @@ import vmdb
 
 
 class VirtualFilesystemMountPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(VirtualFilesystemMountStepRunner())
 
@@ -34,22 +32,20 @@ class VirtualFilesystemMountPlugin(cliapp.Plugin):
 class VirtualFilesystemMountStepRunner(vmdb.StepRunnerInterface):
 
     virtuals = [
-        ['none', '/proc', 'proc'],
-        ['none', '/dev', 'devtmpfs'],
-        ['none', '/dev/pts', 'devpts'],
-        ['none', '/dev/shm', 'tmpfs'],
-        ['none', '/run', 'tmpfs'],
-        ['none', '/run/lock', 'tmpfs'],
-        ['none', '/sys', 'sysfs'],
+        ["none", "/proc", "proc"],
+        ["none", "/dev", "devtmpfs"],
+        ["none", "/dev/pts", "devpts"],
+        ["none", "/dev/shm", "tmpfs"],
+        ["none", "/run", "tmpfs"],
+        ["none", "/run/lock", "tmpfs"],
+        ["none", "/sys", "sysfs"],
     ]
 
     def get_key_spec(self):
-        return {
-            'virtual-filesystems': str,
-        }
+        return {"virtual-filesystems": str}
 
     def run(self, values, settings, state):
-        fstag = values['virtual-filesystems']
+        fstag = values["virtual-filesystems"]
         mount_point = state.tags.get_builder_mount_point(fstag)
         self.mount_virtuals(mount_point, state)
 
@@ -57,23 +53,23 @@ class VirtualFilesystemMountStepRunner(vmdb.StepRunnerInterface):
         self.unmount_virtuals(state)
 
     def mount_virtuals(self, rootfs, state):
-        if not hasattr(state, 'virtuals'):
+        if not hasattr(state, "virtuals"):
             state.virtuals = []
 
         for device, mount_point, fstype in self.virtuals:
-            path = os.path.join(rootfs, './' + mount_point)
+            path = os.path.join(rootfs, "./" + mount_point)
             if not os.path.exists(path):
                 os.mkdir(path)
-            vmdb.runcmd(['mount', '-t', fstype, device, path])
+            vmdb.runcmd(["mount", "-t", fstype, device, path])
             state.virtuals.append(path)
-        logging.debug('mounted virtuals: %r', state.virtuals)
+        logging.debug("mounted virtuals: %r", state.virtuals)
 
     def unmount_virtuals(self, state):
-        logging.debug('unmounting virtuals: %r', state.virtuals)
+        logging.debug("unmounting virtuals: %r", state.virtuals)
         for mount_point in reversed(state.virtuals):
             try:
                 vmdb.unmount(mount_point)
             except vmdb.NotMounted as e:
                 logging.warning(str(e))
             except cliapp.AppException:
-                vmdb.warning('Something went wrong while unmounting. Ignoring.')
+                vmdb.warning("Something went wrong while unmounting. Ignoring.")

@@ -20,33 +20,27 @@ import vmdb
 import os
 import logging
 
-class CreateDirPlugin(cliapp.Plugin):
 
+class CreateDirPlugin(cliapp.Plugin):
     def enable(self):
         self.app.step_runners.add(CreateDirStepRunner())
 
 
 class CreateDirStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'create-dir': str,
-            'perm': 0o755,
-            'uid': 0,
-            'gid': 0,
-        }
+        return {"create-dir": str, "perm": 0o755, "uid": 0, "gid": 0}
 
     def run(self, values, settings, state):
-        root = state.tags.get_builder_from_target_mount_point('/')
-        newdir = values['create-dir']
-        path = '/'.join([root, newdir])
-        perm = values['perm']
-        uid = values['uid']
-        gid = values['gid']
+        root = state.tags.get_builder_from_target_mount_point("/")
+        newdir = values["create-dir"]
+        path = "/".join([root, newdir])
+        perm = values["perm"]
+        uid = values["uid"]
+        gid = values["gid"]
 
         logging.info(
-            'Creating directory %s, uid %d, gid %d, perms %o' % (
-                path, uid, gid, perm))
+            "Creating directory %s, uid %d, gid %d, perms %o" % (path, uid, gid, perm)
+        )
 
         os.makedirs(path, perm)
         os.chown(path, uid, gid)

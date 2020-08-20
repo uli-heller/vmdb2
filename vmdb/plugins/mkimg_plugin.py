@@ -16,40 +16,31 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import cliapp
 
 import vmdb
 
 
 class MkimgPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(MkimgStepRunner())
-        self.app.settings.bytesize(
-            ['size'],
-            'size of output image',
-            default='1GiB')
+        self.app.settings.bytesize(["size"], "size of output image", default="1GiB")
 
 
 class MkimgStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'mkimg': str,
-            'size': str,
-        }
+        return {"mkimg": str, "size": str}
 
     def run(self, values, settings, state):
-        filename = values['mkimg']
-        size = values['size']
+        filename = values["mkimg"]
+        size = values["size"]
 
         if not isinstance(filename, str):
-            raise vmdb.NotString('mkimg', filename)
+            raise vmdb.NotString("mkimg", filename)
         if not filename:
-            raise vmdb.IsEmptyString('mkimg', filename)
+            raise vmdb.IsEmptyString("mkimg", filename)
 
         if not isinstance(size, str):
-            raise vmdb.NotString('mkimg: size', size)
+            raise vmdb.NotString("mkimg: size", size)
 
-        vmdb.runcmd(['qemu-img', 'create', '-f', 'raw', filename, size])
+        vmdb.runcmd(["qemu-img", "create", "-f", "raw", filename, size])

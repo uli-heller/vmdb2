@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 
 import cliapp
@@ -25,28 +24,22 @@ import vmdb
 
 
 class LvcreatePlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(LvcreateStepRunner())
 
 
 class LvcreateStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'lvcreate': str,
-            'name': str,
-            'size': str,
-        }
+        return {"lvcreate": str, "name": str, "size": str}
 
     def run(self, values, settings, state):
-        vgname = values['lvcreate']
-        lvname = values['name']
-        size = values['size']
+        vgname = values["lvcreate"]
+        lvname = values["name"]
+        size = values["size"]
 
-        vmdb.runcmd(['lvcreate', '--name', lvname, '--size', size, vgname])
+        vmdb.runcmd(["lvcreate", "--name", lvname, "--size", size, vgname])
 
-        lvdev = '/dev/{}/{}'.format(vgname, lvname)
+        lvdev = "/dev/{}/{}".format(vgname, lvname)
         assert os.path.exists(lvdev)
         state.tags.append(lvname)
         state.tags.set_dev(lvname, lvdev)

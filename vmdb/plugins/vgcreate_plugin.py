@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 
 import cliapp
@@ -25,36 +24,28 @@ import vmdb
 
 
 class VgcreatePlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.step_runners.add(VgcreateStepRunner())
 
 
 class VgcreateStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'vgcreate': str,
-            'physical': [],
-        }
+        return {"vgcreate": str, "physical": []}
 
     def run(self, values, settings, state):
         vgname = self.get_vg(values)
         physical = self.get_pv(values, state)
 
         for phys in physical:
-            vmdb.runcmd(['pvcreate', '-ff', '--yes', phys])
-        vmdb.runcmd(['vgcreate', vgname] + physical)
+            vmdb.runcmd(["pvcreate", "-ff", "--yes", phys])
+        vmdb.runcmd(["vgcreate", vgname] + physical)
 
     def teardown(self, values, settings, state):
         vgname = self.get_vg(values)
-        vmdb.runcmd(['vgchange', '-an', vgname])
+        vmdb.runcmd(["vgchange", "-an", vgname])
 
     def get_vg(self, values):
-        return values['vgcreate']
+        return values["vgcreate"]
 
     def get_pv(self, values, state):
-        return [
-            state.tags.get_dev(tag)
-            for tag in values['physical']
-        ]
+        return [state.tags.get_dev(tag) for tag in values["physical"]]

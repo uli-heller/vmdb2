@@ -16,7 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-
 import os
 
 import cliapp
@@ -25,54 +24,53 @@ import vmdb
 
 
 class CacheRootFSPlugin(cliapp.Plugin):
-
     def enable(self):
         self.app.settings.string(
-            ['rootfs-tarball'],
-            'store rootfs cache tar archives in FILE',
-            metavar='FILE')
+            ["rootfs-tarball"],
+            "store rootfs cache tar archives in FILE",
+            metavar="FILE",
+        )
 
         self.app.step_runners.add(MakeCacheStepRunner())
 
 
 class MakeCacheStepRunner(vmdb.StepRunnerInterface):
-
     def get_key_spec(self):
-        return {
-            'cache-rootfs': str,
-            'options': '--one-file-system',
-        }
+        return {"cache-rootfs": str, "options": "--one-file-system"}
 
     def run(self, values, settings, state):
-        fs_tag = values['cache-rootfs']
+        fs_tag = values["cache-rootfs"]
         rootdir = state.tags.get_builder_mount_point(fs_tag)
-        tar_path = settings['rootfs-tarball']
-        opts = values['options'].split()
+        tar_path = settings["rootfs-tarball"]
+        opts = values["options"].split()
         if not tar_path:
-            raise Exception('--rootfs-tarball MUST be set')
+            raise Exception("--rootfs-tarball MUST be set")
         dirs = self._find_cacheable_mount_points(state.tags, rootdir)
 
         tags = state.tags
         for tag in tags.get_tags():
             vmdb.progress(
-                'tag {} mounted {} cached {}'.format(
-                    tag, tags.get_builder_mount_point(tag), tags.is_cached(tag)))
+                "tag {} mounted {} cached {}".format(
+                    tag, tags.get_builder_mount_point(tag), tags.is_cached(tag)
+                )
+            )
 
-        vmdb.progress('caching rootdir {}'.format(rootdir))
-        vmdb.progress('caching relative {}'.format(dirs))
+        vmdb.progress("caching rootdir {}".format(rootdir))
+        vmdb.progress("caching relative {}".format(dirs))
         if not os.path.exists(tar_path):
-            vmdb.runcmd(
-                ['tar'] + opts + ['-C', rootdir, '-caf', tar_path] + dirs)
+            vmdb.runcmd(["tar"] + opts + ["-C", rootdir, "-caf", tar_path] + dirs)
 
     def _find_cacheable_mount_points(self, tags, rootdir):
-        return list(sorted(
-            self._make_relative(rootdir, tags.get_builder_mount_point(tag))
-            for tag in tags.get_tags()
-            if tags.is_cached(tag)
-        ))
+        return list(
+            sorted(
+                self._make_relative(rootdir, tags.get_builder_mount_point(tag))
+                for tag in tags.get_tags()
+                if tags.is_cached(tag)
+            )
+        )
 
     def _make_relative(self, rootdir, dirname):
-        assert dirname == rootdir or dirname.startswith(rootdir + '/')
+        assert dirname == rootdir or dirname.startswith(rootdir + "/")
         if dirname == rootdir:
-            return '.'
-        return dirname[len(rootdir) + 1:]
+            return "."
+        return dirname[len(rootdir) + 1 :]
