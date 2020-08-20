@@ -21,8 +21,8 @@ from distutils.command.build import build
 from distutils.command.clean import clean
 import os
 import glob
+import subprocess
 
-import cliapp
 
 import vmdb
 
@@ -43,7 +43,7 @@ class Build(build):
 
     def generate_troff(self, program, lang):
         with open("%s.1%s" % (program, lang), "w") as f:
-            cliapp.runcmd(
+            subprocess.check_call(
                 [
                     "python3",
                     program,
@@ -57,13 +57,13 @@ class Build(build):
         env = dict(os.environ)
         env["MANWIDTH"] = "80"
         with open("%s.1.txt" % program, "w") as f:
-            cliapp.runcmd(
+            subprocess.check_call(
                 ["man", "-l", "%s.1" % program], ["col", "-b"], stdout=f, env=env
             )
 
     def format_yarns(self):
         print("building yarns")
-        cliapp.runcmd(["make", "-C", "yarns"])
+        subprocess.check_call(["make", "-C", "yarns"])
 
 
 setup(
