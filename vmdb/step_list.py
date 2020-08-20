@@ -19,9 +19,6 @@
 import logging
 
 
-import cliapp
-
-
 class StepRunnerInterface:  # pragma: no cover
     def get_key_spec(self):
         raise NotImplementedError()
@@ -106,7 +103,7 @@ class StepRunnerList:
         ]
 
 
-class StepError(cliapp.AppException):
+class StepError(Exception):
     def __init__(self, msg):
         logging.error(msg)
         super().__init__(msg)
