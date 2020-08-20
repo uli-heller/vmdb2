@@ -21,8 +21,6 @@ import os
 import subprocess
 import sys
 
-import cliapp
-
 
 _verbose = False
 
@@ -57,7 +55,7 @@ def runcmd(argv, **kwargs):
     logging.debug("STDOUT: %s", out.decode("UTF8"))
     logging.debug("STDERR: %s", err.decode("UTF8"))
     if p.returncode != 0:
-        raise cliapp.AppException("Command failed: {}".format(p.returncode))
+        raise subprocess.CalledProgramError("Command failed: {}".format(p.returncode))
     return out
 
 
@@ -69,7 +67,7 @@ def runcmd_chroot(chroot, argv, *argvs, **kwargs):
 def _procdir(chroot):
     proc = os.path.join(chroot, "proc")
     if not os.path.exists(proc):
-        os.mkdir(proc, mode=Oo755)
+        os.mkdir(proc, mode=0o755)
     return proc
 
 
