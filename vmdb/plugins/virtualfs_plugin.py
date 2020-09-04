@@ -19,12 +19,10 @@
 import logging
 import os
 
-import cliapp
-
 import vmdb
 
 
-class VirtualFilesystemMountPlugin(cliapp.Plugin):
+class VirtualFilesystemMountPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(VirtualFilesystemMountStepRunner())
 

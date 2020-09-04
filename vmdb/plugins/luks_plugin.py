@@ -20,12 +20,10 @@ import logging
 import os
 import tempfile
 
-import cliapp
-
 import vmdb
 
 
-class LuksPlugin(cliapp.Plugin):
+class LuksPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(CryptsetupStepRunner())
 

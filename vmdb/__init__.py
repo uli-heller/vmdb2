@@ -41,4 +41,5 @@ from .tags import (
 )
 from .unmount import unmount, NotMounted
 from .spec import Spec, expand_templates
+from .plugin import Plugin, find_plugins
 from .app import Vmdb2

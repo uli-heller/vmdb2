@@ -17,6 +17,7 @@
 
 
 import logging
+import os
 import sys
 
 import cliapp
@@ -36,6 +37,8 @@ class Vmdb2(cliapp.Application):
 
     def setup(self):
         self.step_runners = vmdb.StepRunnerList()
+        plugindir = os.path.join(os.path.dirname(vmdb.__file__), "plugins")
+        plugins = [klass(self).enable() for klass in vmdb.find_plugins(plugindir, "Plugin")]
 
     def process_args(self, args):
         if len(args) != 1:

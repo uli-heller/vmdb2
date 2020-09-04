@@ -18,12 +18,10 @@
 
 import os
 
-import cliapp
-
 import vmdb
 
 
-class UnpackRootFSPlugin(cliapp.Plugin):
+class UnpackRootFSPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(UnpackCacheStepRunner())
 

@@ -18,12 +18,10 @@
 
 import os
 
-import cliapp
-
 import vmdb
 
 
-class CacheRootFSPlugin(cliapp.Plugin):
+class CacheRootFSPlugin(vmdb.Plugin):
     def enable(self):
         self.app.settings.string(
             ["rootfs-tarball"],

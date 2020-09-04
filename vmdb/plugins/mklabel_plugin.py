@@ -16,15 +16,10 @@
 # =*= License: GPL-3+ =*=
 
 
-import os
-import stat
-
-import cliapp
-
 import vmdb
 
 
-class MklabelPlugin(cliapp.Plugin):
+class MklabelPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(MklabelStepRunner())
 

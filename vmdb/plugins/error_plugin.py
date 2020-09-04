@@ -16,12 +16,10 @@
 # =*= License: GPL-3+ =*=
 
 
-import cliapp
-
 import vmdb
 
 
-class ErrorPlugin(cliapp.Plugin):
+class ErrorPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(ErrorStepRunner())
 

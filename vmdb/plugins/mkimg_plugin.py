@@ -16,12 +16,10 @@
 # =*= License: GPL-3+ =*=
 
 
-import cliapp
-
 import vmdb
 
 
-class MkimgPlugin(cliapp.Plugin):
+class MkimgPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(MkimgStepRunner())
         self.app.settings.bytesize(["size"], "size of output image", default="1GiB")

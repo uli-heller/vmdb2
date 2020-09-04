@@ -17,12 +17,10 @@
 
 import os
 
-import cliapp
-
 import vmdb
 
 
-class FstabPlugin(cliapp.Plugin):
+class FstabPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(FstabStepRunner())
 

@@ -15,13 +15,12 @@
 #
 # =*= License: GPL-3+ =*=
 
-import cliapp
 import vmdb
 import os
 import logging
 
 
-class CopyFilePlugin(cliapp.Plugin):
+class CopyFilePlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(CopyFileStepRunner())
 

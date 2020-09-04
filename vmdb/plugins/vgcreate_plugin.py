@@ -16,14 +16,10 @@
 # =*= License: GPL-3+ =*=
 
 
-import os
-
-import cliapp
-
 import vmdb
 
 
-class VgcreatePlugin(cliapp.Plugin):
+class VgcreatePlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(VgcreateStepRunner())
 

@@ -16,15 +16,10 @@
 # =*= License: GPL-3+ =*=
 
 
-import os
-import stat
-
-import cliapp
-
 import vmdb
 
 
-class KpartxPlugin(cliapp.Plugin):
+class KpartxPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(KpartxStepRunner())
 

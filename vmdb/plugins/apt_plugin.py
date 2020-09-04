@@ -18,14 +18,7 @@
 
 import os
 
-import cliapp
-
 import vmdb
-
-
-class AptPlugin(cliapp.Plugin):
-    def enable(self):
-        self.app.step_runners.add(AptStepRunner())
 
 
 class AptStepRunner(vmdb.StepRunnerInterface):

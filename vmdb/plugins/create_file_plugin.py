@@ -15,13 +15,12 @@
 #
 # =*= License: GPL-3+ =*=
 
-import cliapp
 import vmdb
 import os
 import logging
 
 
-class CreateFilePlugin(cliapp.Plugin):
+class CreateFilePlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(CreateFileStepRunner())
 

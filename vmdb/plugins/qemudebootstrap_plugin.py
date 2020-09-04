@@ -16,12 +16,10 @@
 # =*= License: GPL-3+ =*=
 
 
-import cliapp
-
 import vmdb
 
 
-class QemuDebootstrapPlugin(cliapp.Plugin):
+class QemuDebootstrapPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(QemuDebootstrapStepRunner())
 

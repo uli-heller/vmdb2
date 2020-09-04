@@ -19,14 +19,7 @@
 import os
 import tempfile
 
-import cliapp
-
 import vmdb
-
-
-class AnsiblePlugin(cliapp.Plugin):
-    def enable(self):
-        self.app.step_runners.add(AnsibleStepRunner())
 
 
 class AnsibleStepRunner(vmdb.StepRunnerInterface):

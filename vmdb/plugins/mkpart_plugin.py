@@ -20,12 +20,10 @@ import os
 import stat
 import time
 
-import cliapp
-
 import vmdb
 
 
-class MkpartPlugin(cliapp.Plugin):
+class MkpartPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(MkpartStepRunner())
 
@@ -99,7 +97,7 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
             time.sleep(1)
 
 
-class MkpartError(cliapp.AppException):
+class MkpartError(Exception):
 
     pass
 

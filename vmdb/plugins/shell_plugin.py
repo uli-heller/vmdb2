@@ -18,12 +18,10 @@
 
 import os
 
-import cliapp
-
 import vmdb
 
 
-class ShellPlugin(cliapp.Plugin):
+class ShellPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(ShellStepRunner())
 

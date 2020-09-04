@@ -18,12 +18,10 @@
 
 import logging
 
-import cliapp
-
 import vmdb
 
 
-class EchoPlugin(cliapp.Plugin):
+class EchoPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(EchoStepRunner())
 

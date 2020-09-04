@@ -73,12 +73,10 @@ import logging
 import os
 import re
 
-import cliapp
-
 import vmdb
 
 
-class GrubPlugin(cliapp.Plugin):
+class GrubPlugin(vmdb.Plugin):
     def enable(self):
         self.app.step_runners.add(GrubStepRunner())
 
@@ -87,7 +85,6 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
     def get_key_spec(self):
         return {
             "grub": str,
-            "tag": str,
             "root-fs": "",
             "efi": "",
             "efi-part": "",
