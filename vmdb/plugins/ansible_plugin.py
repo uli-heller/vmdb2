@@ -22,6 +22,11 @@ import tempfile
 import vmdb
 
 
+class AnsiblePlugin(vmdb.Plugin):
+    def enable(self):
+        self.app.step_runners.add(AnsibleStepRunner())
+
+
 class AnsibleStepRunner(vmdb.StepRunnerInterface):
     def get_key_spec(self):
         return {"ansible": str, "playbook": str}
