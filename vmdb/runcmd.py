@@ -55,7 +55,7 @@ def runcmd(argv, **kwargs):
     logging.debug("STDOUT: %s", out.decode("UTF8"))
     logging.debug("STDERR: %s", err.decode("UTF8"))
     if p.returncode != 0:
-        raise subprocess.CalledProcessError("Command failed: {}".format(p.returncode))
+        raise RuncmdError("Program failed: {}".format(p.returncode))
     return out
 
 
@@ -79,3 +79,7 @@ def _log_stdout(data):
 def _log_stderr(data):
     logging.debug("STDERR: %r", data)
     return data
+
+
+class RuncmdError(Exception):
+    pass

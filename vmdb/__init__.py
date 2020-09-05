@@ -28,7 +28,14 @@ from .step_list import (
     StepKeyMissing,
     StepKeyWrongValueType,
 )
-from .runcmd import runcmd, runcmd_chroot, set_verbose_progress, progress, error
+from .runcmd import (
+    runcmd,
+    runcmd_chroot,
+    set_verbose_progress,
+    progress,
+    error,
+    RuncmdError,
+)
 from .tags import (
     Tags,
     UnknownTag,
