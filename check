@@ -7,6 +7,21 @@ echo Running unit tests ============================================
 python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
 echo
 
+echo Checking every plugin looks OK ============================================
+for file in vmdb/plugins/*.py
+do
+    case "$file" in
+	*_plugin.py) ;;
+	*) echo "File $file should end in _plugin.py" 1>&2 ; exit 1 ;;
+    esac
+    if ! grep -q 'class .*Plugin' "$file"
+    then
+	echo "File $file does not seem to have a Plugin class" 1>&2
+	exit 1
+    fi
+done
+echo
+
 if command -v sp-codegen > /dev/null
 then
     echo Running Subplot ============================================
