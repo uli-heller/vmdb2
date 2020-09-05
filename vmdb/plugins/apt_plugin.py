@@ -21,6 +21,11 @@ import os
 import vmdb
 
 
+class AptPlugin(vmdb.Plugin):
+    def enable(self):
+        self.app.step_runners.add(AptStepRunner())
+
+
 class AptStepRunner(vmdb.StepRunnerInterface):
     def get_key_spec(self):
         return {"apt": str, "packages": [], "tag": "", "fs-tag": "", "clean": True}
