@@ -38,7 +38,8 @@ class Vmdb2(cliapp.Application):
     def setup(self):
         self.step_runners = vmdb.StepRunnerList()
         plugindir = os.path.join(os.path.dirname(vmdb.__file__), "plugins")
-        plugins = [klass(self).enable() for klass in vmdb.find_plugins(plugindir, "Plugin")]
+        for klass in vmdb.find_plugins(plugindir, "Plugin"):
+            klass(self).enable()
 
     def process_args(self, args):
         if len(args) != 1:
