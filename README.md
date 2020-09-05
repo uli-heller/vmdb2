@@ -109,20 +109,7 @@ Steps (and teardowns) are provided by plugins; see the `vmdb/plugins`
 directory in the source tree. Steps are intended to be very cohesive
 and lowly coupled. They may share some state (such as mounted
 filesystems) via the `State` object, but not in any other way. A
-plugin may provide multiple steps.
-
-See the plugin directory for which steps currently exist. A list of
-steps that will become incomplete as soon as development continues:
-
-* chroot (run shell snippet in chroot)
-* shell (run shell snippet without chroot)
-* debootstrap (run deboostrap)
-* apt (install packagers in chroot with apt)
-* mkimg (create disk image)
-* mklabel (create partition table on a disk image)
-* mkpart (create partition)
-* mkfs (create filesystem in a partition)
-* mount (mount filesystem, teardown unmounts it automatically)
+plugin may only provide one step runner.
 
 See `pc.vmdb` and other `.vmdb` files for examples. Note how the file
 uses Jinja2 templating for value fields to get value of `--output` in
@@ -135,12 +122,22 @@ to the device node or mount point.
 Writing plugins
 -----------------------------------------------------------------------------
 
-More step runners would be good, and will be added based on
+More step runners would be good, but will be added based on
 actual reported needs by users ("I need to have this to..."), not
 speculatively ("This seems like a good idea").
 
 To write a plugin, see the existing ones for examples, and put it in
-`vmdb/plugins/foo_plugin.py` for some value of `foo`.
+`vmdb/plugins/foo_plugin.py` for some value of `foo`. The plugin file
+should provide a class named `FooPlugin`, which should provide the
+interface defined by `vmdb.Plugin`. Most plugins add a step runner,
+which subclasses `vmdb.StepRunnerInterface`, and the plugin class adds
+the step runner to the application's global list of step runners. See
+existing plugins for examples.
+
+Note that each plugin may only add one step runner. This keeps things
+simple, and also keeps document formatting simple. If two plugins
+need to share code for some reason, it may be appropriate to put that
+code into the `vmdb` module.
 
 You should document the plugin in a Markdown file next to it:
 `vmdb/plugins/foo.mdwn` for plugin mentioned above. See existing
