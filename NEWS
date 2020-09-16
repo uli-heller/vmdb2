@@ -1,8 +1,18 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.18+git, not yet released
+Version 0.19, released 2020-09-16
 -----------------------------------------------------------------------------
+
+Change in this release are entirely internal code changes that should
+not affect users of vmdb2.
+
+* Python Code has been formatted with the Black code formatting tool.
+
+* Changes have been made towards dropping the dependency on the
+  `cliapp` library: the Python standard library module `subprocess` is
+  used instead of `cliapp.runcmd`, and the `cliapp` plugin system has
+  been replaced with a custom one.
 
 
 Version 0.18, released 2020-08-13
