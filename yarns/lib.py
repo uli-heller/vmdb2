@@ -1,10 +1,10 @@
 import os
+import subprocess
 import sys
 
-import cliapp
 from yarnutils import *
 
-srcdir = os.environ['SRCDIR']
-datadir = os.environ['DATADIR']
+srcdir = os.environ["SRCDIR"]
+datadir = os.environ["DATADIR"]
 
 vars = Variables(datadir)

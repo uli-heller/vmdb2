@@ -11,8 +11,13 @@ This chapter contains the implementations for all scenario steps.
     IMPLEMENTS WHEN user runs vmdb2 (.*)
     args = get_next_match()
     vmdb2 = os.path.join(srcdir, 'vmdb2')
-    exit, out, err = cliapp.runcmd_unchecked([vmdb2] + args.split())
-    vars['exit'] = exit
+    p = subprocess.Popen(
+      [vmdb2] + args.split(),
+      stdin=subprocess.DEVNULL,
+      stdout=subprocess.PIPE,
+      stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    vars['exit'] = p.returncode
     vars['stdout'] = out.decode()
     vars['stderr'] = err.decode()
 
