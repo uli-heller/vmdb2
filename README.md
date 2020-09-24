@@ -58,7 +58,6 @@ The following tools are used by vmdb2 (Debian package names in brackets).
 
 The following Python modules are used by vmdb2 (Debian package names in brackets).
 
-* cliapp [`python3-cliapp`]
 * jinja2 [`python3-jinja2`]
 * yaml [`python3-yaml`]
 
@@ -70,7 +69,6 @@ You probably need the following installed to run the smoke test:
 
 - git
 - python3-coverage-test-runner
-- python3-cliapp
 - python3-jinja2
 - cmdtest 0.31 or later
 - qemu-utils
