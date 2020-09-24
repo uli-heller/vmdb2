@@ -17,9 +17,19 @@
 .SH NAME
 vmdb2 \- create a disk image with Debian installed
 .SH SYNOPSIS
+.nh
+.B vmdb2
+.RB [ \-\-image\fR=\fIFILE ]
+.RB [ \-\-output\fR=\fIFILE ]
+.RB [ \-\-rootfs\-tarball\fR=\fIFILE ]
+.RB [ \-h | \-\-help ]
+.RB [ \-\-version ]
+.RB [ \-v | \-\-verbose ]
+.RB [ \-\-log\fR=\fIFILE ]
+.RI [ FILE ]... ""
+.hy
 .B vmdb
-.RI [ options ]
-.IR SPECFILE ...
+.IR SPECFILE
 .SH DESCRIPTION
 .B vmdb2
 reads a
@@ -30,21 +40,44 @@ The specification file uses YAML syntax,
 and contains a list of steps.
 Each step tells vmdb2 what to do next.
 .SH OPTIONS
-.SH BUGS
-This is unfinished at this time.
+.TP
+.BR \-h ", " \-\-help
+show this help message and exit
+.TP
+.BR \-\-image =\fIFILE
+use existing image file/device
+.I FILE
+.TP
+.BR \-\-output =\fIFILE
+create new image
+.I FILE
+(the size comes from the specification file)
+.TP
+.BR \-\-rootfs\-tarball =\fIFILE
+store rootfs cache tar archives in
+.I FILE
+.TP
+.BR \-v ", " \-\-verbose
+verbose output
+.TP
+.BR \-\-log =\fIFILE
+write log entries to
+.I FILE
+(default is to not write log files at all)
+.TP
+.BR \-\-version
+show program's version number and exit
 .SH EXAMPLE
 To build a disk image:
 .PP
 .nf
 .RS
-vmdb2 foo.vmdb
+vmdb2 foo.vmdb --output foo.img -v --rootfs-tarball foo.tar.gz
 .RE
 .fi
 .SH "SEE ALSO"
-.BR vmdebootstrap (1).
+.BR debootstrap (8).
 .PP
-See the
-.B vmdb2
-manual and test suite for a full explanation of specification files.
-This may be installed as
-.IR /usr/share/doc/vmdb2/manual.html .
+.I https://vmdb2.liw.fi/
+.PP
+.IR /usr/share/doc/vmdb2/manual.html
