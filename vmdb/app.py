@@ -16,44 +16,140 @@
 # =*= License: GPL-3+ =*=
 
 
+import argparse
 import logging
 import os
 import sys
 
-import cliapp
-
 import vmdb
 
 
-class Vmdb2(cliapp.Application):
-    def add_settings(self):
-        self.settings.string(
-            ["image"],
-            "use existing image file/device FILE (use --output to create new file)",
-            metavar="FILE",
+class Vmdb2:
+    def __init__(self, version):
+        self._version = version
+
+    def run(self):
+        args = self.parse_command_line()
+        vmdb.set_verbose_progress(args.verbose)
+        tvars = self.template_vars_from_args(args)
+
+        cmd = None
+        if args.version:
+            cmd = VersionCommand(self._version)
+        elif args.image or args.output:
+            if args.image:
+                cmd = ReuseImageCommand(args.image, args.specfile, args.rootfs_tarball)
+            else:
+                cmd = NewImageCommand(args.output, args.specfile, args.rootfs_tarball)
+            builder = cmd.builder()
+            builder.add_template_vars(tvars)
+
+        if cmd is None:
+            sys.exit("I don't know what to do, re-run with --help")
+
+        if args.log:
+            self.setup_logging(args.log)
+            self.log_startup()
+        try:
+            cmd.run()
+        except Exception as e:
+            logging.error(f"ERROR: {e}", exc_info=True)
+            sys.exit(f"ERROR: {e}\n")
+        logging.debug("Ending, all OK")
+
+    def parse_command_line(self):
+        p = argparse.ArgumentParser(
+            description="build disk images with Debian installed"
         )
 
-        self.settings.boolean(["verbose", "v"], "verbose output")
+        p.add_argument("--image", metavar="FILE")
+        p.add_argument("--output", metavar="FILE")
+        p.add_argument("--rootfs-tarball", metavar="FILE")
+        p.add_argument("-v", "--verbose", action="store_true")
+        p.add_argument("--log")
+        p.add_argument("--version", action="store_true")
+        p.add_argument("specfile")
 
-    def setup(self):
-        self.step_runners = vmdb.StepRunnerList()
-        plugindir = os.path.join(os.path.dirname(vmdb.__file__), "plugins")
-        for klass in vmdb.find_plugins(plugindir, "Plugin"):
-            klass(self).enable()
+        return p.parse_args()
 
-    def process_args(self, args):
-        if len(args) != 1:
-            sys.exit("No image specification was given on the command line.")
+    def setup_logging(self, filename):
+        fmt = "%(asctime)s %(levelname)s %(message)s"
+        datefmt = "%Y-%m-%d %H:%M:%S"
+        formatter = logging.Formatter(fmt, datefmt)
 
-        vmdb.set_verbose_progress(self.settings["verbose"])
+        handler = logging.FileHandler(filename)
+        handler.setFormatter(formatter)
 
-        spec = self.load_spec_file(args[0])
+        logger = logging.getLogger()
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
+
+    def log_startup(self):
+        logging.info(f"Starting vmdb2 version {self._version}")
+
+    def template_vars_from_args(self, args):
+        return {
+            "image": args.image,
+            "output": args.output,
+            "rootfs_tarball": args.rootfs_tarball,
+        }
+
+
+class Command:
+    def run(self):
+        raise NotImplementedError()
+
+
+class VersionCommand(Command):
+    def __init__(self, version):
+        self.version = version
+
+    def run(self):
+        sys.stdout.write("{}\n".format(self.version))
+
+
+class NewImageCommand(Command):
+    def __init__(self, filename, specfile, tarball):
+        self._builder = ImageBuilder(filename, specfile, tarball)
+
+    def builder(self):
+        return self._builder
+
+    def run(self):
+        # FIXME: create file
+        self._builder.build()
+
+
+class ReuseImageCommand(Command):
+    def __init__(self, filename, specfile, tarball):
+        self._builder = ImageBuilder(filename, specfile, tarball)
+
+    def builder(self):
+        return self._builder
+
+    def run(self):
+        self._builder.build()
+
+
+class ImageBuilder:
+    def __init__(self, filename, specfile, tarball):
+        self._filename = filename
+        self._specfile = specfile
+        self._tarball = tarball
+        self._tvars = {}
+
+    def add_template_vars(self, tvars):
+        self._tvars.update(tvars)
+
+    def build(self):
+        spec = self.load_spec_file(self._specfile)
         state = vmdb.State()
         state.tags = vmdb.Tags()
-        params = self.create_template_vars(state)
-        steps = spec.get_steps(params)
+        self.add_template_vars(state.as_dict())
+        steps = spec.get_steps(self._tvars)
 
         # Check that we have step runners for each step
+        self.load_step_runners()
         for step in steps:
             self.step_runners.find(step)
 
@@ -66,7 +162,7 @@ class Vmdb2(cliapp.Application):
             vmdb.progress("All went fine.")
 
         if core_meltdown:
-            logging.error("An error occurred, exiting with non-zero exit code")
+            logging.error("An error occurred, exiting")
             sys.exit(1)
 
     def load_spec_file(self, filename):
@@ -80,6 +176,12 @@ class Vmdb2(cliapp.Application):
                 spec.load_file(f)
         return spec
 
+    def load_step_runners(self):
+        self.step_runners = vmdb.StepRunnerList()
+        plugindir = os.path.join(os.path.dirname(vmdb.__file__), "plugins")
+        for klass in vmdb.find_plugins(plugindir, "Plugin"):
+            klass(self).enable()
+
     def run_steps(self, steps, state):
         return self.run_steps_helper(steps, state, "Running step: %r", "run", False)
 
@@ -91,6 +193,7 @@ class Vmdb2(cliapp.Application):
     def run_steps_helper(self, steps, state, msg, method_name, keep_going):
         core_meltdown = False
         steps_taken = []
+        settings = {"rootfs-tarball": self._tarball}
 
         even_if_skipped = method_name + "_even_if_skipped"
         for step in steps:
@@ -98,7 +201,7 @@ class Vmdb2(cliapp.Application):
                 logging.info(msg, step)
                 steps_taken.append(step)
                 runner = self.step_runners.find(step)
-                if runner.skip(step, self.settings, state):
+                if runner.skip(step, settings, state):
                     logging.info("Skipping as requested by unless")
                     method_names = [even_if_skipped]
                 else:
@@ -113,7 +216,7 @@ class Vmdb2(cliapp.Application):
                 values = runner.get_values(step)
                 for method in methods:
                     logging.info("Calling %s", method)
-                    method(values, self.settings, state)
+                    method(values, settings, state)
             except KeyError as e:
                 vmdb.error("Key error: %s" % str(e))
                 vmdb.error(repr(e))
@@ -128,10 +231,3 @@ class Vmdb2(cliapp.Application):
                     break
 
         return steps_taken, core_meltdown
-
-    def create_template_vars(self, state):
-        vars = dict()
-        for key in self.settings:
-            vars[key] = self.settings[key]
-        vars.update(state.as_dict())
-        return vars

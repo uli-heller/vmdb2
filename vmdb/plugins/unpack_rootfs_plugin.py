@@ -16,6 +16,7 @@
 # =*= License: GPL-3+ =*=
 
 
+import logging
 import os
 
 import vmdb
@@ -33,7 +34,9 @@ class UnpackCacheStepRunner(vmdb.StepRunnerInterface):
     def run(self, values, settings, state):
         fs_tag = values["unpack-rootfs"]
         rootdir = state.tags.get_builder_mount_point(fs_tag)
+        logging.debug(f"settings: {settings}")
         tar_path = settings["rootfs-tarball"]
+        logging.debug(f"tar_path: {tar_path!r}")
         if not tar_path:
             raise Exception("--rootfs-tarball MUST be set")
         if os.path.exists(tar_path):

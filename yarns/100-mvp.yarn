@@ -114,7 +114,7 @@ the step mounts a filesystem, the teardown would unmount it.
     ...         { echo: "bar", teardown: "bar_teardown" }
     ...     ]
     ... }
-    WHEN user runs vmdb2 -v happy.vmdb
+    WHEN user runs vmdb2 -v happy.vmdb --output happy.img
     THEN exit code is 0
     AND stdout contains "foo" followed by "bar"
     AND stdout contains "bar" followed by "bar_teardown"
@@ -159,7 +159,7 @@ then?
     ...         { echo: "bar_step", teardown: "bar_teardown" }
     ...     ]
     ... }
-    WHEN user runs vmdb2 -v unhappy.vmdb
+    WHEN user runs vmdb2 -v unhappy.vmdb --output=unhappy.img
     THEN exit code is 1
     AND stdout contains "foo" followed by "yikes"
     AND stdout contains "yikes" followed by "WAT?!"

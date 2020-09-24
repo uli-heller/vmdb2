@@ -23,12 +23,6 @@ import vmdb
 
 class CacheRootFSPlugin(vmdb.Plugin):
     def enable(self):
-        self.app.settings.string(
-            ["rootfs-tarball"],
-            "store rootfs cache tar archives in FILE",
-            metavar="FILE",
-        )
-
         self.app.step_runners.add(MakeCacheStepRunner())
 
 
