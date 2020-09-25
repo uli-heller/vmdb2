@@ -78,7 +78,7 @@ then
     panic "Documentation has steps that use code in title"
 fi
 
-if ! diff -u <(steps) <(steps | sort)
-then
-    panic "Steps are not in sorted order"
-fi
+#if ! diff -u <(steps) <(steps | sort)
+#then
+#    panic "Steps are not in sorted order"
+#fi
