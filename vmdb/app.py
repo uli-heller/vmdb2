@@ -145,6 +145,7 @@ class ImageBuilder:
         spec = self.load_spec_file(self._specfile)
         state = vmdb.State()
         state.tags = vmdb.Tags()
+        state.arch = vmdb.runcmd(["dpkg", "--print-architecture"]).decode("UTF-8").strip()
         self.add_template_vars(state.as_dict())
         steps = spec.get_steps(self._tvars)
 
