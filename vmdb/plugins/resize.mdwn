@@ -1,0 +1,24 @@
+Step: rezize-rootfs
+-----------------------------------------------------------------------------
+
+Configure the system on the image so that it automatically resizes
+itself to fill the actual disk, upon first boot. For this to work, the
+root file system MUST be the last partition on the image.
+
+Also, the image MUST have the `parted` package installed for the
+`partprobe` command.
+
+Step keys:
+
+* `resize-rootfs` &mdash; REQUIRED; value MUST be the tag for the root
+  filesystem.
+
+This is based on reading the changes by Peter Lawler to the
+[image-specs](https://salsa.debian.org/raspi-team/image-specs.git)
+repository to do the same thing.
+
+Example:
+
+~~~yaml
+- resize-rootfs: root
+~~~

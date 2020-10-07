@@ -6,6 +6,9 @@ Version 0.19+git, not yet released
 
 * All use of the Python `cliapp` library has been dropped from vmdb2 now.
 
+* New step `resize-rootfs` adds a systemd service to resize the root
+  file system to fit the actual drive on boot.
+
 
 Version 0.19, released 2020-09-16
 -----------------------------------------------------------------------------

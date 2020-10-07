@@ -11,7 +11,7 @@ steps:
   - mkpart: primary
     device: "{{ output }}"
     start: 0%
-    end: 100%
+    end: 50%
     tag: /
 
   - kpartx: "{{ output }}"
@@ -40,9 +40,15 @@ steps:
   - chroot: /
     shell: |
       echo pc > /etc/hostname
-      apt -y install python
+      apt -y install python parted
 
   - fstab: /
+
+  - chroot: /
+    shell: |
+      sed -i 's,^root:[^:]*:,root::,' /etc/passwd
+
+  - resize-rootfs: /
 
   - grub: bios
     tag: /
