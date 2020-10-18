@@ -1,7 +1,7 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.19+git, not yet released
+Version 0.20+git, released 2020-10-18
 -----------------------------------------------------------------------------
 
 * All use of the Python `cliapp` library has been dropped from vmdb2 now.
