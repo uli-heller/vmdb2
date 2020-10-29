@@ -4,6 +4,8 @@ NEWS for vmdb2, the Debian disk image builder
 Version 0.20+git, not yet released
 -----------------------------------------------------------------------------
 
+* The grub plugin is able to install the UEFI version of grub on arm64
+  targets, patch from David Edmondson.
 
 
 Version 0.20, released 2020-10-18

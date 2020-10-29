@@ -51,9 +51,9 @@
 # For cleanliness, we also undo any bind mounts into the chroot. Don't
 # want to leave them in case they cause trouble.
 #
-# Note that this is currently rather strongly assuming that UEFI and
-# the amd64 (a.k.a. x86_64) architecture are being used. These should
-# probably not be hardcoded. Patch welcome.
+# Note that this is currently assuming that UEFI and either the amd64
+# (a.k.a. x86_64) or arm64 (a.k.a. aarch64) architectures are being
+# used. These should probably not be hardcoded. Patch welcome.
 
 # To use this plugin: write steps to create a root filesystem, and an
 # VFAT filesystem to be mounted as /boot/efi. Install Debian onto the
@@ -105,6 +105,18 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         else:
             raise Exception("Unknown GRUB flavor {}".format(flavor))
 
+    def grub_uefi_variant(self, state):
+        variants = {
+            "amd64": ("grub-efi-amd64", "x86_64-efi"),
+            "arm64": ("grub-efi-arm64", "arm64-efi"),
+        }
+        try:
+            return variants[state.arch]
+        except KeyError:
+            raise Exception(
+                'GRUB UEFI package and target for "{}" unknown'.format(state.arch)
+            )
+
     def install_uefi(self, values, settings, state):
         efi = values["efi"] or None
         efi_part = values["efi-part"] or None
@@ -112,8 +124,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             raise Exception('"efi" or "efi-part" required in UEFI GRUB installation')
 
         vmdb.progress("Installing GRUB for UEFI")
-        grub_package = "grub-efi-amd64"
-        grub_target = "x86_64-efi"
+        (grub_package, grub_target) = self.grub_uefi_variant(state)
         self.install_grub(values, settings, state, grub_package, grub_target)
 
     def install_bios(self, values, settings, state):

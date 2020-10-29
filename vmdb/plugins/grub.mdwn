@@ -1,17 +1,17 @@
 Step: grub
 -----------------------------------------------------------------------------
 
-Install the GRUB bootloader to the image. Works on a PC, for
-traditional BIOS booting or modern UEFI booting. Does not (yet?)
-support Secure Boot.
+Install the GRUB bootloader to the image. Works on a PC for
+traditional BIOS booting and both a PC and arm64 machines for modern
+UEFI booting. Does not (yet?) support Secure Boot.
 
 Warning: This is the least robust part of vmdb2.
 
 Step keys:
 
 * `grub` &mdash; REQUIRED; value MUST be one of `uefi` and `bios`, for
-  a UEFI or a BIOS boot, respectively. (FIXME: these are valid for a
-  PC; not sure what other archs require, if grub even works there.)
+  a UEFI or a BIOS boot, respectively. Only PC systems support the
+  `bios` option.
 
 * `tag` &mdash; REQUIRED; value is the tag for the root filesystem.
 
