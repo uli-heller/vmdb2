@@ -2,13 +2,15 @@
 
 set -eu
 
-tarball="$1"
+amd64_tarball="$1"
 shift
 
 tryit()
 {
     local image="$1"
     local yaml="$2"
+    local tarball="$3"
+
     echo "Testing $yaml"
     ./vmdb2 --rootfs-tarball "$dst/$tarball" \
             --verbose \
@@ -25,11 +27,11 @@ cd "$src"
 #tryit luks.img "$src/luks.vmdb"
 #tryit lvm2.img "$src/lvm2.vmdb"; exit
 
-./smoke.sh "$tarball"
+./smoke.sh "$amd64_tarball"
 
 for x in "$@" pc uefi ansible smoke-pc smoke-uefi
 do
-    tryit "$dst/$x.img" "$x.vmdb"
+    tryit "$dst/$x.img" "$x.vmdb" "$amd64_tarball"
 done
 
 echo All test images built successfully.
