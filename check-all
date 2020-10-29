@@ -25,6 +25,8 @@ cd "$src"
 #tryit luks.img "$src/luks.vmdb"
 #tryit lvm2.img "$src/lvm2.vmdb"; exit
 
+./smoke.sh "$tarball"
+
 for x in "$@" pc uefi ansible smoke-pc smoke-uefi
 do
     tryit "$dst/$x.img" "$x.vmdb"

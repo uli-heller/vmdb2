@@ -29,7 +29,7 @@ testing multiple time much faster.
     THEN user can UEFI boot smoke-uefi.img and power it off from root shell
 
     IMPLEMENTS WHEN user runs vmdb (\S+) --output (\S+)
-    "$SRCDIR/vmdb2" --no-default-config "$SRCDIR/$MATCH_1" \
+    "$SRCDIR/vmdb2" "$SRCDIR/$MATCH_1" \
         --output "$DATADIR/$MATCH_2" \
         --log "$DATADIR/vmdb.log" \
         --verbose \
