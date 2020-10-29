@@ -10,8 +10,8 @@ More elaborate testing can be added, but smoke testing is enough for
 now.
 
 To run this yarn file, you need to run it as root (since it needs to
-build an image as root), and you need to run on an amd64 system (and
-thus build an amd64 image). Additionally, you need to add the
+build an image as root), and you need to run on a system where
+qemu-system-aarch64 is installed. Additionally, you need to add the
 following option to yarn:
 
     EXAMPLE
@@ -21,12 +21,9 @@ This means vmdb2 will use the given tarball when creating an image,
 and if the tarball doesn't exist yet, it will create it. This makes
 testing multiple time much faster.
 
-    SCENARIO smoke test image
-    WHEN user runs vmdb smoke-pc.vmdb --output smoke-pc.img
-    THEN user can BIOS boot smoke-pc.img and power it off from root shell
-
-    WHEN user runs vmdb smoke-uefi.vmdb --output smoke-uefi.img
-    THEN user can UEFI boot smoke-uefi.img and power it off from root shell
+    SCENARIO smoke test arm64 UEFI image
+    WHEN user runs vmdb smoke-uefi-arm64.vmdb --output smoke-uefi-arm64.img
+    THEN user can UEFI boot smoke-uefi-arm64.img and power it off from root shell
 
     IMPLEMENTS WHEN user runs vmdb (\S+) --output (\S+)
     "$SRCDIR/vmdb2" "$SRCDIR/$MATCH_1" \
@@ -35,43 +32,17 @@ testing multiple time much faster.
         --verbose \
         --rootfs-tarball "$ROOTFS_TARBALL"
 
-    IMPLEMENTS THEN user can BIOS boot (\S+) and power it off from root shell
-    cd "$DATADIR"
-    img="$MATCH_1"
-    cat << EOF > run.sh
-    qemu-system-x86_64 -drive file="$img",format=raw -m 1024 -nographic
-    EOF
-    chmod a+rx run.sh
-    cat << EOF > expect.txt
-    set timeout 300
-    proc abort {} {
-        puts "ERROR ERROR\n"
-        exit 1
-    }
-    spawn ./run.sh
-    expect "login: "
-    send "root\n"
-    expect "# "
-    send "poweroff\r"
-    set timeout 5
-    expect {
-        "reboot: Power down" {puts poweroffing\n}
-        eof abort
-        timeout abort
-    }
-    expect eof
-    EOF
-    expect -d expect.txt > expect.out
-
     IMPLEMENTS THEN user can UEFI boot (\S+) and power it off from root shell
     cd "$DATADIR"
     img="$MATCH_1"
     cat << EOF > run.sh
-    cp /usr/share/OVMF/OVMF_VARS.fd .
-    qemu-system-x86_64 \
+    cp /usr/share/AAVMF/AAVMF_VARS.fd .
+    qemu-system-aarch64 \
+      -machine virt \
+      -cpu cortex-a72 \
       -m 1024 \
-      -drive if=pflash,format=raw,unit=0,file=/usr/share/ovmf/OVMF.fd,readonly=on \
-      -drive if=pflash,format=raw,unit=1,file=OVMF_VARS.fd \
+      -drive if=pflash,format=raw,unit=0,file=/usr/share/AAVMF/AAVMF_CODE.fd,readonly=on \
+      -drive if=pflash,format=raw,unit=1,file=AAVMF_VARS.fd \
       -drive format=raw,file="$img" \
       -nographic
     EOF
