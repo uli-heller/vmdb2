@@ -4,6 +4,8 @@ set -eu
 
 amd64_tarball="$1"
 shift
+arm64_tarball="$1"
+shift
 
 tryit()
 {
@@ -32,6 +34,11 @@ cd "$src"
 for x in "$@" pc uefi ansible smoke-pc smoke-uefi
 do
     tryit "$dst/$x.img" "$x.vmdb" "$amd64_tarball"
+done
+
+for x in "$@" arm64-uefi
+do
+    tryit "$dst/$x.img" "$x.vmdb" "$arm64_tarball"
 done
 
 echo All test images built successfully.
