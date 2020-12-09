@@ -334,6 +334,7 @@ title: Building Debian system images with vmdb2
 author: Lars Wirzenius
 bindings: vmdb2.yaml
 functions: vmdb2.py
+template: python
 documentclass: report
 ...
 
