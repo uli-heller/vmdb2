@@ -39,7 +39,7 @@ testing multiple time much faster.
     cp /usr/share/AAVMF/AAVMF_VARS.fd .
     qemu-system-aarch64 \
       -machine virt \
-      -cpu cortex-a72 \
+      -cpu max \
       -m 1024 \
       -drive if=pflash,format=raw,unit=0,file=/usr/share/AAVMF/AAVMF_CODE.fd,readonly=on \
       -drive if=pflash,format=raw,unit=1,file=AAVMF_VARS.fd \
