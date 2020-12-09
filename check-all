@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
 
@@ -22,7 +22,7 @@ tryit()
     echo
 }
 
-src="$(dirname $0)"
+src="$(dirname "$0")"
 dst="$(pwd)"
 cd "$src"
 
