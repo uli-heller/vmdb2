@@ -3,11 +3,22 @@
 set -eu
 set -o pipefail
 
-echo Running unit tests ============================================
-python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
-echo
+hideok=chronic
+if ! command -v chronic > /dev/null
+then
+    hideok=
+fi
+if [ "$#" -gt 0 ] && [ "$1" = -v ]
+then
+    hideok=
+    shift
+fi
 
-echo Checking every plugin looks OK ============================================
+$hideok echo Running unit tests ============================================
+$hideok python3 -m CoverageTestRunner --ignore-missing-from=without-tests yarns vmdb
+$hideok echo
+
+$hideok echo Checking every plugin looks OK ============================================
 for file in vmdb/plugins/*.py
 do
     case "$file" in
@@ -20,29 +31,29 @@ do
 	exit 1
     fi
 done
-echo
+$hideok echo
 
 if command -v sp-codegen > /dev/null
 then
-    echo Running Subplot ============================================
-    sp-codegen vmdb2.md -o test.py --run
-    echo
+    $hideok echo Running Subplot ============================================
+    $hideok sp-codegen vmdb2.md -o test.py --run
+    $hideok echo
 fi
 
-echo Running yarn tests ========================================
+$hideok echo Running yarn tests ========================================
 if python3 -c 'import yarnutils' 2>/dev/null
 then
-    yarn \
+    $hideok yarn \
         --shell=python3 \
         --shell-arg '' \
         --shell-library yarns/lib.py \
         --env "PYTHONPATH=$(pwd)/yarns" \
         --cd-datadir \
         yarns/*.yarn "$@"
-    echo
+    $hideok echo
 fi
 
-echo Formatting docs ========================================
+$hideok echo Formatting docs ========================================
 ./format.sh
 
 plugindocs() {
