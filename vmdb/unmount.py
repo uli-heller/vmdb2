@@ -37,7 +37,7 @@ def unmount(what, mounts=None, real_unmount=None):
     dirnames = _find_what_to_unmount(mounts, what)
     for dirname in dirnames:
         real_unmount(dirname)
-    logging.debug("Finishd unmounting {}".format(what))
+    logging.debug("Finished unmounting {}".format(what))
 
 
 def _read_proc_mounts():  # pragma: no cover
