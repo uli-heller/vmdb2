@@ -1,4 +1,4 @@
-Step: rezize-rootfs
+Step: resize-rootfs
 -----------------------------------------------------------------------------
 
 Configure the system on the image so that it automatically resizes
