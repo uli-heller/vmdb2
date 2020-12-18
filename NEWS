@@ -5,7 +5,9 @@ Version 0.20+git, not yet released
 -----------------------------------------------------------------------------
 
 * The grub plugin is able to install the UEFI version of grub on arm64
-  targets, patch from David Edmondson.
+  targets, patch from David Edmondson.[
+
+* The documentation tile for the `resize_rootfs` step is now fixed.
 
 
 Version 0.20, released 2020-10-18
