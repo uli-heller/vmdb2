@@ -1,7 +1,11 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.21, not yet released
+Version 0.21+git, not yet released
+-----------------------------------------------------------------------------
+
+
+Version 0.21, released 2020-12-18
 -----------------------------------------------------------------------------
 
 * The grub plugin is able to install the UEFI version of grub on arm64
