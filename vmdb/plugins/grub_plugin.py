@@ -108,7 +108,9 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
     def grub_uefi_variant(self, state):
         variants = {
             "amd64": ("grub-efi-amd64", "x86_64-efi"),
+            "i386": ("grub-efi-ia32", "i386-efi"),
             "arm64": ("grub-efi-arm64", "arm64-efi"),
+            "armhf": ("grub-efi-arm", "arm-efi"),
         }
         try:
             return variants[state.arch]
