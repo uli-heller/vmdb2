@@ -61,11 +61,19 @@ The following Python modules are used by vmdb2 (Debian package names in brackets
 * jinja2 [`python3-jinja2`]
 * yaml [`python3-yaml`]
 
+If UEFI booting is to be used, firmware is needed for the following
+architectures (Debian package names providing it in brackets):
+
+* amd64 [`ovmf`]
+* arm64 [`qemu-efi-aarch64`]
+* arm [`qemu-efi-arm`]
+* i386 [`ovmf-ia32`]
+
 
 Dependencies for smoke.sh
 -----------------------------------------------------------------------------
 
-You probably need the following installed to run the smoke test:
+You probably need the following installed to run the smoke tests:
 
 - git
 - python3-coverage-test-runner
@@ -77,6 +85,10 @@ You probably need the following installed to run the smoke test:
 - debootstrap
 - expect
 - qemu-system
+- ovmf
+- ovmf-ia32
+- qemu-efi-aarch64
+- qemu-efi-arm
 
 
 Tutorial
