@@ -27,7 +27,7 @@ tryit()
 }
 
 src="$(dirname "$0")"
-dst="$(pwd)"
+dst="${VMDB2_DST:-$(pwd)}"
 cd "$src"
 
 #tryit luks.img "$src/luks.vmdb"
