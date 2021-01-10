@@ -40,7 +40,7 @@ steps:
   - chroot: /
     shell: |
       echo pc > /etc/hostname
-      apt -y install python parted
+      apt -y install python3 parted
 
   - fstab: /
 
