@@ -36,6 +36,13 @@ do
     tryit "$dst/$x.img" "$x.vmdb" "$amd64_tarball"
 done
 
+# On amd64, qemu-user-static has occasionally been observed to segfault. This
+# is being investigated further.
+# [  865.372027] show_signal_msg: 21 callbacks suppressed
+# [  865.372029] locale[37762]: segfault at 1eed310 ip 0000000000562f20 sp 00007ffe90ac9bf8 error 4 in qemu-aarch64-static[401000+3e3000]
+# [  865.372034] Code: 00 e9 94 7d 1c 00 0f 1f 40 00 64 83 2c 25 50 ff ff ff 01 74 05 c3 0f 1f 40 00 48 8d 3d c9 d9 7f 00 e9 e4 8a 1c 00 0f 1f 40 00 <64> 8b 04 25 50 ff ff ff 85 c0 0f 9f c0 c3 66 90 48 83 ec 08 64 8b
+./smoke-arm64.sh "$dst/$arm64_tarball"
+
 for x in "$@" arm64-uefi
 do
     tryit "$dst/$x.img" "$x.vmdb" "$arm64_tarball"
