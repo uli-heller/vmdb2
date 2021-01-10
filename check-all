@@ -8,6 +8,8 @@ i386_tarball="$1"
 shift
 arm64_tarball="$1"
 shift
+armhf_tarball="$1"
+shift
 
 tryit()
 {
@@ -60,4 +62,14 @@ do
     tryit "$dst/$x.img" "$x.vmdb" "$arm64_tarball"
 done
 
+
+./smoke-armhf.sh "$dst/$armhf_tarball"
+
+for x in "$@" armhf-uefi
+do
+    tryit "$dst/$x.img" "$x.vmdb" "$armhf_tarball"
+done
+
+
 echo All test images built successfully.
+
