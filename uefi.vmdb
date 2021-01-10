@@ -1,5 +1,5 @@
 # This is a sample VMDB2 input file that specifies a simple system for
-# a PC that boots with UEFI.
+# a 64-bit PC that boots with UEFI.
 
 steps:
   - mkimg: "{{ output }}"

@@ -1,5 +1,5 @@
 # This is a sample VMDB2 input file to specify a simple
-# system that boots on a 64-bit PC with BIOS.
+# system that boots on a 32-bit PC with BIOS.
 
 steps:
   - mkimg: "{{ output }}"
@@ -23,14 +23,15 @@ steps:
 
   - unpack-rootfs: /
 
-  - debootstrap: buster
+  - qemu-debootstrap: buster
+    arch: i386
     mirror: http://deb.debian.org/debian
     target: /
     unless: rootfs_unpacked
 
   - apt: install
     packages:
-    - linux-image-amd64
+    - linux-image-686-pae
     tag: /
     unless: rootfs_unpacked
 
@@ -39,7 +40,7 @@ steps:
 
   - chroot: /
     shell: |
-      echo pc > /etc/hostname
+      echo i386 > /etc/hostname
       apt -y install python3 parted
 
   - fstab: /

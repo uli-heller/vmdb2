@@ -45,7 +45,7 @@ done
 
 ./smoke-i386.sh "$dst/$i386_tarball"
 
-for x in "$@" i386-uefi
+for x in "$@" i386 i386-uefi
 do
     tryit "$dst/$x.img" "$x.vmdb" "$i386_tarball"
 done

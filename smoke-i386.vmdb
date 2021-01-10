@@ -1,0 +1,72 @@
+steps:
+  - mkimg: "{{ output }}"
+    size: 4G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 1M
+    end: 10M
+    tag: unused
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 10M
+    end: 100%
+    tag: rootfs
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: rootfs
+    label: smoke
+
+  - mount: rootfs
+
+  - create-dir: /smoke-dir
+    perm: 0777
+    uid: 1000
+    gid: 1000
+
+  - create-file: /smoke-create-file.txt
+    contents: No smoke here.
+    perm: 0777
+    uid: 1000
+    gid: 1000
+
+  - copy-file: /smoke-copy-file.txt
+    src: smoke-copy-file.txt
+    perm: 0777
+    uid: 1000
+    gid: 1000
+
+  - unpack-rootfs: rootfs
+
+  - qemu-debootstrap: buster
+    arch: i386
+    mirror: http://deb.debian.org/debian
+    keyring: /usr/share/keyrings/debian-archive-keyring.gpg
+    target: rootfs
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - linux-image-686-pae
+    tag: rootfs
+    unless: rootfs_unpacked
+
+  - cache-rootfs: rootfs
+    unless: rootfs_unpacked
+
+  - chroot: rootfs
+    shell: |
+      sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
+      echo pc-vmdb2 > /etc/hostname
+
+  - fstab: rootfs
+
+  - grub: bios
+    tag: rootfs
+    console: serial

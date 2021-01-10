@@ -13,7 +13,6 @@ To run this yarn file, you need to run it as root (since it needs to
 build an image as root), and you need to run on a system where
 qemu-system-i386 is installed. Additionally, you need to add the
 following option to yarn:
-
     EXAMPLE
     --env ROOTFS_TARBALL=/path/to/rootfs/tarball
 
@@ -21,7 +20,10 @@ This means vmdb2 will use the given tarball when creating an image,
 and if the tarball doesn't exist yet, it will create it. This makes
 testing multiple time much faster.
 
-    SCENARIO smoke test i386 UEFI image
+    SCENARIO smoke test i386 image
+    WHEN user runs vmdb smoke-i386.vmdb --output smoke-i386.img
+    THEN user can BIOS boot smoke-i386.img and power it off from root shell
+
     WHEN user runs vmdb smoke-uefi-i386.vmdb --output smoke-uefi-i386.img
     THEN user can UEFI boot smoke-uefi-i386.img and power it off from root shell
 
@@ -31,6 +33,35 @@ testing multiple time much faster.
         --log "$DATADIR/vmdb.log" \
         --verbose \
         --rootfs-tarball "$ROOTFS_TARBALL"
+
+    IMPLEMENTS THEN user can BIOS boot (\S+) and power it off from root shell
+    cd "$DATADIR"
+    img="$MATCH_1"
+    cat << EOF > run.sh
+    qemu-system-x86_64 -drive file="$img",format=raw -m 1024 -nographic
+    EOF
+    chmod a+rx run.sh
+    cat << EOF > expect.txt
+    set timeout 300
+    proc abort {} {
+        puts "ERROR ERROR\n"
+        exit 1
+    }
+    spawn ./run.sh
+    expect "login: "
+    send "root\n"
+    expect "# "
+    send "poweroff\r"
+    set timeout 5
+    expect {
+        "reboot: Power down" {puts poweroffing\n}
+        eof abort
+        timeout abort
+    }
+    expect eof
+    wait
+    EOF
+    expect -d expect.txt > expect.out
 
     IMPLEMENTS THEN user can UEFI boot (\S+) and power it off from root shell
     cd "$DATADIR"
