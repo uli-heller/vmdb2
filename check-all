@@ -23,6 +23,7 @@ tryit()
             --log "$dst/check.log" \
             --output "$image" \
             "$yaml"
+	rm -f "$image"
     echo
 }
 
