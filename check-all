@@ -4,6 +4,8 @@ set -eu
 
 amd64_tarball="$1"
 shift
+i386_tarball="$1"
+shift
 arm64_tarball="$1"
 shift
 
@@ -29,12 +31,22 @@ cd "$src"
 #tryit luks.img "$src/luks.vmdb"
 #tryit lvm2.img "$src/lvm2.vmdb"; exit
 
-./smoke.sh "$amd64_tarball"
+
+./smoke.sh "$dst/$amd64_tarball"
 
 for x in "$@" pc uefi ansible smoke-pc smoke-uefi
 do
     tryit "$dst/$x.img" "$x.vmdb" "$amd64_tarball"
 done
+
+
+./smoke-i386.sh "$dst/$i386_tarball"
+
+for x in "$@" i386-uefi
+do
+    tryit "$dst/$x.img" "$x.vmdb" "$i386_tarball"
+done
+
 
 # On amd64, qemu-user-static has occasionally been observed to segfault. This
 # is being investigated further.
