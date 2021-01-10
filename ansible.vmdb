@@ -36,7 +36,7 @@ steps:
 
   - apt: install
     packages:
-    - python
+    - python3
     fs-tag: /
 
   - cache-rootfs: /
