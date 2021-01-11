@@ -38,7 +38,7 @@ testing multiple time much faster.
     cd "$DATADIR"
     img="$MATCH_1"
     cat << EOF > run.sh
-    qemu-system-x86_64 -drive file="$img",format=raw -m 1024 -nographic
+    qemu-system-i386 -drive file="$img",format=raw -m 1024 -nographic
     EOF
     chmod a+rx run.sh
     cat << EOF > expect.txt
