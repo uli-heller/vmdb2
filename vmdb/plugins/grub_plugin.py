@@ -88,6 +88,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             "root-fs": "",
             "efi": "",
             "efi-part": "",
+            "prep": "",
             "console": "",
             "tag": "",
             "image-dev": "",
@@ -102,6 +103,8 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             self.install_uefi(values, settings, state)
         elif flavor == "bios":
             self.install_bios(values, settings, state)
+        elif flavor == "ieee1275":
+            self.install_ieee1275(values, settings, state)
         else:
             raise Exception("Unknown GRUB flavor {}".format(flavor))
 
@@ -135,6 +138,12 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         grub_target = "i386-pc"
         self.install_grub(values, settings, state, grub_package, grub_target)
 
+    def install_ieee1275(self, values, settings, state):
+        vmdb.progress("Installing GRUB for IEEE1275")
+        grub_package = "grub-ieee1275"
+        grub_target = "powerpc-ieee1275"
+        self.install_grub(values, settings, state, grub_package, grub_target)
+
     def install_grub(self, values, settings, state, grub_package, grub_target):
         console = values["console"] or None
 
@@ -155,11 +164,21 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
         else:
             efi_dev = None
 
+        prep = values["prep"] or None
+        if prep:
+            prep_dev = state.tags.get_dev(prep)
+        else:
+            prep_dev = None
+
         quiet = values["quiet"]
 
-        self.bind_mount_many(chroot, ["/dev", "/sys"], state)
+        self.bind_mount_many(chroot, ["/dev", "/sys", "/proc"], state)
         if efi_dev:
             self.mount(chroot, efi_dev, "/boot/efi", state)
+        elif prep_dev:
+            pn = prep_dev[-1]
+            vmdb.runcmd(["parted", "-s", image_dev, "set", pn, "prep", "on" ])
+            image_dev = prep_dev
         self.install_package(chroot, grub_package)
 
         kernel_params = [
