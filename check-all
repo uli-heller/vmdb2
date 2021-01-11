@@ -45,6 +45,17 @@ then
 	done
 fi
 
+if [ -e /usr/share/OVMF/OVMF_VARS_4M.fd ]
+then
+    bash -x ./smoke-amd64.sh "$amd64_tarball"
+fi
+tryit "$tarballdir/amd64.img" "amd64.vmdb" "$amd64_tarball"
+
+if [ -e /usr/share/OVMF/OVMF_VARS_4M.fd ]
+then
+    tryit "$tarballdir/amd64-uefi.img" "amd64-uefi.vmdb" "$amd64_tarball"
+fi
+
 if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]
 then
     bash -x ./smoke-i386.sh "$i386_tarball"

@@ -1,0 +1,56 @@
+# This is a sample VMDB2 input file to specify a simple
+# system that boots on a 32-bit PC with BIOS.
+
+steps:
+  - mkimg: "{{ output }}"
+    size: 4G
+
+  - mklabel: msdos
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 50%
+    tag: /
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: /
+
+  - mount: /
+
+  - unpack-rootfs: /
+
+  - qemu-debootstrap: buster
+    arch: amd64
+    mirror: http://deb.debian.org/debian
+    target: /
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+    - linux-image-amd64
+    tag: /
+    unless: rootfs_unpacked
+
+  - cache-rootfs: /
+    unless: rootfs_unpacked
+
+  - chroot: /
+    shell: |
+      echo amd64 > /etc/hostname
+      apt -y install python3 parted
+
+  - fstab: /
+
+  - chroot: /
+    shell: |
+      sed -i 's,^root:[^:]*:,root::,' /etc/passwd
+
+  - resize-rootfs: /
+
+  - grub: bios
+    tag: /
+    quiet: false
