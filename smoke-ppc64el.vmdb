@@ -70,4 +70,4 @@ steps:
   - grub: ieee1275
     tag: rootfs
     prep: prep
-    quiet: false
+    console: serial

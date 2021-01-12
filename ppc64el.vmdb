@@ -58,4 +58,4 @@ steps:
   - grub: ieee1275
     tag: /
     prep: prep
-    quiet: false
+    console: serial
