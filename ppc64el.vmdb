@@ -1,0 +1,61 @@
+# This is a sample VMDB2 input file that specifies a simple system for
+# a ppc64el machine that boots with IEEE1275.
+
+steps:
+  - mkimg: "{{ output }}"
+    size: 4G
+
+  - mklabel: gpt
+    device: "{{ output }}"
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 0%
+    end: 10M
+    tag: prep
+
+  - mkpart: primary
+    device: "{{ output }}"
+    start: 10M
+    end: 100%
+    tag: /
+
+  - kpartx: "{{ output }}"
+
+  - mkfs: ext4
+    partition: /
+
+  - mount: /
+
+  # Using the virtual-filesystems plugin here upsets qemu-debootstrap,
+  # which ends up unable to create /dev/fd within the chroot, causing
+  # the qemu-debootstrap phase to fail. Until we get to the bottom
+  # that, don't enable the plugin.
+  #- virtual-filesystems: /
+
+  - unpack-rootfs: /
+
+  - qemu-debootstrap: buster
+    arch: ppc64el
+    mirror: http://deb.debian.org/debian
+    target: /
+    unless: rootfs_unpacked
+
+  - apt: install
+    packages:
+      - linux-image-powerpc64le
+    fs-tag: /
+    unless: rootfs_unpacked
+
+  - cache-rootfs: /
+    unless: rootfs_unpacked
+
+  - chroot: /
+    shell: |
+      sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
+      echo ppc64el-vmdb2 > /etc/hostname
+
+  - grub: ieee1275
+    tag: /
+    prep: prep
+    quiet: false

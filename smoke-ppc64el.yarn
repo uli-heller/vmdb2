@@ -1,0 +1,65 @@
+# Smoke test vmdb2-built images
+
+This yarn file builds a basic image, and runs it under Qemu. The image
+is configured to have a serial console enabled, and the scenario below
+will log in as root (no password), and command the virtual machine to
+power off. If this works, the image is at least minimally functional,
+so the "smoke test" passes.
+
+More elaborate testing can be added, but smoke testing is enough for
+now.
+
+To run this yarn file, you need to run it as root (since it needs to
+build an image as root), and you need to run on a system where
+qemu-system-ppc64le is installed. Additionally, you need to add the
+following option to yarn:
+
+    EXAMPLE
+    --env ROOTFS_TARBALL=/path/to/rootfs/tarball
+
+This means vmdb2 will use the given tarball when creating an image,
+and if the tarball doesn't exist yet, it will create it. This makes
+testing multiple time much faster.
+
+    SCENARIO smoke test ppc64el IEEE1275 image
+    WHEN user runs vmdb smoke-ppc64el.vmdb --output smoke-ppc64el.img
+    THEN user can IEEE1275 boot smoke-ppc64el.img and power it off from root shell
+
+    IMPLEMENTS WHEN user runs vmdb (\S+) --output (\S+)
+    "$SRCDIR/vmdb2" "$SRCDIR/$MATCH_1" \
+        --output "$DATADIR/$MATCH_2" \
+        --log "$DATADIR/vmdb.log" \
+        --verbose \
+        --rootfs-tarball "$ROOTFS_TARBALL"
+
+    IMPLEMENTS THEN user can IEEE1275 boot (\S+) and power it off from root shell
+    cd "$DATADIR"
+    img="$MATCH_1"
+    cat << EOF > run.sh
+    qemu-system-ppc64le \
+      -m 1024 \
+      -nographic \
+      "$img"
+    EOF
+    chmod a+rx run.sh
+    cat << EOF > expect.txt
+    set timeout 600
+    proc abort {} {
+        puts "ERROR ERROR\n"
+        exit 1
+    }
+    spawn ./run.sh
+    expect "login: "
+    send "root\n"
+    expect "# "
+    send "poweroff\r"
+    set timeout 30
+    expect {
+        "reboot: Power down" {puts poweroffing\n}
+        eof abort
+        timeout abort
+    }
+    expect eof
+    wait
+    EOF
+    expect -d expect.txt > expect.out

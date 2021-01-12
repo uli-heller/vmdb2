@@ -9,6 +9,7 @@ amd64_tarball="$tarballdir/amd64.tar.gz"
 i386_tarball="$tarballdir/i386.tar.gz"
 arm64_tarball="$tarballdir/arm64.tar.gz"
 armhf_tarball="$tarballdir/armhf.tar.gz"
+ppc64el_tarball="$tarballdir/ppc64el.tar.gz"
 
 tryit()
 {
@@ -74,6 +75,14 @@ done
 for x in "$@" armhf-uefi
 do
     tryit "$tarballdir/$x.img" "$x.vmdb" "$armhf_tarball"
+done
+
+
+./smoke-ppc64el.sh "$ppc64el_tarball"
+
+for x in "$@" ppc64el
+do
+    tryit "$tarballdir/$x.img" "$x.vmdb" "$ppc64el_tarball"
 done
 
 
