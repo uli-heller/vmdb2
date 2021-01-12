@@ -60,3 +60,4 @@ steps:
   - grub: uefi
     tag: /
     efi: efi
+    console: serial

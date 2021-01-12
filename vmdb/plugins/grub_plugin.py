@@ -170,9 +170,15 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             "rw",
         ]
         if console == "serial":
-            kernel_params.extend(
-                ["loglevel=3", "console=tty0", "console=ttyS0,115200n8"]
-            )
+            if 'arm' in state.arch:
+                kernel_params.extend(
+                    ["loglevel=3", "console=tty0", "console=ttyAMA0,115200n8"]
+                )
+            else:
+                kernel_params.extend(
+                    ["loglevel=3", "console=tty0", "console=ttyS0,115200n8"]
+                )
+
         if quiet:
             kernel_params.extend(
                 [
