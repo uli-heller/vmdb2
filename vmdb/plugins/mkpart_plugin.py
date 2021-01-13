@@ -50,7 +50,7 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
 
         device = os.path.realpath(device)
         orig = self.list_partitions(device)
-        vmdb.runcmd(["parted", "-s", device, "mkpart", part_type, fs_type, start, end])
+        vmdb.runcmd(["parted", "-s", device, "--", "mkpart", part_type, fs_type, start, end])
         new = self.list_partitions(device)
         diff = self.diff_partitions(orig, new)
 
