@@ -4,4 +4,4 @@
     - unset_root_password
   vars:
     hostname: pc
-
+    ansible_python_interpreter: /usr/bin/python3
