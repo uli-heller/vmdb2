@@ -2,14 +2,13 @@
 
 set -eu
 
-amd64_tarball="$1"
+tarballdir="$(cd "$1" && pwd)"
 shift
-i386_tarball="$1"
-shift
-arm64_tarball="$1"
-shift
-armhf_tarball="$1"
-shift
+
+amd64_tarball="$tarballdir/amd64.tar.gz"
+i386_tarball="$tarballdir/i386.tar.gz"
+arm64_tarball="$tarballdir/arm64.tar.gz"
+armhf_tarball="$tarballdir/armhf.tar.gz"
 
 tryit()
 {
@@ -18,9 +17,9 @@ tryit()
     local tarball="$3"
 
     echo "Testing $yaml"
-    ./vmdb2 --rootfs-tarball "$dst/$tarball" \
+    ./vmdb2 --rootfs-tarball "$tarball" \
             --verbose \
-            --log "$dst/check.log" \
+            --log "$tarballdir/check.log" \
             --output "$image" \
             "$yaml"
 	rm -f "$image"
@@ -28,26 +27,25 @@ tryit()
 }
 
 src="$(dirname "$0")"
-dst="${VMDB2_DST:-$(pwd)}"
 cd "$src"
 
 #tryit luks.img "$src/luks.vmdb"
 #tryit lvm2.img "$src/lvm2.vmdb"; exit
 
 
-./smoke.sh "$dst/$amd64_tarball"
+bash -x ./smoke.sh "$amd64_tarball"
 
 for x in "$@" pc uefi ansible smoke-pc smoke-uefi
 do
-    tryit "$dst/$x.img" "$x.vmdb" "$amd64_tarball"
+    tryit "$tarballdir/$x.img" "$x.vmdb" "$amd64_tarball"
 done
 
 
-./smoke-i386.sh "$dst/$i386_tarball"
+bash -x ./smoke-i386.sh "$i386_tarball"
 
 for x in "$@" i386 i386-uefi
 do
-    tryit "$dst/$x.img" "$x.vmdb" "$i386_tarball"
+    tryit "$tarballdir/$x.img" "$x.vmdb" "$i386_tarball"
 done
 
 
@@ -56,21 +54,20 @@ done
 # [  865.372027] show_signal_msg: 21 callbacks suppressed
 # [  865.372029] locale[37762]: segfault at 1eed310 ip 0000000000562f20 sp 00007ffe90ac9bf8 error 4 in qemu-aarch64-static[401000+3e3000]
 # [  865.372034] Code: 00 e9 94 7d 1c 00 0f 1f 40 00 64 83 2c 25 50 ff ff ff 01 74 05 c3 0f 1f 40 00 48 8d 3d c9 d9 7f 00 e9 e4 8a 1c 00 0f 1f 40 00 <64> 8b 04 25 50 ff ff ff 85 c0 0f 9f c0 c3 66 90 48 83 ec 08 64 8b
-./smoke-arm64.sh "$dst/$arm64_tarball"
+./smoke-arm64.sh "$arm64_tarball"
 
 for x in "$@" arm64-uefi
 do
-    tryit "$dst/$x.img" "$x.vmdb" "$arm64_tarball"
+    tryit "$tarballdir/$x.img" "$x.vmdb" "$arm64_tarball"
 done
 
 
-./smoke-armhf.sh "$dst/$armhf_tarball"
+./smoke-armhf.sh "$armhf_tarball"
 
 for x in "$@" armhf-uefi
 do
-    tryit "$dst/$x.img" "$x.vmdb" "$armhf_tarball"
+    tryit "$tarballdir/$x.img" "$x.vmdb" "$armhf_tarball"
 done
 
 
 echo All test images built successfully.
-
