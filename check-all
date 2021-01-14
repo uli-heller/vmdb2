@@ -41,12 +41,16 @@ do
 done
 
 
-bash -x ./smoke-i386.sh "$i386_tarball"
+if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]
+then
+    bash -x ./smoke-i386.sh "$i386_tarball"
+fi
+tryit "$tarballdir/i386.img" "i386.vmdb" "$i386_tarball"
 
-for x in "$@" i386 i386-uefi
-do
-    tryit "$tarballdir/$x.img" "$x.vmdb" "$i386_tarball"
-done
+if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]
+then
+    tryit "$tarballdir/i386-uefi.img" "i386-uefi.vmdb" "$i386_tarball"
+fi
 
 
 # On amd64, qemu-user-static has occasionally been observed to segfault. This
