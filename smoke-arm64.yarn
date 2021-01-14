@@ -28,7 +28,7 @@ testing multiple time much faster.
     IMPLEMENTS WHEN user runs vmdb (\S+) --output (\S+)
     "$SRCDIR/vmdb2" "$SRCDIR/$MATCH_1" \
         --output "$DATADIR/$MATCH_2" \
-        --log "$DATADIR/vmdb.log" \
+        --log "$SRCDIR/vmdb.log" \
         --verbose \
         --rootfs-tarball "$ROOTFS_TARBALL"
 
