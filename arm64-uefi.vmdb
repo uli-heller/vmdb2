@@ -55,6 +55,7 @@ steps:
 
   - chroot: /
     shell: |
+      sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
       echo arm64-uefi-vmdb2 > /etc/hostname
 
   - grub: uefi

@@ -50,6 +50,7 @@ steps:
 
   - chroot: /
     shell: |
+      sed -i '/^root:[^:]*:/s//root::/' /etc/passwd
       echo uefi-vmdb2 > /etc/hostname
 
   - fstab: /
