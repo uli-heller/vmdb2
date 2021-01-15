@@ -33,13 +33,16 @@ cd "$src"
 #tryit lvm2.img "$src/lvm2.vmdb"; exit
 
 
-bash -x ./smoke.sh "$amd64_tarball"
+# This uses debootstrap, not qemu-debootstrap. Hence, it only works on amd64
+if [ -x /usr/bin/dpkg ] && [ "$(dpkg --print-architecture)" = "amd64" ]
+then
+	bash -x ./smoke.sh "$amd64_tarball"
 
-for x in "$@" pc uefi ansible smoke-pc smoke-uefi
-do
-    tryit "$tarballdir/$x.img" "$x.vmdb" "$amd64_tarball"
-done
-
+	for x in "$@" pc uefi ansible smoke-pc smoke-uefi
+	do
+		tryit "$tarballdir/$x.img" "$x.vmdb" "$amd64_tarball"
+	done
+fi
 
 if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]
 then
