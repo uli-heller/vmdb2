@@ -174,6 +174,8 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
 
         self.bind_mount_many(chroot, ["/dev", "/sys", "/proc"], state)
         if efi_dev:
+            pn = efi_dev[-1]
+            vmdb.runcmd(["parted", "-s", image_dev, "set", pn, "esp", "on" ])
             self.mount(chroot, efi_dev, "/boot/efi", state)
         elif prep_dev:
             pn = prep_dev[-1]
