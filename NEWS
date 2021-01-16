@@ -1,7 +1,11 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.22, not yet released
+Version 0.22+git, not yet released
+-----------------------------------------------------------------------------
+
+
+Version 0.22, released 2021-01-16
 -----------------------------------------------------------------------------
 
 * This release has a lot of changes from Ryutaroh Matsumoto and
