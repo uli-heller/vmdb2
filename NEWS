@@ -1,8 +1,12 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.21+git, not yet released
+Version 0.22, not yet released
 -----------------------------------------------------------------------------
+
+* This release has a lot of changes from Ryutaroh Matsumoto and
+  Christian Kastner to fix and clean up things, and to add support for
+  building images for I385 (UEFI and BIOS), armhf+UEFI, and ppc64el.
 
 
 Version 0.21, released 2020-12-18
