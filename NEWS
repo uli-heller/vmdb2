@@ -4,6 +4,8 @@ NEWS for vmdb2, the Debian disk image builder
 Version 0.22+git, not yet released
 -----------------------------------------------------------------------------
 
+* Matthias Klein added the optional `options` field to the `mkfs`
+  step to set aditional options for mkfs.
 
 Version 0.22, released 2021-01-16
 -----------------------------------------------------------------------------

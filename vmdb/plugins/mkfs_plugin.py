@@ -26,7 +26,7 @@ class MkfsPlugin(vmdb.Plugin):
 
 class MkfsStepRunner(vmdb.StepRunnerInterface):
     def get_key_spec(self):
-        return {"mkfs": str, "partition": str, "label": ""}
+        return {"mkfs": str, "partition": str, "label": "", "options": ""}
 
     def run(self, values, settings, state):
         fstype = values["mkfs"]
@@ -50,6 +50,12 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
             else:
                 cmd.append("-L")
             cmd.append(label)
+
+        options = values["options"] or None
+        if options:
+            for opt in options.split(' '):
+                cmd.append(opt)
+
         cmd.append(device)
         vmdb.runcmd(cmd)
 

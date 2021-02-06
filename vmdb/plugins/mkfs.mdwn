@@ -9,7 +9,10 @@ Step keys:
 
 * `partition` &mdash; REQUIRED; tag for the block device to use.
 
+* `options` &mdash; OPTIONAL; aditional options for mkfs.
+
 Example (in the .vmdb file):
 
     - mkfs: ext4
       partition: root
+      options: -O ^64bit,^metadata_csum
