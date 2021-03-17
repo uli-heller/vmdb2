@@ -12,6 +12,10 @@ Step keys:
 
 * `packages` &mdash; REQUIRED; value is a list of packages to install.
 
+* `recommends` &mdash; OPTIONAL; defaults to true. Setting value to a
+  false (i.e. `0`, `null`, `false`) asks apt-get to run with the
+  `--no-install-recommends` option set.
+
 Example (in the .vmdb file):
 
     - apt: install

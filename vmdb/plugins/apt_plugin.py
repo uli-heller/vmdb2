@@ -28,7 +28,7 @@ class AptPlugin(vmdb.Plugin):
 
 class AptStepRunner(vmdb.StepRunnerInterface):
     def get_key_spec(self):
-        return {"apt": str, "packages": [], "tag": "", "fs-tag": "", "clean": True}
+        return {"apt": str, "packages": [], "tag": "", "fs-tag": "", "clean": True, "recommends": True}
 
     def run(self, values, settings, state):
         operation = values["apt"]
@@ -36,15 +36,16 @@ class AptStepRunner(vmdb.StepRunnerInterface):
             raise Exception('"apt" must always have value "install"')
 
         packages = values["packages"]
+        recommends = values["recommends"]
         tag = values.get("tag") or None
         if tag is None:
             tag = values["fs-tag"]
         mount_point = state.tags.get_builder_mount_point(tag)
 
         if not self.got_eatmydata(state):
-            self.install_packages(mount_point, [], ["eatmydata"])
+            self.install_packages(mount_point, [], recommends, ["eatmydata"])
             state.got_eatmydata = True
-        self.install_packages(mount_point, ["eatmydata"], packages)
+        self.install_packages(mount_point, ["eatmydata"], recommends, packages)
 
         if values["clean"]:
             self.clean_cache(mount_point)
@@ -52,15 +53,19 @@ class AptStepRunner(vmdb.StepRunnerInterface):
     def got_eatmydata(self, state):
         return hasattr(state, "got_eatmydata") and getattr(state, "got_eatmydata")
 
-    def install_packages(self, mount_point, argv_prefix, packages):
+    def install_packages(self, mount_point, argv_prefix, recommends, packages):
         env = os.environ.copy()
         env["DEBIAN_FRONTEND"] = "noninteractive"
 
         vmdb.runcmd_chroot(mount_point, argv_prefix + ["apt-get", "update"], env=env)
 
+        rec = ''
+        if recommends:
+            rec = '--no-install-recommends'
+
         vmdb.runcmd_chroot(
             mount_point,
-            argv_prefix + ["apt-get", "-y", "--no-show-progress", "install"] + packages,
+            argv_prefix + ["apt-get", "-y", "--no-show-progress", rec, "install"] + packages,
             env=env,
         )
 
