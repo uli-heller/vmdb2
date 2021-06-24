@@ -1,6 +1,10 @@
 Step: qemu-debootstrap
 -----------------------------------------------------------------------------
 
+This command has been merged into `debootstrap`.
+If your builds run on Debian 10 or later,
+it is recommended to use `debootstrap` instead of `qemu-debootstrap`.
+
 Install packages using apt, which needs to already have been
 installed, for a different architecture than the host where vmdb2 is
 being run. For example, for building an image for a Raspberry Pi on an

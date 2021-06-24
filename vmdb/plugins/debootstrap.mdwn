@@ -21,6 +21,10 @@ Step keys:
   (e.g. Raspbian) as by default debootstrap will use the keys provided
   by the "debian-archive-keyring" package.
 
+* `arch` &mdash; OPTIONAL; the foreign architecture to use.
+
+* `variant` &mdash; OPTIONAL; the variant for debootstrap.
+
 Example (in the .vmdb file):
 
     - debootstrap: buster
