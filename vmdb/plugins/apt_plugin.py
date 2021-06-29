@@ -60,7 +60,7 @@ class AptStepRunner(vmdb.StepRunnerInterface):
         vmdb.runcmd_chroot(mount_point, argv_prefix + ["apt-get", "update"], env=env)
 
         rec = ''
-        if recommends:
+        if not recommends:
             rec = '--no-install-recommends'
 
         vmdb.runcmd_chroot(
