@@ -17,7 +17,7 @@
 
 
 import vmdb
-
+import subprocess
 
 class DebootstrapPlugin(vmdb.Plugin):
     def enable(self):
@@ -30,8 +30,10 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
             "debootstrap": str,
             "target": str,
             "mirror": str,
+            "arch": "",
             "keyring": "",
             "variant": "-",
+            "components": ["main"],
         }
 
     def run(self, values, settings, state):
@@ -40,7 +42,9 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         target = state.tags.get_builder_mount_point(tag)
         mirror = values["mirror"]
         keyring = values["keyring"] or None
+        arch = values["arch"] or subprocess.check_output(['dpkg', '--print-architecture'])
         variant = values["variant"]
+        components = values["components"]
 
         if not (suite and tag and target and mirror):
             raise Exception("missing arg for debootstrap step")
@@ -50,15 +54,32 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
                     "debootstrap",
                     "--keyring",
                     keyring,
+                    "--arch",
+                    arch,
                     "--variant",
                     variant,
+                    "--components",
+                    ",".join(components),
                     suite,
                     target,
                     mirror,
                 ]
             )
         else:
-            vmdb.runcmd(["debootstrap", "--variant", variant, suite, target, mirror])
+            vmdb.runcmd(
+                [
+                    "debootstrap",
+                    "--arch",
+                    arch,
+                    "--variant",
+                    variant,
+                    "--components",
+                    ",".join(components),
+                    suite,
+                    target,
+                    mirror,
+                ]
+            )
 
     def run_even_if_skipped(self, values, settings, state):
         tag = values["target"]
