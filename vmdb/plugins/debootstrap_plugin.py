@@ -42,7 +42,7 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         target = state.tags.get_builder_mount_point(tag)
         mirror = values["mirror"]
         keyring = values["keyring"] or None
-        arch = values["keyring"] or subprocess.check_output(['dpkg', '--print-architecture'])
+        arch = values["arch"] or subprocess.check_output(['dpkg', '--print-architecture'])
         variant = values["variant"]
         components = values["components"]
 
