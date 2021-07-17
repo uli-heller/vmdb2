@@ -48,9 +48,13 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
         tag = values["tag"] or values["part-tag"] or None
         fs_type = values["fs-type"]
 
-        device = os.path.realpath(device)
+        # Enabling this breaks installation to an LVM2 logical volume.
+        # device = os.path.realpath(device)
+
         orig = self.list_partitions(device)
-        vmdb.runcmd(["parted", "-s", device, "--", "mkpart", part_type, fs_type, start, end])
+        vmdb.runcmd(
+            ["parted", "-s", device, "--", "mkpart", part_type, fs_type, start, end]
+        )
         new = self.list_partitions(device)
         diff = self.diff_partitions(orig, new)
 
