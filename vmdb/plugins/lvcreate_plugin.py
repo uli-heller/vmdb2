@@ -35,7 +35,7 @@ class LvcreateStepRunner(vmdb.StepRunnerInterface):
         lvname = values["name"]
         size = values["size"]
 
-        vmdb.runcmd(["lvcreate", "--name", lvname, "--size", size, vgname])
+        vmdb.runcmd(["lvcreate", "-qq", "--name", lvname, "--size", size, vgname])
 
         lvdev = "/dev/{}/{}".format(vgname, lvname)
         assert os.path.exists(lvdev)
