@@ -25,5 +25,5 @@ Step keys:
 Example (in the .vmdb file):
 
 ~~~yaml
-- virtual-filesystem: rootfs
+- virtual-filesystems: rootfs
 ~~~
