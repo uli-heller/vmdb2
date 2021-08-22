@@ -1,12 +1,35 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
+Version 0.24, released 2021-08-22
+-----------------------------------------------------------------------------
+
+* This release disables the non-Intel architectures in the
+  `./check-all` scripts. The builds work when done manually, but now
+  when done by the script. I'm tired of debugging this and will be
+  rewriting the test suite to be more sane.
+
+* Aaron Dewes merged `qemu-debootstrap` with plain `debootstrap`. As
+  of Debian 10 (buster) plain `debootstrap` can do the same foreign
+  bootstrap thing.
+
+* Andres Salomon fixed the logic for the `apt` plugin's `recommends`
+  option. The option has reversed the meaning to make it easier for
+  the user to get right.
+
+* Lars Wirzenius disabled using `realpath` to resolve the output
+  device to not include symbolic links, to fix LVM2 support. This
+  probably breaks something else.
+
+* Lars Wirzenius changed the `lvcreate` step to run the `lvcreate`
+  command in a way the prevents it from asking questions.
+
 Version 0.23, released 2021-04-01
 -----------------------------------------------------------------------------
 
 * Matthias Klein added the optional `options` field to the `mkfs`
   step to set aditional options for mkfs.
-  
+
 * Gunnar Wolf added support for not installing recommended packages in
   the `apt` step in a .vmdb file.
 
