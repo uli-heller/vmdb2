@@ -1,6 +1,14 @@
 README for vmdb2 or vmdebootstrap 2nd generation     ; -*- mode: markdown;-*-
 =============================================================================
 
+
+**Note:** vmdb2 is in "selfish maintenance mode". Lars maintains the
+software to the extent he needs it, but is not spending time to
+develop new features or debug problems he doesn't see himself. He will
+review patches, however, so if you want vmdb2 to improve, make a
+change and submit it for review.
+
+
 [vmdb2][] is a program for producing a disk image with Debian
 installed.
 
