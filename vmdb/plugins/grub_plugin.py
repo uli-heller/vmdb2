@@ -187,7 +187,6 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             "biosdevname=0",
             "net.ifnames=0",
             "consoleblank=0",
-            "systemd.show_status=true",
             "rw",
         ]
         if console == "serial":
@@ -210,7 +209,12 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
                     "quiet",
                     "systemd.show_status=false",
                     "rd.systemd.show_status=false",
-                    "systemd.show_status=false",
+                ]
+            )
+        else:
+            kernel_params.extend(
+                [
+                    "systemd.show_status=true",
                 ]
             )
 
