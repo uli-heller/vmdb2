@@ -225,13 +225,14 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             self.add_grub_serial_console(chroot)
 
         vmdb.runcmd_chroot(chroot, ["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
+        help_out = vmdb.runcmd_chroot(chroot, ["grub-install", "--help"])
         vmdb.runcmd_chroot(
             chroot,
             [
                 "grub-install",
                 "--target=" + grub_target,
                 "--no-nvram",
-                "--force-extra-removable",
+                "--no-extra-removable" if b"--no-extra-removable" in help_out else "--force-extra-removable",
                 "--no-floppy",
                 "--modules=part_msdos part_gpt",
                 "--grub-mkdevicemap=/boot/grub/device.map",
