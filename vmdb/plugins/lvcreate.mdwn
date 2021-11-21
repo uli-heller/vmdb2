@@ -9,7 +9,8 @@ Step keys:
 
 * `name` &mdash; REQUIRED; tag for the new LV block device.
 
-* `size` &mdash; REQUIRED; size of the new LV.
+* `size` &mdash; REQUIRED; size of the new LV. The special value `fill` will
+  make the volume use all of the available space.
 
 Example (in the .vmdb file):
 
