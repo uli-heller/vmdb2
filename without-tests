@@ -25,6 +25,7 @@ vmdb/plugins/mount_plugin.py
 vmdb/plugins/qemudebootstrap_plugin.py
 vmdb/plugins/resize_plugin.py
 vmdb/plugins/shell_plugin.py
+vmdb/plugins/set_part_flag_plugin.py
 vmdb/plugins/unpack_rootfs_plugin.py
 vmdb/plugins/vgcreate_plugin.py
 vmdb/plugins/virtualfs_plugin.py

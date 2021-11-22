@@ -1,0 +1,24 @@
+Step: set_part_flag
+-----------------------------------------------------------------------------
+
+Create a partition.
+
+Step keys:
+
+* `set_part_flag` &mdash; REQUIRED; filename of block device containing
+  partition that will have the flag set or cleared.
+
+* `tag` &mdash; REQUIRED; tag of the partition being modified.
+
+* `flag` &mdash; REQUIRED; the name of the flag to be set or cleared
+
+* `state` &mdash; OPTIONAL; the flag state: "enabled" or "disabled". Defaults
+  to "enabled".
+
+Example (in the .vmdb file):
+
+    - set_part_flag: "{{ output }}"
+      tag: rootfs
+      start: 0%
+      flag: bios_grub
+      state: enabled
