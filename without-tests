@@ -5,6 +5,7 @@ vmdb/plugins/ansible_plugin.py
 vmdb/plugins/apt_plugin.py
 vmdb/plugins/cache_rootfs_plugin.py
 vmdb/plugins/chroot_plugin.py
+vmdb/plugins/copy_dir_plugin.py
 vmdb/plugins/copy_file_plugin.py
 vmdb/plugins/create_dir_plugin.py
 vmdb/plugins/create_file_plugin.py

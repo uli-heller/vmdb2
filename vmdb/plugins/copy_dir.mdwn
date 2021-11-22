@@ -1,0 +1,23 @@
+Step: copy-dir
+-----------------------------------------------------------------------------
+
+Recursively copy a directory from outside into the target filesystem.
+
+Step keys:
+
+* `copy-dir` &mdash; REQUIRED; the full (starting from the new
+  filesystem root) path of directory to copy to. Any missing
+  directories will be created with the configured user and group ownership and
+  permissions. See the `perm`, `uid`, `gid`, `user` and `group` keys.
+* `src` &mdash; REQUIRED; the path of the directory to copy from on the host
+  filesystem, outside the chroot, relative to the current working directory of
+  the vmdb2 process.
+* `perm` &mdash; OPTIONAL; the permissions to apply to any missing parent
+  directories that are created on the target. The value of `umask` is applied
+  to this value.
+* `umask` &mdash; OPTIONAL; the numeric (octal) representation of umask to
+  apply to the permissions of copied files and directories. Defaults to 0022.
+* `uid` &mdash; OPTIONAL; the numeric user ID to assign to the copied files
+  and directories. Defaults to 0 (root).
+* `gid` &mdash; OPTIONAL; the numeric group ID to assign to the copied files
+  and directories. Defaults to 0 (root).
