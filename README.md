@@ -63,6 +63,7 @@ The following tools are used by vmdb2 (Debian package names in brackets).
 * `parted` [`parted`, mklabel command]
 * `qemu-img` [`qemu-utils`, mkimg command]
 * `qemu-user-static` [`qemu-user-static`, qemu-debootstrap command]
+* `zerofree` [`zerofree`, zerofree command]
 
 The following Python modules are used by vmdb2 (Debian package names in brackets).
 
@@ -97,6 +98,7 @@ You probably need the following installed to run the smoke tests:
 - ovmf-ia32
 - qemu-efi-aarch64
 - qemu-efi-arm
+- zerofree
 
 
 Tutorial

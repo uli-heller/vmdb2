@@ -61,3 +61,5 @@ steps:
   - grub: uefi
     tag: /
     efi: efi
+
+  - zerofree: /
