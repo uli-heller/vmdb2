@@ -25,7 +25,7 @@ class Tags:
         return repr({"tags": self._tags, "tagnames": self._tagnames})
 
     def get_tags(self):
-        return list(self._tags.keys())
+        return self._tagnames
 
     def has_tag(self, tag):
         return tag in self._tags

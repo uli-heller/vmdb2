@@ -14,7 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # =*= License: GPL-3+ =*=
-
+import os
+import re
 
 import vmdb
 
@@ -47,3 +48,17 @@ class KpartxStepRunner(vmdb.StepRunnerInterface):
     def teardown(self, values, settings, state):
         device = values["kpartx"]
         vmdb.runcmd(["kpartx", "-dsv", device])
+        # docker containers on macOS don't honor the kpartx cleanup command, so
+        # we have to do the clean up ourselves... :-/
+        loop_devs = set()
+        for tag in state.tags.get_tags():
+            dev = state.tags.get_dev(tag)
+            m = re.match(r"^/dev/mapper/(?P<loop>.*)p\d+$", dev)
+            if m is not None:
+                if os.path.exists(dev):
+                    vmdb.runcmd(["dmsetup", "-v", "remove", dev])
+                loop = m.group("loop")
+                loop_devs.add("/dev/{}".format(loop))
+
+        for loop_dev in loop_devs:
+            vmdb.runcmd(["losetup", "-d", loop_dev])
