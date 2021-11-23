@@ -10,8 +10,19 @@ Step keys:
 
 * `ansible` &mdash; REQUIRED; value is the tag of the root filesystem.
 
+* `config_file` &mdash; OPTIONAL; value is the filename of an Ansible
+  configuration file, relative to the .vmdb file.
+
+* `group` &mdash; OPTIONAL; the name of the Ansible inventory group. Defaults
+  to "image"
+
 * `playbook` &mdash; REQUIRED; value is the filename of the Ansible
   playbook, relative to the .vmdb file.
+
+* `tags` &mdash; OPTIONAL; a comma-separated list of Ansible tags to execute
+
+* `extra_vars` &mdash; OPTIONAL; a dictionary defining variables to pass to the
+  Ansible playbook.
 
 Example (in the .vmdb file):
 
@@ -21,6 +32,12 @@ Example (in the .vmdb file):
 
     - ansible: root
       playbook: foo.yml
+      tags: bar
+      config_file: ansible.cfg
+      group: AwesomeGroup
+      extra_vars:
+        iface:
+          name: eth0
 
 Example (`foo.yml`):
 
@@ -38,9 +55,9 @@ Example (`foo.yml`):
         - name: "configure networking"
           copy:
             content: |
-              auto eth0
-              iface eth0 inet dhcp
-              iface eth0 inet6 auto
+              auto {{ iface.name }}
+              iface {{ iface.name }} inet dhcp
+              iface {{ iface.name }} inet6 auto
             dest: /etc/network/interfaces.d/wired
 
       vars:
