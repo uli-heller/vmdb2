@@ -68,7 +68,7 @@
 #
 # The grub step will take of the rest.
 
-
+import json
 import logging
 import os
 import re
@@ -153,7 +153,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
 
         image_dev = values["image-dev"] or None
         if image_dev is None:
-            image_dev = self.get_image_loop_device(root_dev)
+            image_dev = self.get_image_loop_device(root_dev, chroot)
 
         efi = values["efi"] or None
         efi_part = values["efi-part"] or None
@@ -255,19 +255,85 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
             except vmdb.NotMounted as e:
                 logging.warning(str(e))
 
-    def get_image_loop_device(self, partition_device):
+    def get_image_loop_device(self, partition_device, chroot):
         # We get /dev/mappers/loopXpY and return /dev/loopX
-        # assert partition_device.startswith('/dev/mapper/loop')
-
         m = re.match(r"^/dev/mapper/(?P<loop>.*)p\d+$", partition_device)
-        if m is None:
-            raise Exception(
-                "Do not understand partition device name {}".format(partition_device)
-            )
-        assert m is not None
+        if m is not None:
+            loop = m.group("loop")
+            return "/dev/{}".format(loop)
 
-        loop = m.group("loop")
-        return "/dev/{}".format(loop)
+        # Check if the rootfs is a LVM volume
+        m = re.match(r"^/dev/(?P<vgname>[^/]+)/.*$", partition_device)
+        if m is not None:
+            vgname = m.group("vgname")
+            logging.debug(f"extracted vgname={vgname} from {partition_device}")
+
+            env = dict(os.environ)
+            env["LVM_SUPPRESS_FD_WARNINGS"] = "1"
+            output = vmdb.runcmd_chroot(
+                chroot,
+                ["lvs", "-o", "vg_name,devices", "--reportformat", "json"],
+                env=env,
+            )
+            # example "lvs" output:
+            #  {
+            #    "report": [
+            #        {
+            #            "lv": [
+            #                {"vg_name":"lvm_volgroup0", "devices":"/dev/mapper/loop1p6(1024)"},
+            #                {"vg_name":"lvm_volgroup0", "devices":"/dev/mapper/loop1p6(0)"}
+            #            ]
+            #        }
+            #    ]
+            #  }
+            report = json.loads(output.strip())
+            logging.debug(f"lvs report: {report}")
+
+            for report_item in report["report"]:
+                logging.debug(f"report_item: {report_item}")
+
+                for lv in report_item.get("lv", []):
+                    logging.debug(f"lv: {lv}")
+                    if lv.get("vg_name") == vgname:
+                        devices = lv.get("devices", [])
+                        if not isinstance(devices, list):
+                            devices = [devices]
+                        for device in devices:
+                            logging.debug(f"device: {device}")
+                            m = re.match(
+                                r"^/dev/mapper/(?P<loop>.*)p\d+\(\d+\)$", device
+                            )
+                            if m is not None:
+                                loop = m.group("loop")
+                                return "/dev/{}".format(loop)
+
+                            # Sometimes lvs gives us /dev/dm-X instead of a
+                            # loop device, in which case we need to find the
+                            # corresponding loop device ourselves
+                            loop = self.get_loop_device_from_dm(device, chroot)
+                            if loop is not None:
+                                return loop
+
+        raise Exception(
+            "Do not understand partition device name {}".format(partition_device)
+        )
+
+    @staticmethod
+    def get_loop_device_from_dm(device, chroot):
+        # Returns the corresponding /dev/loopX device for a /dev/dm-Y device
+        m = re.match(r"^/dev/(?P<mapped>dm-\d+)\(\d+\)$", device)
+        if m is not None:
+            mapped = m.group("mapped")
+            logging.debug(f"mapped: {mapped}")
+
+            dmsetup_out = vmdb.runcmd_chroot(
+                chroot, ["dmsetup", "ls", "-o", "blkdevname"]
+            )
+            for line in dmsetup_out.decode().splitlines(keepends=False):
+                m = re.match(fr"^(?P<loop>loop\d+)p\d+\s+\({mapped}\)$", line)
+                if m is not None:
+                    loop = m.group("loop")
+                    return "/dev/{}".format(loop)
 
     def bind_mount_many(self, chroot, paths, state):
         for path in paths:
