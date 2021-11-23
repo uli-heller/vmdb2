@@ -290,6 +290,7 @@ class GrubStepRunner(vmdb.StepRunnerInterface):
     def install_package(self, chroot, package):
         env = os.environ.copy()
         env["DEBIAN_FRONTEND"] = "noninteractive"
+        vmdb.runcmd_chroot(chroot, ["apt-get", "update"], env=env)
         vmdb.runcmd_chroot(
             chroot, ["apt-get", "-y", "--no-show-progress", "install", package], env=env
         )
