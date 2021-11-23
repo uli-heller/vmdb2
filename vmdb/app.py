@@ -68,6 +68,14 @@ class Vmdb2:
         p.add_argument("-v", "--verbose", action="store_true")
         p.add_argument("--log")
         p.add_argument("--version", action="store_true")
+        p.add_argument(
+            "--variable",
+            action="append",
+            default=[],
+            help="Specify the value for a Jinja2 template variable in the "
+            'build spec file in the format "name=value". This parameter can '
+            "be specified multiple times to define multiple variables.",
+        )
         p.add_argument("specfile")
 
         return p.parse_args()
@@ -88,11 +96,26 @@ class Vmdb2:
         logging.info(f"Starting vmdb2 version {self._version}")
 
     def template_vars_from_args(self, args):
-        return {
+        vars = {
             "image": args.image,
             "output": args.output,
             "rootfs_tarball": args.rootfs_tarball,
         }
+
+        for var_spec in args.variable:
+            name, value = var_spec.split("=")
+            if name in vars:
+                raise RuntimeError(f'Duplicate definition of variable "{name}"')
+
+            # Remove quoes from the value if required
+            if value.startswith("'"):
+                value = value.strip("'")
+            elif value.startswith('"'):
+                value = value.strip('"')
+
+            vars[name] = value
+
+        return vars
 
 
 class Command:
