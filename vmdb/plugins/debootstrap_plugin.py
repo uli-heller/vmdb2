@@ -15,9 +15,11 @@
 #
 # =*= License: GPL-3+ =*=
 
+import os
+import shutil
+import subprocess
 
 import vmdb
-import subprocess
 
 
 class DebootstrapPlugin(vmdb.Plugin):
@@ -33,8 +35,10 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
             "mirror": str,
             "arch": "",
             "keyring": "",
+            "install_keyring": False,
             "variant": "-",
             "components": ["main"],
+            "include": [],
         }
 
     def run(self, values, settings, state):
@@ -43,6 +47,8 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         target = state.tags.get_builder_mount_point(tag)
         mirror = values["mirror"]
         keyring = values["keyring"] or None
+        install_keyring = values["install_keyring"]
+        include = values["include"]
         arch = (
             values["arch"]
             or subprocess.check_output(["dpkg", "--print-architecture"]).strip()
@@ -52,36 +58,49 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
 
         if not (suite and tag and target and mirror):
             raise Exception("missing arg for debootstrap step")
+
+        cmd = [
+            "debootstrap",
+            "--arch",
+            arch,
+            "--variant",
+            variant,
+            "--components",
+            ",".join(components),
+        ]
+
+        remove_pkgs = []
         if keyring:
-            vmdb.runcmd(
+            cmd.extend(["--keyring", keyring])
+            if install_keyring and "gnupg" not in include:
+                include.append("gnupg")
+                # If gnupg needed to be installed it should be removed again to
+                # minimize the installation footprint
+                remove_pkgs.append("gnupg")
+
+        if include:
+            cmd.extend(["--include", ",".join(include)])
+
+        cmd.extend([suite, target, mirror])
+
+        vmdb.runcmd(cmd)
+
+        if keyring and install_keyring:
+            keyring_basename = os.path.basename(keyring)
+            chroot_keyring = os.path.join(target, keyring_basename)
+            shutil.copyfile(keyring, os.path.join(target, keyring_basename))
+            vmdb.runcmd_chroot(target, ["apt-key", "add", f"/{keyring_basename}"])
+            os.remove(chroot_keyring)
+
+        if remove_pkgs:
+            vmdb.runcmd_chroot(
+                target,
                 [
-                    "debootstrap",
-                    "--keyring",
-                    keyring,
-                    "--arch",
-                    arch,
-                    "--variant",
-                    variant,
-                    "--components",
-                    ",".join(components),
-                    suite,
-                    target,
-                    mirror,
+                    "apt-get",
+                    "remove",
+                    "--purge",
+                    "-y",
                 ]
-            )
-        else:
-            vmdb.runcmd(
-                [
-                    "debootstrap",
-                    "--arch",
-                    arch,
-                    "--variant",
-                    variant,
-                    "--components",
-                    ",".join(components),
-                    suite,
-                    target,
-                    mirror,
-                ]
+                + remove_pkgs,
             )
 

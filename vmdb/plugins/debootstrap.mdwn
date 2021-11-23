@@ -18,9 +18,16 @@ Step keys:
   (e.g. Raspbian) as by default debootstrap will use the keys provided
   by the "debian-archive-keyring" package.
 
+* `install_keyring` &mdash; OPTIONAL; if set to `yes`, the gpg keyring
+  specified by the `keyring` key will be installed in the image for use when
+  installing packages from non-official Debian repositories.
+
 * `arch` &mdash; OPTIONAL; the foreign architecture to use.
 
 * `variant` &mdash; OPTIONAL; the variant for debootstrap.
+
+* `include` &mdash; OPTIONAL; a list of additional packages for
+  debootstrap to install.
 
 Example (in the .vmdb file):
 
