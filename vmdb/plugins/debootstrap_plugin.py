@@ -85,7 +85,3 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
                 ]
             )
 
-    def run_even_if_skipped(self, values, settings, state):
-        tag = values["target"]
-        target = state.tags.get_builder_mount_point(tag)
-        vmdb.runcmd_chroot(target, ["apt-get", "update"])
