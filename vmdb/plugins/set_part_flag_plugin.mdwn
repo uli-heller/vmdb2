@@ -1,7 +1,7 @@
 Step: set_part_flag
 -----------------------------------------------------------------------------
 
-Create a partition.
+Set or clear a flag in a partition.
 
 Step keys:
 
@@ -19,6 +19,5 @@ Example (in the .vmdb file):
 
     - set_part_flag: "{{ output }}"
       tag: rootfs
-      start: 0%
       flag: bios_grub
       state: enabled
