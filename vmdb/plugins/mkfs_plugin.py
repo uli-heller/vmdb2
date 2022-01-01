@@ -53,10 +53,25 @@ class MkfsStepRunner(vmdb.StepRunnerInterface):
 
         options = values["options"] or None
         if options:
-            for opt in options.split(' '):
+            for opt in options.split(" "):
                 cmd.append(opt)
 
         cmd.append(device)
         vmdb.runcmd(cmd)
 
+        uuid = (
+            vmdb.runcmd(
+                [
+                    "blkid",
+                    "-c/dev/null",
+                    "-ovalue",
+                    "-sUUID",
+                    device,
+                ]
+            )
+            .decode()
+            .strip()
+        )
+
         state.tags.set_fstype(tag, fstype)
+        state.tags.set_fsuuid(tag, uuid)

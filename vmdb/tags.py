@@ -34,6 +34,18 @@ class Tags:
         item = self._get(tag)
         return item["dev"]
 
+    def get_fsuuid(self, tag):
+        item = self._get(tag)
+        return item["fsuuid"]
+
+    def get_luksuuid(self, tag):
+        item = self._get(tag)
+        return item["luksuuid"]
+
+    def get_dm(self, tag):
+        item = self._get(tag)
+        return item["dm"]
+
     def get_builder_mount_point(self, tag):
         item = self._get(tag)
         return item["builder_mount_point"]
@@ -59,6 +71,9 @@ class Tags:
             "builder_mount_point": None,
             "fstype": None,
             "target_mount_point": None,
+            "fsuuid": None,
+            "luksuuid": None,
+            "dm": None,
         }
 
     def set_dev(self, tag, dev):
@@ -79,6 +94,24 @@ class Tags:
         if item["fstype"] is not None:
             raise AlreadyHasFsType(tag)
         item["fstype"] = fstype
+
+    def set_fsuuid(self, tag, uuid):
+        item = self._get(tag)
+        if item["fsuuid"] is not None:
+            raise AlreadyHasFsUuid(tag)
+        item["fsuuid"] = uuid
+
+    def set_luksuuid(self, tag, uuid):
+        item = self._get(tag)
+        if item["luksuuid"] is not None:
+            raise AlreadyHasLuksUuid(tag)
+        item["luksuuid"] = uuid
+
+    def set_dm(self, tag, name):
+        item = self._get(tag)
+        if item["dm"] is not None:
+            raise AlreadyHasDeviceMapper(tag)
+        item["dm"] = name
 
     def set_target_mount_point(self, tag, target_mount_point):
         item = self._get(tag)
@@ -127,6 +160,21 @@ class AlreadyHasFsType(Exception):
 class AlreadyHasTargetMountPoint(Exception):
     def __init__(self, tag):
         super().__init__("Already has target mount point: {}".format(tag))
+
+
+class AlreadyHasFsUuid(Exception):
+    def __init__(self, tag):
+        super().__init__("Already has fs UUID: {}".format(tag))
+
+
+class AlreadyHasLuksUuid(Exception):
+    def __init__(self, tag):
+        super().__init__("Already has LuksUUID: {}".format(tag))
+
+
+class AlreadyHasDeviceMapper(Exception):
+    def __init__(self, tag):
+        super().__init__("Already has device-mapper name: {}".format(tag))
 
 
 class NeedBothMountPoints(Exception):

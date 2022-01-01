@@ -1,0 +1,18 @@
+Step: cryptsetup
+-----------------------------------------------------------------------------
+
+Use cryptsetup to set up encryption of a block device.
+
+Step keys:
+
+* `cryptsetup` &mdash; REQUIRED; tag of block device
+
+* `password` &mdash; REQUIRED; the encryption password
+
+* `name` &mdash; REQUIRED; name of the encrypted device when opened
+
+Example (in the .vmdb file):
+
+    - cryptsetup: cleartext_pv0
+      password: hunter2
+      name: pv0

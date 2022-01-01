@@ -34,29 +34,50 @@ class FstabStepRunner(vmdb.StepRunnerInterface):
         chroot = state.tags.get_builder_mount_point(tag)
 
         filesystems = []
+        crypts = []
 
         for tag in state.tags.get_tags():
             device = state.tags.get_dev(tag)
             mount_point = state.tags.get_target_mount_point(tag)
+
+            fstype = state.tags.get_fstype(tag)
+            fsuuid = state.tags.get_fsuuid(tag)
+            luksuuid = state.tags.get_luksuuid(tag)
+            dm = state.tags.get_dm(tag)
+
             if mount_point is not None:
-                fstype = state.tags.get_fstype(tag)
-                output = vmdb.runcmd(
-                    ["blkid", "-c", "/dev/null", "-o", "value", "-s", "UUID", device]
-                )
-                if output:
-                    uuid = output.decode().strip()
-                    filesystems.append(
-                        {"uuid": uuid, "mount_point": mount_point, "fstype": fstype}
-                    )
-                else:
+                if fsuuid is None:
                     raise Exception(
                         "Unknown UUID for device {} (to be mounted on {})".format(
                             device, mount_point
                         )
                     )
 
+                filesystems.append(
+                    {
+                        "uuid": fsuuid,
+                        "mount_point": mount_point,
+                        "fstype": fstype,
+                    }
+                )
+            elif luksuuid is not None and dm is not None:
+                crypts.append(
+                    {
+                        "dm": dm,
+                        "luksuuid": luksuuid,
+                    }
+                )
+
         fstab_path = os.path.join(chroot, "etc/fstab")
         line = "UUID={uuid} {mount_point} {fstype} errors=remount-ro 0 1\n"
         with open(fstab_path, "w") as fstab:
             for entry in filesystems:
                 fstab.write(line.format(**entry))
+
+        vmdb.progress(f"crypts: {crypts}")
+        if crypts:
+            crypttab_path = os.path.join(chroot, "etc/crypttab")
+            line = "{dm} UUID={luksuuid} none luks,discard\n"
+            with open(crypttab_path, "w") as crypttab:
+                for entry in crypts:
+                    crypttab.write(line.format(**entry))

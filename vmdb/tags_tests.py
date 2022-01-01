@@ -121,6 +121,45 @@ class TagsTests(unittest.TestCase):
         with self.assertRaises(vmdb.AlreadyHasFsType):
             tags.set_fstype("first", "ext4")
 
+    def test_set_fsuuid(self):
+        tags = vmdb.Tags()
+        tags.append("first")
+        tags.set_fsuuid("first", "uuid")
+        self.assertEqual(tags.get_fsuuid("first"), "uuid")
+
+    def test_set_fsuuid_raises_error_for_double_fstype(self):
+        tags = vmdb.Tags()
+        tags.append("first")
+        tags.set_fsuuid("first", "uuid")
+        with self.assertRaises(vmdb.AlreadyHasFsUuid):
+            tags.set_fsuuid("first", "other")
+
+    def test_set_luksuuid(self):
+        tags = vmdb.Tags()
+        tags.append("first")
+        tags.set_luksuuid("first", "uuid")
+        self.assertEqual(tags.get_luksuuid("first"), "uuid")
+
+    def test_set_luksuuid_raises_error_for_double_fstype(self):
+        tags = vmdb.Tags()
+        tags.append("first")
+        tags.set_luksuuid("first", "uuid")
+        with self.assertRaises(vmdb.AlreadyHasLuksUuid):
+            tags.set_luksuuid("first", "other")
+
+    def test_set_dm(self):
+        tags = vmdb.Tags()
+        tags.append("first")
+        tags.set_dm("first", "dm")
+        self.assertEqual(tags.get_dm("first"), "dm")
+
+    def test_set_dm_raises_error_for_double_fstype(self):
+        tags = vmdb.Tags()
+        tags.append("first")
+        tags.set_dm("first", "dm")
+        with self.assertRaises(vmdb.AlreadyHasDeviceMapper):
+            tags.set_dm("first", "other")
+
     def test_set_target_mount_point(self):
         tags = vmdb.Tags()
         tags.append("first")
