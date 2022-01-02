@@ -16,6 +16,8 @@
 # =*= License: GPL-3+ =*=
 
 
+import itertools
+import logging
 import os
 import stat
 import time
@@ -89,16 +91,30 @@ class MkpartStepRunner(vmdb.StepRunnerInterface):
         output = output.decode("UTF-8")
         partitions = [line.split(":")[0] for line in output.splitlines() if ":" in line]
         return [
-            word if word.startswith("/") else "{}{}".format(device, word)
+            word if word.startswith("/") else "{}{}{}".format(
+                device,
+                # If the device name ends in a number,
+                # a 'p' is added between device and part number
+                'p' if device[-1].isnumeric() else '',
+                word
+            )
             for word in partitions
         ]
 
     def diff_partitions(self, old, new):
         return [line for line in new if line not in old]
 
-    def wait_for_file_to_exist(self, filename):
-        while not os.path.exists(filename):
-            time.sleep(1)
+    def wait_for_file_to_exist(self, filename, timeout=60):
+        logging.debug("Starting to wait for file %s to come to life", filename)
+        if timeout is not None:
+            logging.debug("Waiting %s second(s) before timeout", timeout)
+        for count in itertools.count():
+            if os.path.exists(filename):
+                return
+            if timeout is None or count < timeout:
+                time.sleep(1)
+            else:
+                raise TimeoutOnWaitingForFile(filename)
 
 
 class MkpartError(Exception):
@@ -116,4 +132,12 @@ class UnexpectedNewPartitions(MkpartError):
         super().__init__(
             "Expected only one new partition to exist after mkpart, "
             "but found {}".format(" ".join(diff))
+        )
+
+
+class TimeoutOnWaitingForFile(MkpartError):
+    def __init__(self, part):
+        super().__init__(
+            "Waited for file {} to come to life, but timeout was "
+            "reached while waiting. ".format(part)
         )
