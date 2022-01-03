@@ -67,7 +67,7 @@ class KpartxStepRunner(vmdb.StepRunnerInterface):
                 vmdb.runcmd(["losetup", "--json", "-l", loop_dev])
             )["loopdevices"]
             if len(loopdev_info) != 1:
-                # Sometime is wrong, this should not happen...
+                # Something is wrong, this must not happen
                 raise RuntimeError("losetup returned more than one device")
             loopdev_info = loopdev_info.pop()
             if loopdev_info["back-file"] is None:
