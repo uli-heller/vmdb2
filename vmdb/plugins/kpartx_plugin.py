@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # =*= License: GPL-3+ =*=
+import json
 import os
 import re
 
@@ -61,4 +62,16 @@ class KpartxStepRunner(vmdb.StepRunnerInterface):
                 loop_devs.add("/dev/{}".format(loop))
 
         for loop_dev in loop_devs:
+            # Check if loop device is actually active:
+            loopdev_info = json.loads(
+                vmdb.runcmd(["losetup", "--json", "-l", loop_dev])
+            )["loopdevices"]
+            if len(loopdev_info) != 1:
+                # Sometime is wrong, this should not happen...
+                raise RuntimeError("losetup returned more than one device")
+            loopdev_info = loopdev_info.pop()
+            if loopdev_info["back-file"] is None:
+                continue
+            vmdb.progress("Loop device {} is still bound to back-file {}, "
+                          "removing loop device".format(loop_dev, loopdev_info["back-file"]))
             vmdb.runcmd(["losetup", "-d", loop_dev])
