@@ -59,6 +59,12 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         if not (suite and tag and target and mirror):
             raise Exception("missing arg for debootstrap step")
 
+        if os.path.exists(target):
+            if len(os.listdir(target)) > 0:
+                raise Exception(
+                    f"debootstrap target is a non-empty directory: {target}"
+                )
+
         cmd = [
             "debootstrap",
             "--arch",
@@ -103,4 +109,3 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
                 ]
                 + remove_pkgs,
             )
-
