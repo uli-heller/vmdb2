@@ -30,13 +30,22 @@ class MountPlugin(vmdb.Plugin):
 
 class MountStepRunner(vmdb.StepRunnerInterface):
     def get_key_spec(self):
-        return {"mount": str, "dirname": "", "mount-on": ""}
+        return {"mount": str, "dirname": "", "mount-on": "", "zerofree": True}
 
     def run(self, values, settings, state):
         self.mount_rootfs(values, settings, state)
 
     def teardown(self, values, settings, state):
         self.unmount_rootfs(values, settings, state)
+        tag = values["mount"]
+        run_zerofree = values.get("zerofree", True)
+        if run_zerofree:
+            fstype = state.tags.get_fstype(tag)
+            if fstype.startswith('ext'):
+                dev = state.tags.get_dev(tag)
+                vmdb.runcmd(["zerofree", "-v", dev])
+            else:
+                logging.info(f"not running zerofree on {tag} with {fstype} filesystem")
 
     def mount_rootfs(self, values, settings, state):
         tag = values["mount"]

@@ -12,6 +12,10 @@ Step keys:
 * `mount-on` &mdash; OPTIONAL; tag of already mounted filesystem in
   image. (FIXME: this may be wrong?)
 
+* `zerofree` &mdash; OPTIONAL; Boolean flag controlling whether or not to run
+  the `zerofree` utility on the filesystem after unmounting it at the end of
+  the build process. Defaults to `true`
+
 Example (in the .vmdb file):
 
     - mount: root
