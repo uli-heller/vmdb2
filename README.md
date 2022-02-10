@@ -193,8 +193,8 @@ also [CoverageTestRunner][] for running the unit tests.
 Try to follow PEP8 for code formatting, and try to keep lines shorter
 than 80 characters.
 
-Make sure ./check and check-all scripts pass both before and after
-your modifications.
+Make sure `./check-all` script passes both before and after your
+modifications.
 
 
 Contact
