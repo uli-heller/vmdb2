@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -euo pipefail
+
+cachedir="$1"
+
+cd "$(dirname "$0")"
+./check
+./check-images "$cachedir"
+./check-external "$cachedir"
