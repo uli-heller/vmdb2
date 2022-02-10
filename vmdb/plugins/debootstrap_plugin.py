@@ -60,9 +60,11 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
             raise Exception("missing arg for debootstrap step")
 
         if os.path.exists(target):
-            if len(os.listdir(target)) > 0:
+            allowed_names = ["lost+found"]
+            names = [n for n in os.listdir(target) if n not in allowed_names]
+            if len(names) > 0:
                 raise Exception(
-                    f"debootstrap target is a non-empty directory: {target}"
+                    f"debootstrap target {target} is a not an empty directory: {names}"
                 )
 
         cmd = [

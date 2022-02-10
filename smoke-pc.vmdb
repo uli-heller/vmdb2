@@ -25,23 +25,6 @@ steps:
 
   - mount: rootfs
 
-  - create-dir: /smoke-dir
-    perm: 0777
-    uid: 1000
-    gid: 1000
-
-  - create-file: /smoke-create-file.txt
-    contents: No smoke here.
-    perm: 0777
-    uid: 1000
-    gid: 1000
-
-  - copy-file: /smoke-copy-file.txt
-    src: smoke-copy-file.txt
-    perm: 0777
-    uid: 1000
-    gid: 1000
-
   - unpack-rootfs: rootfs
 
   - debootstrap: buster
@@ -58,6 +41,23 @@ steps:
 
   - cache-rootfs: rootfs
     unless: rootfs_unpacked
+
+  - create-dir: /smoke-dir
+    perm: 0777
+    uid: 1000
+    gid: 1000
+
+  - create-file: /smoke-create-file.txt
+    contents: No smoke here.
+    perm: 0777
+    uid: 1000
+    gid: 1000
+
+  - copy-file: /smoke-copy-file.txt
+    src: smoke-copy-file.txt
+    perm: 0777
+    uid: 1000
+    gid: 1000
 
   - chroot: rootfs
     shell: |
