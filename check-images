@@ -11,20 +11,19 @@ arm64_tarball="$tarballdir/arm64.tar.gz"
 armhf_tarball="$tarballdir/armhf.tar.gz"
 ppc64el_tarball="$tarballdir/ppc64el.tar.gz"
 
-tryit()
-{
-    local image="$1"
-    local yaml="$2"
-    local tarball="$3"
+tryit() {
+	local image="$1"
+	local yaml="$2"
+	local tarball="$3"
 
-    echo "Testing $yaml"
-    ./vmdb2 --rootfs-tarball "$tarball" \
-            --verbose \
-            --log "$tarballdir/check.log" \
-            --output "$image" \
-            "$yaml"
+	echo "Testing $yaml"
+	./vmdb2 --rootfs-tarball "$tarball" \
+		--verbose \
+		--log "$tarballdir/check.log" \
+		--output "$image" \
+		"$yaml"
 	rm -f "$image"
-    echo
+	echo
 }
 
 src="$(dirname "$0")"
@@ -33,40 +32,32 @@ cd "$src"
 #tryit luks.img "$src/luks.vmdb"
 #tryit lvm2.img "$src/lvm2.vmdb"; exit
 
-
 # This uses debootstrap, not qemu-debootstrap. Hence, it only works on amd64
-if [ -x /usr/bin/dpkg ] && [ "$(dpkg --print-architecture)" = "amd64" ]
-then
+if [ -x /usr/bin/dpkg ] && [ "$(dpkg --print-architecture)" = "amd64" ]; then
 	bash -x ./smoke.sh "$amd64_tarball"
 
-	for x in "$@" pc uefi ansible smoke-pc smoke-uefi
-	do
+	for x in "$@" pc uefi ansible smoke-pc smoke-uefi; do
 		tryit "$tarballdir/$x.img" "$x.vmdb" "$amd64_tarball"
 	done
 fi
 
-if [ -e /usr/share/OVMF/OVMF_VARS_4M.fd ]
-then
-    bash -x ./smoke-amd64.sh "$amd64_tarball"
+if [ -e /usr/share/OVMF/OVMF_VARS_4M.fd ]; then
+	bash -x ./smoke-amd64.sh "$amd64_tarball"
 fi
 tryit "$tarballdir/amd64.img" "amd64.vmdb" "$amd64_tarball"
 
-if [ -e /usr/share/OVMF/OVMF_VARS_4M.fd ]
-then
-    tryit "$tarballdir/amd64-uefi.img" "amd64-uefi.vmdb" "$amd64_tarball"
+if [ -e /usr/share/OVMF/OVMF_VARS_4M.fd ]; then
+	tryit "$tarballdir/amd64-uefi.img" "amd64-uefi.vmdb" "$amd64_tarball"
 fi
 
-if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]
-then
-    bash -x ./smoke-i386.sh "$i386_tarball"
+if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]; then
+	bash -x ./smoke-i386.sh "$i386_tarball"
 fi
 tryit "$tarballdir/i386.img" "i386.vmdb" "$i386_tarball"
 
-if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]
-then
-    tryit "$tarballdir/i386-uefi.img" "i386-uefi.vmdb" "$i386_tarball"
+if [ -e /usr/share/OVMF/OVMF32_VARS_4M.fd ]; then
+	tryit "$tarballdir/i386-uefi.img" "i386-uefi.vmdb" "$i386_tarball"
 fi
-
 
 # On amd64, qemu-user-static has occasionally been observed to segfault. This
 # is being investigated further.
@@ -80,7 +71,6 @@ fi
 #     tryit "$tarballdir/$x.img" "$x.vmdb" "$arm64_tarball"
 # done
 
-
 # ./smoke-armhf.sh "$armhf_tarball"
 
 # for x in "$@" armhf-uefi
@@ -88,13 +78,11 @@ fi
 #     tryit "$tarballdir/$x.img" "$x.vmdb" "$armhf_tarball"
 # done
 
-
 # ./smoke-ppc64el.sh "$ppc64el_tarball"
 
 # for x in "$@" ppc64el
 # do
 #     tryit "$tarballdir/$x.img" "$x.vmdb" "$ppc64el_tarball"
 # done
-
 
 echo All test images built successfully.
