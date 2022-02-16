@@ -29,9 +29,6 @@ tryit() {
 src="$(dirname "$0")"
 cd "$src"
 
-#tryit luks.img "$src/luks.vmdb"
-#tryit lvm2.img "$src/lvm2.vmdb"; exit
-
 # This uses debootstrap, not qemu-debootstrap. Hence, it only works on amd64
 if [ -x /usr/bin/dpkg ] && [ "$(dpkg --print-architecture)" = "amd64" ]; then
 	bash -x ./smoke.sh "$amd64_tarball"
