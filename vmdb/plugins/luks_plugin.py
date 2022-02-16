@@ -67,15 +67,23 @@ class CryptsetupStepRunner(vmdb.StepRunnerInterface):
                 )
             assert 0
 
-        vmdb.runcmd(["cryptsetup", "-q", "luksFormat", dev, key_file])
+        vmdb.runcmd(
+            [
+                "cryptsetup",
+                "-q",
+                "luksFormat",
+                "--type",
+                "luks2",
+                "--allow-discards",
+                dev,
+                key_file,
+            ]
+        )
         vmdb.runcmd(
             [
                 "cryptsetup",
                 "open",
-                "--type",
-                "luks2",
                 "--key-file",
-                "--allow-discards",
                 key_file,
                 dev,
                 crypt_name,
