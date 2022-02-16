@@ -59,5 +59,3 @@ steps:
     tag: /
     prep: prep
     console: serial
-
-  - zerofree: /

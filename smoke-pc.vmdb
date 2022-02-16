@@ -69,5 +69,3 @@ steps:
   - grub: bios
     tag: rootfs
     console: serial
-
-  - zerofree: rootfs

@@ -29,7 +29,6 @@ vmdb/plugins/set_part_flag_plugin.py
 vmdb/plugins/unpack_rootfs_plugin.py
 vmdb/plugins/vgcreate_plugin.py
 vmdb/plugins/virtualfs_plugin.py
-vmdb/plugins/zerofree_plugin.py
 vmdb/plugins/cryptsetup_plugin.py
 vmdb/runcmd.py
 vmdb/state.py

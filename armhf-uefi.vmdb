@@ -62,5 +62,3 @@ steps:
     tag: /
     efi: efi
     console: serial
-
-  - zerofree: /

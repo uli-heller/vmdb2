@@ -71,5 +71,3 @@ steps:
     tag: rootfs
     prep: prep
     console: serial
-
-  - zerofree: rootfs

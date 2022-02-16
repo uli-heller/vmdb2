@@ -49,5 +49,3 @@ steps:
 
   - grub: bios
     tag: /
-
-  - zerofree: /

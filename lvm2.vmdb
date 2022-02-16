@@ -73,5 +73,3 @@ steps:
     tag: rootfs
     image-dev: "{{ image }}"
     console: serial
-
-  - zerofree: /

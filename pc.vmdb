@@ -53,5 +53,3 @@ steps:
   - grub: bios
     tag: /
     quiet: false
-
-  - zerofree: /

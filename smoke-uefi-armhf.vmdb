@@ -74,5 +74,3 @@ steps:
     tag: rootfs
     efi: efifs
     console: serial
-
-  - zerofree: rootfs
