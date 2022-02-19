@@ -39,6 +39,7 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
             "variant": "-",
             "components": ["main"],
             "include": [],
+            "require_empty_target": True,
         }
 
     def run(self, values, settings, state):
@@ -49,6 +50,7 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         keyring = values["keyring"] or None
         install_keyring = values["install_keyring"]
         include = values["include"]
+        require_empty = values["require_empty_target"]
         arch = (
             values["arch"]
             or subprocess.check_output(["dpkg", "--print-architecture"]).strip()
@@ -59,7 +61,7 @@ class DebootstrapStepRunner(vmdb.StepRunnerInterface):
         if not (suite and tag and target and mirror):
             raise Exception("missing arg for debootstrap step")
 
-        if os.path.exists(target):
+        if os.path.exists(target) and require_empty:
             allowed_names = ["lost+found"]
             names = [n for n in os.listdir(target) if n not in allowed_names]
             if len(names) > 0:
