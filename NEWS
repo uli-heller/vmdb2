@@ -1,6 +1,66 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
+Version 0.25, released 2022-02-19
+-----------------------------------------------------------------------------
+
+* Project is now in "selfish maintenance mode". I make changes when I
+  need them for myself, but I'm not developing new features otherwise.
+  I will review and merge patches, though.
+
+* Florian La Roche fixed the grub plugin to not set
+  systemd.show_status multiple times, and other issues with how vmdb2
+  generates the kernel command line.
+
+* Zygmunt Krynicki changed vmdb2 to detect if it should use the
+  --no-extra-removable option. Debian and Ubuntu versions of grub
+  differ on whether it's needed.
+
+* Andy Piper fixed cleaning up mapped partitions in Docker on macOS.
+
+* Andy Piper added a "fill" option to the lvcreate plugin.
+
+* Andy Piper added support for filling ext2/3/4 file systems with
+  zeroes after they're unmounted. This happens by default, but can be
+  disabled in the mount step.
+
+* Andy Piper added the copy_dir plugin to copy directory trees into
+  the build chroot.
+
+* Andy Piper added the set_part plugin for setting flags on partition.
+
+* Andy Piper fixed the grub plugin to run "apt update" before grub is
+  installed to handle the case where no packages get installed
+  previously in a vmdb2 run.
+
+* Andy Piper fixed the grub plugin to work if the root file system is
+  on a logical volume.
+
+* Andy Pipe added the --variable option to vmdb2 for setting variables
+  for jinja2 template expansion on .vmdb files.
+
+* Andy Piper extended the ansible plugin to make it more configurable.
+
+* Andy Piper fixed the debootstrap plugin to not run apt-get update
+  unnecessarily, and to add the include and install_keyring fields,
+  to allow additional packages to be installed.
+
+* Lars Wirzenius added the cryptsetup setup.
+
+* Sebastian Bachmann fixed bugs related partition naming, when device
+  names end in a number, and redundant removal of loop devices.
+
+* Lars Wirzenius made the debootstrap plugin require the target
+  directory to not exist, or be an empty directory, with an override
+  for this check.
+
+* Lars Wirzenius changed the test suite so there is one script that
+  can run it entirely. It's called check-all. The old check-all is now
+  check-images.
+
+* Lars Wirzenius changed the luks plugin to use luks2 by default.
+
+
 Version 0.24, released 2021-08-22
 -----------------------------------------------------------------------------
 
