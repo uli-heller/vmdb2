@@ -8,3 +8,5 @@ cd "$(dirname "$0")"
 ./check
 ./check-images "$cachedir"
 ./check-external "$cachedir"
+
+echo "All tests PASS"
