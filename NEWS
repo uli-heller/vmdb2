@@ -1,12 +1,19 @@
 NEWS for vmdb2, the Debian disk image builder
 =============================================================================
 
-Version 0.25, released 2022-02-19
+Project is now in "selfish maintenance mode". I make changes when I
+need them for myself, but I'm not developing new features otherwise. I
+will review and merge patches, though.
+
+Version 0.26, released 2022-04-20
 -----------------------------------------------------------------------------
 
-* Project is now in "selfish maintenance mode". I make changes when I
-  need them for myself, but I'm not developing new features otherwise.
-  I will review and merge patches, though.
+* Bug fix: the Ansible plugin now correctly deletes the temporary
+  files it creates.
+
+
+Version 0.25, released 2022-02-19
+-----------------------------------------------------------------------------
 
 * Florian La Roche fixed the grub plugin to not set
   systemd.show_status multiple times, and other issues with how vmdb2
