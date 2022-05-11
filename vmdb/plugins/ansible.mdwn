@@ -3,7 +3,7 @@ Step: ansible
 
 Run Ansible using a provided playbook, to configure the image. vmdb2
 sets up Ansible so that it treats the image as the host being
-configured (via the `chroot` connecion). The image MUST have Python
+configured (via the `chroot` connection). The image MUST have Python
 installed (version 2 or 3 depending on Ansible version).
 
 Step keys:
